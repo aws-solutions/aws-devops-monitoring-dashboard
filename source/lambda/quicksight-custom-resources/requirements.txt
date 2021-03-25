@@ -1,0 +1,4 @@
+crhelper==2.0.6
+requests==2.24.0
+pyyaml
+tenacity==6.2.0

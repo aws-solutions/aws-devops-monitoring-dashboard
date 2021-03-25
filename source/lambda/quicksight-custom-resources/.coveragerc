@@ -1,0 +1,20 @@
+[run]
+omit =
+    *images/*
+    *tests/*
+    *.venv-*/*
+    *test/*
+    */__init__.py
+    *setup.py
+    *certifi/*
+    *chardet/*
+    *crhelper/*
+    *idna/*
+    *requests/*
+    *six.py
+    *tenacity/*
+    *urllib3/*
+    *yaml/*
+
+source =
+    .

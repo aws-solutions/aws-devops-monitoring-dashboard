@@ -1,0 +1,159 @@
+{
+    "PhysicalTableMap": {
+        "67442a0f-7d69-4e60-94b0-08846b3acae7": {
+            "RelationalTable": {
+                "DataSourceArn": "{self.data_source.arn}",
+                "Schema": "aws_devops_metrics_db_so0143",
+                "Name": "recovery_time_detail_view",
+                "InputColumns": [
+                    {
+                        "Name": "account",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "time",
+                        "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "region",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "alarm_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "application_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "repository_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "current_state",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "current_state_timestamp",
+                        "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "previous_state",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "previous_state_timestamp",
+                        "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "duration_minutes",
+                        "Type": "INTEGER"
+                    },
+                    {
+                        "Name": "created_at",
+                        "Type": "DATETIME"
+                    }
+                ]
+            }
+        }
+    },
+    "LogicalTableMap": {
+        "67442a0f-7d69-4e60-94b0-08846b3acae7": {
+            "Alias": "recovery_time_detail_view",
+            "DataTransforms": [
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "duration_minutes",
+                        "NewColumnName": "Duration"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "previous_state_timestamp",
+                        "NewColumnName": "Outage Time"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "previous_state",
+                        "NewColumnName": "Previous State"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "current_state_timestamp",
+                        "NewColumnName": "Recovery Time"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "current_state",
+                        "NewColumnName": "Current State"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "repository_name",
+                        "NewColumnName": "Repository"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "application_name",
+                        "NewColumnName": "Application"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "alarm_name",
+                        "NewColumnName": "Alarm Name"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "region",
+                        "NewColumnName": "Region"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "time",
+                        "NewColumnName": "Time"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "account",
+                        "NewColumnName": "Account"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "created_at",
+                        "NewColumnName": "Created At"
+                    }
+                },
+                {
+                    "ProjectOperation": {
+                        "ProjectedColumns": [
+                            "Account",
+                            "Time",
+                            "Region",
+                            "Alarm Name",
+                            "Application",
+                            "Repository",
+                            "Recovery Time",
+                            "Outage Time",
+                            "Duration",
+                            "Created At"
+                        ]
+                    }
+                }
+            ],
+            "Source": {
+                "PhysicalTableId": "67442a0f-7d69-4e60-94b0-08846b3acae7"
+            }
+        }
+    }
+}

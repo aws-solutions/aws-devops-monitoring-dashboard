@@ -1,0 +1,2463 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test for primary devopsDashboardStack 1`] = `
+Object {
+  "Conditions": Object {
+    "AnonymousDataToAWS": Object {
+      "Fn::Equals": Array [
+        Object {
+          "Fn::FindInMap": Array [
+            "AnonymousData",
+            "SendAnonymousUsageData",
+            "Data",
+          ],
+        },
+        "Yes",
+      ],
+    },
+    "QuickSightCondition": Object {
+      "Fn::Not": Array [
+        Object {
+          "Fn::Equals": Array [
+            Object {
+              "Ref": "QuickSightPrincipalArn",
+            },
+            "",
+          ],
+        },
+      ],
+    },
+  },
+  "Description": "(SO0143)AWS DevOps Monitoring Dashboard  - Main Template. Version: v1.0.0",
+  "Mappings": Object {
+    "AnonymousData": Object {
+      "SendAnonymousUsageData": Object {
+        "Data": "Yes",
+        "MetricsURL": "https://metrics.awssolutionsbuilder.com/generic",
+      },
+    },
+  },
+  "Metadata": Object {
+    "AWS::CloudFormation::Interface": Object {
+      "ParameterGroups": Array [
+        Object {
+          "Label": Object {
+            "default": "Metrics Configuration",
+          },
+          "Parameters": Array [
+            "DataDuration",
+            "CodeCommitRepo",
+          ],
+        },
+        Object {
+          "Label": Object {
+            "default": "S3 Configuration",
+          },
+          "Parameters": Array [
+            "S3TransitionDays",
+          ],
+        },
+        Object {
+          "Label": Object {
+            "default": "QuickSight Configuration",
+          },
+          "Parameters": Array [
+            "QuickSightPrincipalArn",
+          ],
+        },
+      ],
+      "ParameterLabels": Object {
+        "CodeCommitRepo": Object {
+          "default": "AWS CodeCommit Repository List",
+        },
+        "DataDuration": Object {
+          "default": "Athena Query Data Duration (Days)",
+        },
+        "QuickSightPrincipalArn": Object {
+          "default": "Amazon Quicksight Principal ARN",
+        },
+        "S3TransitionDays": Object {
+          "default": "S3 Transition Days",
+        },
+      },
+    },
+  },
+  "Outputs": Object {
+    "DevOpsMetricsS3Bucket": Object {
+      "Description": "DevOps Metrics S3 Bucket for AWS DevOps Monitoring Dashboard Solution",
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+          "Arn",
+        ],
+      },
+    },
+    "EventParserLambdaFunction": Object {
+      "Description": "Event Parser Lambda Function for AWS DevOps Monitoring Dashboard Solution",
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "EventParserE8B3240E",
+          "Arn",
+        ],
+      },
+    },
+    "KinesisFirehoseDeliveryStream": Object {
+      "Description": "Kinesis Firehose Delivery Stream for AWS DevOps Monitoring Dashboard Solution",
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8",
+          "Arn",
+        ],
+      },
+    },
+    "QSAnalysisURL": Object {
+      "Condition": "QuickSightCondition",
+      "Description": "Amazon QuickSight Analysis URL for AWS DevOps Monitoring Dashboard Solution",
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "QSDashboardNestedStackQSDashboardNestedStackResourceF5171359",
+          "Outputs.DevopsDashboardStackQSDashboardQuicksightQuickSightResourcesC8F2EDEFanalysisurl",
+        ],
+      },
+    },
+    "QSDashboardURL": Object {
+      "Condition": "QuickSightCondition",
+      "Description": "Amazon QuickSight Dashboard URL for AWS DevOps Monitoring Dashboard Solution",
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "QSDashboardNestedStackQSDashboardNestedStackResourceF5171359",
+          "Outputs.DevopsDashboardStackQSDashboardQuicksightQuickSightResourcesC8F2EDEFdashboardurl",
+        ],
+      },
+    },
+    "QueryRunnerLambdaFunction": Object {
+      "Description": "Query Runner Lambda Function for AWS DevOps Monitoring Dashboard Solution",
+      "Value": Object {
+        "Fn::GetAtt": Array [
+          "QueryRunner0586B77B",
+          "Arn",
+        ],
+      },
+    },
+    "SolutionVersion": Object {
+      "Description": "Version for AWS DevOps Monitoring Dashboard Solution",
+      "Value": "v1.0.0",
+    },
+  },
+  "Parameters": Object {
+    "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cArtifactHashD445E6AF": Object {
+      "Description": "Artifact hash for asset \\"73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35c\\"",
+      "Type": "String",
+    },
+    "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3Bucket9412E24C": Object {
+      "Description": "S3 bucket for asset \\"73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35c\\"",
+      "Type": "String",
+    },
+    "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3VersionKeyC6233AA0": Object {
+      "Description": "S3 key for asset version \\"73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35c\\"",
+      "Type": "String",
+    },
+    "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbArtifactHash22028B3B": Object {
+      "Description": "Artifact hash for asset \\"79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422db\\"",
+      "Type": "String",
+    },
+    "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3Bucket90773FB9": Object {
+      "Description": "S3 bucket for asset \\"79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422db\\"",
+      "Type": "String",
+    },
+    "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3VersionKey9F4DEDB0": Object {
+      "Description": "S3 key for asset version \\"79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422db\\"",
+      "Type": "String",
+    },
+    "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8ArtifactHash3AACE34E": Object {
+      "Description": "Artifact hash for asset \\"a8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8\\"",
+      "Type": "String",
+    },
+    "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3Bucket9DDC127D": Object {
+      "Description": "S3 bucket for asset \\"a8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8\\"",
+      "Type": "String",
+    },
+    "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7": Object {
+      "Description": "S3 key for asset version \\"a8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8\\"",
+      "Type": "String",
+    },
+    "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0ArtifactHashAE540AE7": Object {
+      "Description": "Artifact hash for asset \\"cdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0\\"",
+      "Type": "String",
+    },
+    "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3BucketDF1CB2E9": Object {
+      "Description": "S3 bucket for asset \\"cdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0\\"",
+      "Type": "String",
+    },
+    "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3VersionKey5B4A7AD0": Object {
+      "Description": "S3 key for asset version \\"cdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0\\"",
+      "Type": "String",
+    },
+    "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241ArtifactHashD5F974C0": Object {
+      "Description": "Artifact hash for asset \\"ff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241\\"",
+      "Type": "String",
+    },
+    "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3Bucket9F6A0D53": Object {
+      "Description": "S3 bucket for asset \\"ff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241\\"",
+      "Type": "String",
+    },
+    "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3VersionKey425AB463": Object {
+      "Description": "S3 key for asset version \\"ff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241\\"",
+      "Type": "String",
+    },
+    "CodeCommitRepo": Object {
+      "Default": "'ALL'",
+      "Description": "List of the names of AWS CodeCommit Repositories that will be monitored. Must be single-quoted and comma separated. For example, 'MyRepository1','MyRepository2'. To monitor all the repositories, leave default 'ALL' value.",
+      "Type": "String",
+    },
+    "DataDuration": Object {
+      "Default": "90",
+      "Description": "Enter a duration (days) that Athena query uses to retrieve data. By default Athena query retrieves data within the last 90 days. We recommend you to limit the duration for performance optimization and cost reduction.",
+      "Type": "Number",
+    },
+    "QuickSightPrincipalArn": Object {
+      "AllowedPattern": "^$|^arn:\\\\S+:quicksight:\\\\S+:\\\\d{12}:user/\\\\S+$",
+      "ConstraintDescription": "Provide an arn matching an Amazon Quicksight User ARN. The input did not match the validation pattern.",
+      "Default": "",
+      "Description": "Provide a QuickSight ADMIN user ARN (arn:aws:quicksight:AWSRegion:AWSAccountId:user/default/QuickSightUserName) to automatically create QuickSight dashboards. QuickSight Enterprise edition must be enabled for the account. To disable QuickSight dashboards creation, leave it blank.",
+      "Type": "String",
+    },
+    "S3TransitionDays": Object {
+      "Default": "365",
+      "Description": "Enter the number of days after which you would like to transition Amazon S3 objects to Amazon S3 Glacier storage class. By default objects are transitioned to Glacier 365 days (one year) after creation.",
+      "Type": "Number",
+    },
+  },
+  "Resources": Object {
+    "AddAthenaPartitionEventsRule8E73AEE0": Object {
+      "Properties": Object {
+        "Description": "AWS DevOps Monitoring Dashboard Solution - Event rule for adding Athena partitions",
+        "ScheduleExpression": "cron(0 0 * * ? *)",
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "AddAthenaPartitionLambdaFunction02003486",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "AddAthenaPartitionLambdaFunction02003486": Object {
+      "DependsOn": Array [
+        "AddAthenaPartitionLambdaRoleDefaultPolicyBA8B41CD",
+        "AddAthenaPartitionLambdaRoleA28EF3C7",
+      ],
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W58",
+              "reason": "Lambda functions has the required permission to write CloudWatch Logs. It uses custom policy instead of arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole with more tighter permissions.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3Bucket9DDC127D",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Description": "AWS DevOps Monitoring Dashboard Solution - This function runs on a daily schedule and adds a new partition to Amazon Athena table",
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "AthenaWorkGroup": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "AWSDevOpsDashboardWG-",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "SolutionHelperCreateUniqueIDAF03406A",
+                      "UUID",
+                    ],
+                  },
+                ],
+              ],
+            },
+            "LOG_LEVEL": "INFO",
+            "MetricsDBName": Object {
+              "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+            },
+            "MetricsTableName": Object {
+              "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
+            },
+            "MetricsURL": Object {
+              "Fn::FindInMap": Array [
+                "AnonymousData",
+                "SendAnonymousUsageData",
+                "MetricsURL",
+              ],
+            },
+            "Region": Object {
+              "Ref": "AWS::Region",
+            },
+            "SendAnonymousUsageData": Object {
+              "Fn::FindInMap": Array [
+                "AnonymousData",
+                "SendAnonymousUsageData",
+                "Data",
+              ],
+            },
+            "SolutionId": "SO0143",
+            "UUID": Object {
+              "Fn::GetAtt": Array [
+                "SolutionHelperCreateUniqueIDAF03406A",
+                "UUID",
+              ],
+            },
+            "Version": "v1.0.0",
+          },
+        },
+        "Handler": "add_athena_partition.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "AddAthenaPartitionLambdaRoleA28EF3C7",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs12.x",
+        "Timeout": 300,
+        "TracingConfig": Object {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "AddAthenaPartitionLambdaFunctionLambdaInvokePermission6F449EAA": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "AddAthenaPartitionLambdaFunction02003486",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::GetAtt": Array [
+            "AddAthenaPartitionEventsRule8E73AEE0",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "AddAthenaPartitionLambdaFunctionServiceRole34D9F028": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/*",
+                      ],
+                    ],
+                  },
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "LambdaFunctionServiceRolePolicy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "AddAthenaPartitionLambdaRoleA28EF3C7": Object {
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W11",
+              "reason": "Resource * is required for cloudwatch:GetMetricStatistics as it does not support resource-level permissions.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/*",
+                      ],
+                    ],
+                  },
+                  "Sid": "CreateCWLogs",
+                },
+                Object {
+                  "Action": Array [
+                    "s3:GetBucketLocation",
+                    "s3:GetObject",
+                    "s3:ListBucket",
+                    "s3:ListBucketMultipartUploads",
+                    "s3:ListMultipartUploadParts",
+                    "s3:AbortMultipartUpload",
+                    "s3:CreateBucket",
+                    "s3:PutObject",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Array [
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::",
+                          Object {
+                            "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          },
+                          "/athena_results/*",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::",
+                          Object {
+                            "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          },
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::",
+                          Object {
+                            "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          },
+                          "/*",
+                        ],
+                      ],
+                    },
+                  ],
+                  "Sid": "S3AccessPS",
+                },
+                Object {
+                  "Action": "athena:StartQueryExecution",
+                  "Effect": "Allow",
+                  "Resource": Array [
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":athena:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":workgroup/AWSDevOpsDashboard*",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":athena:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":workgroup/primary",
+                        ],
+                      ],
+                    },
+                  ],
+                  "Sid": "AthenaQueryExecutionPS",
+                },
+                Object {
+                  "Action": Array [
+                    "glue:GetTable",
+                    "glue:GetPartitions",
+                    "glue:GetDatabase",
+                    "glue:CreateTable",
+                    "glue:UpdateTable",
+                    "glue:BatchCreatePartition",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Array [
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":catalog",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":database/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                          },
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":table/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                          },
+                          "/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
+                          },
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":table/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                          },
+                          "/*",
+                        ],
+                      ],
+                    },
+                  ],
+                  "Sid": "glueAccessPS",
+                },
+                Object {
+                  "Action": "cloudwatch:GetMetricStatistics",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                  "Sid": "cloudwatchAccessPS",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "AddAthenaPartitionPolicy-",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "SolutionHelperCreateUniqueIDAF03406A",
+                      "UUID",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "AddAthenaPartitionLambdaRoleDefaultPolicyBA8B41CD": Object {
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W12",
+              "reason": "Lambda needs the following minimum required permissions to send trace data to X-Ray and access ENIs in a VPC.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "AddAthenaPartitionLambdaRoleDefaultPolicyBA8B41CD",
+        "Roles": Array [
+          Object {
+            "Ref": "AddAthenaPartitionLambdaRoleA28EF3C7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CanaryEventsCanaryEventsRule115776A2": Object {
+      "Properties": Object {
+        "Description": "AWS DevOps Monitoring Dashboard Solution - Event rule for Amazon CloudWatch Synthetics Canary Alarm",
+        "EventPattern": Object {
+          "detail": Object {
+            "configuration": Object {
+              "metrics": Object {
+                "metricStat": Object {
+                  "metric": Object {
+                    "namespace": Array [
+                      "CloudWatchSynthetics",
+                    ],
+                  },
+                },
+              },
+            },
+            "previousState": Object {
+              "value": Array [
+                "ALARM",
+              ],
+            },
+            "state": Object {
+              "value": Array [
+                "OK",
+              ],
+            },
+          },
+          "detail-type": Array [
+            "CloudWatch Alarm State Change",
+          ],
+          "source": Array [
+            "aws.cloudwatch",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitEventsRuleInvokeKinesisFirehoseRole1CA10D3E",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodeCommitEventsRule6F25533B": Object {
+      "Properties": Object {
+        "Description": "AWS DevOps Monitoring Dashboard Solution - Event rule for AWS CodeCommit",
+        "EventPattern": Object {
+          "detail": Object {
+            "eventName": Array [
+              "PutFile",
+              "DeleteFile",
+              "UpdateFile",
+              "GitPush",
+            ],
+          },
+          "detail-type": Array [
+            "AWS API Call via CloudTrail",
+          ],
+          "source": Array [
+            "aws.codecommit",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitEventsRuleInvokeKinesisFirehoseRole1CA10D3E",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodeCommitEventsRuleInvokeKinesisFirehosePolicy1498E6F5": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "firehose:PutRecord",
+                "firehose:PutRecordBatch",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CodeCommitEventsRuleInvokeKinesisFirehosePolicy1498E6F5",
+        "Roles": Array [
+          Object {
+            "Ref": "CodeCommitEventsRuleInvokeKinesisFirehoseRole1CA10D3E",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CodeCommitEventsRuleInvokeKinesisFirehoseRole1CA10D3E": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "events.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Description": "Events Rule To Kinesis Firehose Role",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8": Object {
+      "DependsOn": Array [
+        "CodeCommitKinesisFirehoseToS3KinesisFirehosePolicy7335C74C",
+      ],
+      "Properties": Object {
+        "DeliveryStreamEncryptionConfigurationInput": Object {
+          "KeyType": "AWS_OWNED_CMK",
+        },
+        "ExtendedS3DestinationConfiguration": Object {
+          "BucketARN": Object {
+            "Fn::GetAtt": Array [
+              "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+              "Arn",
+            ],
+          },
+          "BufferingHints": Object {
+            "IntervalInSeconds": 300,
+            "SizeInMBs": 64,
+          },
+          "CloudWatchLoggingOptions": Object {
+            "Enabled": true,
+            "LogGroupName": Object {
+              "Ref": "CodeCommitKinesisFirehoseToS3firehoseloggroupD55CEEDC",
+            },
+            "LogStreamName": Object {
+              "Ref": "CodeCommitKinesisFirehoseToS3firehoseloggroupfirehoselogstreamC9CAC73D",
+            },
+          },
+          "CompressionFormat": "UNCOMPRESSED",
+          "DataFormatConversionConfiguration": Object {
+            "Enabled": true,
+            "InputFormatConfiguration": Object {
+              "Deserializer": Object {
+                "OpenXJsonSerDe": Object {
+                  "CaseInsensitive": true,
+                },
+              },
+            },
+            "OutputFormatConfiguration": Object {
+              "Serializer": Object {
+                "ParquetSerDe": Object {
+                  "Compression": "SNAPPY",
+                },
+              },
+            },
+            "SchemaConfiguration": Object {
+              "DatabaseName": Object {
+                "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+              },
+              "RoleARN": Object {
+                "Fn::GetAtt": Array [
+                  "CodeCommitKinesisFirehoseToS3KinesisFirehoseRole1FE64272",
+                  "Arn",
+                ],
+              },
+              "TableName": Object {
+                "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
+              },
+            },
+          },
+          "EncryptionConfiguration": Object {
+            "KMSEncryptionConfig": Object {
+              "AWSKMSKeyARN": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":kms:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":alias/aws/s3",
+                  ],
+                ],
+              },
+            },
+          },
+          "ErrorOutputPrefix": "DevopsEventsProcessingErrorlogs/result=!{firehose:error-output-type}/created_at=!{timestamp:yyyy-MM-dd}/",
+          "Prefix": "DevopsEvents/created_at=!{timestamp:yyyy-MM-dd}/",
+          "ProcessingConfiguration": Object {
+            "Enabled": true,
+            "Processors": Array [
+              Object {
+                "Parameters": Array [
+                  Object {
+                    "ParameterName": "LambdaArn",
+                    "ParameterValue": Object {
+                      "Fn::GetAtt": Array [
+                        "EventParserE8B3240E",
+                        "Arn",
+                      ],
+                    },
+                  },
+                ],
+                "Type": "Lambda",
+              },
+            ],
+          },
+          "RoleARN": Object {
+            "Fn::GetAtt": Array [
+              "CodeCommitKinesisFirehoseToS3KinesisFirehoseRole1FE64272",
+              "Arn",
+            ],
+          },
+        },
+      },
+      "Type": "AWS::KinesisFirehose::DeliveryStream",
+    },
+    "CodeCommitKinesisFirehoseToS3KinesisFirehosePolicy7335C74C": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:AbortMultipartUpload",
+                "s3:GetBucketLocation",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:ListBucketMultipartUploads",
+                "s3:PutObject",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
+              "Action": "logs:PutLogEvents",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    Object {
+                      "Ref": "CodeCommitKinesisFirehoseToS3firehoseloggroupD55CEEDC",
+                    },
+                    ":log-stream:",
+                    Object {
+                      "Ref": "CodeCommitKinesisFirehoseToS3firehoseloggroupfirehoselogstreamC9CAC73D",
+                    },
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "EventParserE8B3240E",
+                  "Arn",
+                ],
+              },
+              "Sid": "InvokeLambda",
+            },
+            Object {
+              "Action": Array [
+                "glue:GetTable",
+                "glue:GetTableVersion",
+                "glue:GetTableVersions",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":catalog",
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":database/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":table/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                      },
+                      "/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":table/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+              "Sid": "glueAccessPSForFirehose",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CodeCommitKinesisFirehoseToS3KinesisFirehosePolicy7335C74C",
+        "Roles": Array [
+          Object {
+            "Ref": "CodeCommitKinesisFirehoseToS3KinesisFirehoseRole1FE64272",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CodeCommitKinesisFirehoseToS3KinesisFirehoseRole1FE64272": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "firehose.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "BucketEncryption": Object {
+          "ServerSideEncryptionConfiguration": Array [
+            Object {
+              "ServerSideEncryptionByDefault": Object {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "BucketName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "aws-devops-metrics-",
+              Object {
+                "Fn::GetAtt": Array [
+                  "SolutionHelperCreateUniqueIDAF03406A",
+                  "UUID",
+                ],
+              },
+            ],
+          ],
+        },
+        "LifecycleConfiguration": Object {
+          "Rules": Array [
+            Object {
+              "NoncurrentVersionTransitions": Array [
+                Object {
+                  "StorageClass": "GLACIER",
+                  "TransitionInDays": Object {
+                    "Ref": "S3TransitionDays",
+                  },
+                },
+              ],
+              "Status": "Enabled",
+            },
+          ],
+        },
+        "LoggingConfiguration": Object {
+          "DestinationBucketName": Object {
+            "Ref": "CodeCommitKinesisFirehoseToS3S3LoggingBucketEBB86ACF",
+          },
+        },
+        "PublicAccessBlockConfiguration": Object {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+        "VersioningConfiguration": Object {
+          "Status": "Enabled",
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodeCommitKinesisFirehoseToS3S3BucketPolicy4E0BD5BE": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "*",
+              "Condition": Object {
+                "Bool": Object {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+              "Sid": "HttpsOnly",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "CodeCommitKinesisFirehoseToS3S3LoggingBucketEBB86ACF": Object {
+      "DeletionPolicy": "Retain",
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W35",
+              "reason": "This S3 bucket is used as the access logging bucket for another bucket",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "AccessControl": "LogDeliveryWrite",
+        "BucketEncryption": Object {
+          "ServerSideEncryptionConfiguration": Array [
+            Object {
+              "ServerSideEncryptionByDefault": Object {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "BucketName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "aws-devops-metrics-logging-",
+              Object {
+                "Fn::GetAtt": Array [
+                  "SolutionHelperCreateUniqueIDAF03406A",
+                  "UUID",
+                ],
+              },
+            ],
+          ],
+        },
+        "PublicAccessBlockConfiguration": Object {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodeCommitKinesisFirehoseToS3S3LoggingBucketPolicyA9B174C1": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "CodeCommitKinesisFirehoseToS3S3LoggingBucketEBB86ACF",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "*",
+              "Condition": Object {
+                "Bool": Object {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "CodeCommitKinesisFirehoseToS3S3LoggingBucketEBB86ACF",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+              "Sid": "HttpsOnly",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "CodeCommitKinesisFirehoseToS3firehoseloggroupD55CEEDC": Object {
+      "DeletionPolicy": "Retain",
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W84",
+              "reason": "The CloudWatch log group does not need to be encrypted.",
+            },
+            Object {
+              "id": "W86",
+              "reason": "The log data in CloudWatch log group does not need to be expired.",
+            },
+          ],
+        },
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodeCommitKinesisFirehoseToS3firehoseloggroupfirehoselogstreamC9CAC73D": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Ref": "CodeCommitKinesisFirehoseToS3firehoseloggroupD55CEEDC",
+        },
+      },
+      "Type": "AWS::Logs::LogStream",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodeDeployEventsCodeDeployEventsRule9A7B5DEA": Object {
+      "Properties": Object {
+        "Description": "AWS DevOps Monitoring Dashboard Solution - Event rule for AWS CodeDeploy",
+        "EventPattern": Object {
+          "detail-type": Array [
+            "CodeDeploy Deployment State-change Notification",
+          ],
+          "source": Array [
+            "aws.codedeploy",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitEventsRuleInvokeKinesisFirehoseRole1CA10D3E",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CustomResourceQueryRunner": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "AthenaWorkGroup": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "AWSDevOpsDashboardWG-",
+              Object {
+                "Fn::GetAtt": Array [
+                  "SolutionHelperCreateUniqueIDAF03406A",
+                  "UUID",
+                ],
+              },
+            ],
+          ],
+        },
+        "DataDuration": Object {
+          "Ref": "DataDuration",
+        },
+        "MetricsDBName": Object {
+          "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+        },
+        "MetricsTableName": Object {
+          "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
+        },
+        "RepositoryList": Object {
+          "Ref": "CodeCommitRepo",
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "QueryRunner0586B77B",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::QueryRunner",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "EventParserE8B3240E": Object {
+      "DependsOn": Array [
+        "EventParserLambdaRole3A607F90",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3Bucket9F6A0D53",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3VersionKey425AB463",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3VersionKey425AB463",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Description": "AWS DevOps Monitoring Dashboard Solution - This function performs lambda transformation within kinesis firehose. It parses raw cloudwatch events, sends relevant data to S3 for downstream operation",
+        "Environment": Object {
+          "Variables": Object {
+            "LOG_LEVEL": "INFO",
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "EventParserLambdaRole3A607F90",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs12.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "EventParserLambdaRole3A607F90": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/*",
+                      ],
+                    ],
+                  },
+                  "Sid": "CreateCWLogs",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "EventParserLambdaPolicy-",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "SolutionHelperCreateUniqueIDAF03406A",
+                      "UUID",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "GlueAthenaDatabaseAWSDevOpsDashboardAthenaWorkGroupCA26D38C": Object {
+      "Properties": Object {
+        "Description": "AWS DevOps Monitoring Dashboard Solution Athena Work Group",
+        "Name": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "AWSDevOpsDashboardWG-",
+              Object {
+                "Fn::GetAtt": Array [
+                  "SolutionHelperCreateUniqueIDAF03406A",
+                  "UUID",
+                ],
+              },
+            ],
+          ],
+        },
+        "RecursiveDeleteOption": true,
+        "State": "ENABLED",
+        "WorkGroupConfiguration": Object {
+          "PublishCloudWatchMetricsEnabled": true,
+          "ResultConfiguration": Object {
+            "EncryptionConfiguration": Object {
+              "EncryptionOption": "SSE_S3",
+            },
+            "OutputLocation": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "s3://",
+                  Object {
+                    "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                  },
+                  "/athena_query_output/",
+                ],
+              ],
+            },
+          },
+        },
+      },
+      "Type": "AWS::Athena::WorkGroup",
+    },
+    "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF": Object {
+      "Properties": Object {
+        "CatalogId": Object {
+          "Ref": "AWS::AccountId",
+        },
+        "DatabaseInput": Object {
+          "Name": "aws_devops_metrics_db_so0143",
+        },
+      },
+      "Type": "AWS::Glue::Database",
+    },
+    "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1": Object {
+      "Properties": Object {
+        "CatalogId": Object {
+          "Ref": "AWS::AccountId",
+        },
+        "DatabaseName": Object {
+          "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+        },
+        "TableInput": Object {
+          "Description": "AWS DevOps Monitoring Dashboard Solution - AWS DevOps Metrics Glue table",
+          "Name": "aws_devops_metrics_table",
+          "Parameters": Object {
+            "EXTERNAL": "TRUE",
+            "classification": "parquet",
+            "has_encrypted_data": false,
+          },
+          "PartitionKeys": Array [
+            Object {
+              "Name": "created_at",
+              "Type": "timestamp",
+            },
+          ],
+          "StorageDescriptor": Object {
+            "Columns": Array [
+              Object {
+                "Name": "version",
+                "Type": "string",
+              },
+              Object {
+                "Name": "id",
+                "Type": "string",
+              },
+              Object {
+                "Name": "detail_type",
+                "Type": "string",
+              },
+              Object {
+                "Name": "source",
+                "Type": "string",
+              },
+              Object {
+                "Name": "account",
+                "Type": "string",
+              },
+              Object {
+                "Name": "time",
+                "Type": "timestamp",
+              },
+              Object {
+                "Name": "region",
+                "Type": "string",
+              },
+              Object {
+                "Comment": "array<string>",
+                "Name": "resources",
+                "Type": "array<string>",
+              },
+              Object {
+                "Comment": "struct<nested_column:datatype>",
+                "Name": "detail",
+                "Type": "struct<eventName:string,repositoryName:string,branchName:string,authorName:string,commitId:string,canaryAlarmName:string,canaryAlarmAppName:string,canaryAlarmRepoName:string,canaryAlarmCurrState:string,canaryAlarmPrevState:string,canaryAlarmCurrStateTimeStamp:timestamp,canaryAlarmPrevStateTimeStamp:timestamp,recoveryDurationMinutes:int,deploymentState:string,deploymentId:string,deploymentApplication:string>",
+              },
+            ],
+            "Compressed": false,
+            "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+            "Location": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "s3://",
+                  Object {
+                    "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                  },
+                  "/DevopsEvents/",
+                ],
+              ],
+            },
+            "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+            "SerdeInfo": Object {
+              "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+            },
+            "StoredAsSubDirectories": true,
+          },
+          "TableType": "EXTERNAL_TABLE",
+        },
+      },
+      "Type": "AWS::Glue::Table",
+    },
+    "QSDashboardNestedStackQSDashboardNestedStackResourceF5171359": Object {
+      "Condition": "QuickSightCondition",
+      "Description": "(SO0143)AWS DevOps Monitoring Dashboard - Create QuickSight Template. Version: v1.0.0",
+      "Metadata": Object {
+        "nestedStackFileName": "DevopsDashboardStackQSDashboard0560D204.nested.template",
+      },
+      "Properties": Object {
+        "Parameters": Object {
+          "AthenaWorkGroupName": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "AWSDevOpsDashboardWG-",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "SolutionHelperCreateUniqueIDAF03406A",
+                    "UUID",
+                  ],
+                },
+              ],
+            ],
+          },
+          "ParentStackName": Object {
+            "Ref": "AWS::StackName",
+          },
+          "QuickSightPrincipalArn": Object {
+            "Ref": "QuickSightPrincipalArn",
+          },
+          "SolutionID": "SO0143",
+          "SolutionName": "AWS DevOps Monitoring Dashboard",
+          "SolutionVersion": "v1.0.0",
+          "referencetoDevopsDashboardStackAssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3BucketF7AEA35FRef": Object {
+            "Ref": "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3Bucket90773FB9",
+          },
+          "referencetoDevopsDashboardStackAssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3VersionKeyBD39948CRef": Object {
+            "Ref": "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3VersionKey9F4DEDB0",
+          },
+        },
+        "TemplateURL": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "https://s3.",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ".",
+              Object {
+                "Ref": "AWS::URLSuffix",
+              },
+              "/",
+              Object {
+                "Ref": "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3Bucket9412E24C",
+              },
+              "/",
+              Object {
+                "Fn::Select": Array [
+                  0,
+                  Object {
+                    "Fn::Split": Array [
+                      "||",
+                      Object {
+                        "Ref": "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3VersionKeyC6233AA0",
+                      },
+                    ],
+                  },
+                ],
+              },
+              Object {
+                "Fn::Select": Array [
+                  1,
+                  Object {
+                    "Fn::Split": Array [
+                      "||",
+                      Object {
+                        "Ref": "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3VersionKeyC6233AA0",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::CloudFormation::Stack",
+    },
+    "QueryRunner0586B77B": Object {
+      "DependsOn": Array [
+        "queryRunnerLambdaRoleB4DE757D",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3Bucket9DDC127D",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Description": "AWS DevOps Monitoring Dashboard Solution - This function runs Amazon Athena queries and creates views.",
+        "Environment": Object {
+          "Variables": Object {
+            "LOG_LEVEL": "INFO",
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "queryRunnerLambdaRoleB4DE757D",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs12.x",
+        "Timeout": 300,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "SendAnonymousUsageData": Object {
+      "Condition": "AnonymousDataToAWS",
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "AthenaQueryDataDuration": Object {
+          "Ref": "DataDuration",
+        },
+        "MetricsURL": Object {
+          "Fn::FindInMap": Array [
+            "AnonymousData",
+            "SendAnonymousUsageData",
+            "MetricsURL",
+          ],
+        },
+        "QuickSightPrincipalArn": Object {
+          "Ref": "QuickSightPrincipalArn",
+        },
+        "Region": Object {
+          "Ref": "AWS::Region",
+        },
+        "RepositoryList": Object {
+          "Ref": "CodeCommitRepo",
+        },
+        "S3TransitionDays": Object {
+          "Ref": "S3TransitionDays",
+        },
+        "SendAnonymousUsageData": Object {
+          "Fn::FindInMap": Array [
+            "AnonymousData",
+            "SendAnonymousUsageData",
+            "Data",
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "QueryRunner0586B77B",
+            "Arn",
+          ],
+        },
+        "SolutionId": "SO0143",
+        "UUID": Object {
+          "Fn::GetAtt": Array [
+            "SolutionHelperCreateUniqueIDAF03406A",
+            "UUID",
+          ],
+        },
+        "Version": "v1.0.0",
+      },
+      "Type": "Custom::SendAnonymousUsageData",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "SolutionHelper4825923B": Object {
+      "DependsOn": Array [
+        "SolutionHelperHelperRole142364AA",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3BucketDF1CB2E9",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3VersionKey5B4A7AD0",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3VersionKey5B4A7AD0",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Description": "AWS DevOps Monitoring Dashboard Solution - This function generates UUID for each deployment.",
+        "Handler": "lambda_function.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "SolutionHelperHelperRole142364AA",
+            "Arn",
+          ],
+        },
+        "Runtime": "python3.8",
+        "Timeout": 300,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "SolutionHelperCreateUniqueIDAF03406A": Object {
+      "DeletionPolicy": "Delete",
+      "Properties": Object {
+        "Resource": "UUID",
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "SolutionHelper4825923B",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::CreateUUID",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "SolutionHelperHelperRole142364AA": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/*",
+                      ],
+                    ],
+                  },
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "CloudWatchLogsPolicy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "queryRunnerLambdaRoleB4DE757D": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/*",
+                      ],
+                    ],
+                  },
+                  "Sid": "CreateCWLogs",
+                },
+                Object {
+                  "Action": Array [
+                    "s3:GetBucketLocation",
+                    "s3:GetObject",
+                    "s3:ListBucket",
+                    "s3:ListBucketMultipartUploads",
+                    "s3:ListMultipartUploadParts",
+                    "s3:AbortMultipartUpload",
+                    "s3:CreateBucket",
+                    "s3:PutObject",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Array [
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::",
+                          Object {
+                            "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          },
+                          "/athena_results/*",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::",
+                          Object {
+                            "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          },
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::",
+                          Object {
+                            "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          },
+                          "/*",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::aws-athena-query-results-*",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::query-results-custom-bucket",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":s3:::query-results-custom-bucket/*",
+                        ],
+                      ],
+                    },
+                  ],
+                  "Sid": "s3AccessPSwAthena",
+                },
+                Object {
+                  "Action": "athena:StartQueryExecution",
+                  "Effect": "Allow",
+                  "Resource": Array [
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":athena:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":workgroup/AWSDevOpsDashboard*",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":athena:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":workgroup/primary",
+                        ],
+                      ],
+                    },
+                  ],
+                  "Sid": "AthenaQueryExecutionPS",
+                },
+                Object {
+                  "Action": Array [
+                    "glue:GetTable",
+                    "glue:GetPartitions",
+                    "glue:GetDatabase",
+                    "glue:CreateTable",
+                    "glue:UpdateTable",
+                    "glue:BatchCreatePartition",
+                    "glue:DeleteTable",
+                    "glue:DeletePartition",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Array [
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":catalog",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":database/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                          },
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":table/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                          },
+                          "/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
+                          },
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":table/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                          },
+                          "/*",
+                        ],
+                      ],
+                    },
+                  ],
+                  "Sid": "glueAccessPS",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "queryRunnerLambdaPolicy-",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "SolutionHelperCreateUniqueIDAF03406A",
+                      "UUID",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+}
+`;

@@ -1,0 +1,6 @@
+{
+  "app": "npx ts-node bin/aws_devops_monitoring_dashboard.ts",
+  "context": {
+    "quicksight_source_template_arn": "arn:aws:quicksight:us-east-1:%%TEMPLATE_ACCOUNT_ID%%:template/%%DIST_QUICKSIGHT_NAMESPACE%%_%%SOLUTION_NAME%%_%%DASHED_VERSION%%"
+  }
+}

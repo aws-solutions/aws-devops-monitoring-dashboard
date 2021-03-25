@@ -1,0 +1,52 @@
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License").
+You may not use this file except in compliance with the License.
+A copy of the License is located at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+or in the "license" file accompanying this file. This file is distributed
+on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+express or implied. See the License for the specific language governing
+permissions and lithe Massachusetts Institute of Technology (MIT) licenseations under the License.
+
+**********************
+THIRD PARTY COMPONENTS
+**********************
+This software includes third party software subject to the following copyrights:
+
+AWS SDK under the Apache License Version 2.0
+AWS SDK Mock under the Apache License Version 2.0
+AWS CDK under the Apache License Version 2.0
+AWS Solutions Constructs Library under the Apache License Version 2.0
+pytest under the Massachusetts Institute of Technology (MIT) license
+pytest-cov under the Massachusetts Institute of Technology (MIT) license
+pytest-mock under the Massachusetts Institute of Technology (MIT) license
+pytest-env under the Massachusetts Institute of Technology (MIT) license
+request under the Apache License Version 2.0
+coverage under the Apache License Version 2.0
+crhelper under the Apache License Version 2.0
+PyYAML under the Massachusetts Institute of Technology (MIT) license
+tenacity under the Apache License Version 2.0
+@types/jest under the Massachusetts Institute of Technology (MIT) license
+@types/node under the Massachusetts Institute of Technology (MIT) license
+jest under the Massachusetts Institute of Technology (MIT) license
+ts-node under the Massachusetts Institute of Technology (MIT) license
+ts-jest under the Massachusetts Institute of Technology (MIT) license
+typescript under the Apache License Version 2.0
+moto under the Apache License Version 2.0
+uuid under the Massachusetts Institute of Technology (MIT) license
+url under the Massachusetts Institute of Technology (MIT) license
+https under the Massachusetts Institute of Technology (MIT) license
+async under the Massachusetts Institute of Technology (MIT) license
+moment under the Massachusetts Institute of Technology (MIT) license
+axios under the Massachusetts Institute of Technology (MIT) license
+axios-mock-adapter under the Massachusetts Institute of Technology (MIT) license
+chai under the Massachusetts Institute of Technology (MIT) license
+mocha under the Massachusetts Institute of Technology (MIT) license
+sinon under the BSD license
+sinon-chai under the WTFPL and BSD dual license
+npm-run-all under the Massachusetts Institute of Technology (MIT) license
+nyc under the Internet Systems Consortium (ISC) license
+source-map-support under the Massachusetts Institute of Technology (MIT) license

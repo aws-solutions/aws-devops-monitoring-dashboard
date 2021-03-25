@@ -1,0 +1,15 @@
+# exclude python 3rd party modules
+*.dist-info/
+bin
+certifi/
+chardet/
+crhelper/
+idna/
+requests/
+six.py
+tenacity/
+## crhelper tests directory
+tests/
+urllib3/
+_yaml.cpython-*.so
+yaml

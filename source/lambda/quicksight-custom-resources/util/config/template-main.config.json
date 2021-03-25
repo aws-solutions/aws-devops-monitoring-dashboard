@@ -1,0 +1,21 @@
+{
+    "SourceEntity": {
+        "SourceAnalysis": {
+            "DataSetReferences": [
+                {
+                    "DataSetPlaceholder": "recovery-time-detail",
+                    "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/recovery-time"
+                },
+                {
+                    "DataSetPlaceholder": "code-change-activity",
+                    "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/code-change-activity"
+                },
+                {
+                    "DataSetPlaceholder": "code-deployment-detail",
+                    "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/code-deployment"
+                }
+            ],
+            "Arn": "{self.source_analysis_arn}"
+        }
+    }
+}

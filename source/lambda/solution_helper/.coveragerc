@@ -1,0 +1,17 @@
+[run]
+omit =
+    images/*
+    tests/*
+    .venv-*/*
+    test/*
+    */__init__.py
+    setup.py
+    bin
+    cert*
+    crhelper*
+    idna*
+    requests*
+    urllib*
+    chardet*
+source =
+    .

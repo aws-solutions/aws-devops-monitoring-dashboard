@@ -1,0 +1,93 @@
+{
+    "PhysicalTableMap": {
+        "3847a7fb-32e8-4210-bcce-07b7370032c8": {
+            "RelationalTable": {
+                "DataSourceArn": "{self.data_source.arn}",
+                "Schema": "aws_devops_metrics_db_so0143",
+                "Name": "code_deployment_detail_view",
+                "InputColumns": [
+                    {
+                        "Name": "account",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "time",
+                        "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "region",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "deployment_id",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "application",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "state",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "created_at",
+                        "Type": "DATETIME"
+                    }
+                ]
+            }
+        }
+    },
+    "LogicalTableMap": {
+        "3847a7fb-32e8-4210-bcce-07b7370032c8": {
+            "Alias": "code_deployment_detail_view",
+            "DataTransforms": [
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "account",
+                        "NewColumnName": "Account"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "time",
+                        "NewColumnName": "Time"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "region",
+                        "NewColumnName": "Region"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "deployment_id",
+                        "NewColumnName": "Deployment Id"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "application",
+                        "NewColumnName": "Application"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "state",
+                        "NewColumnName": "State"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "created_at",
+                        "NewColumnName": "Created At"
+                    }
+                }
+            ],
+            "Source": {
+                "PhysicalTableId": "3847a7fb-32e8-4210-bcce-07b7370032c8"
+            }
+        }
+    }
+}
