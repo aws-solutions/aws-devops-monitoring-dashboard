@@ -1,0 +1,163 @@
+{
+    "PhysicalTableMap": {
+        "d73d53a4-31d4-4c55-b82a-bf00909e0409": {
+            "RelationalTable": {
+                "DataSourceArn": "{self.data_source.arn}",
+                "Schema": "aws_devops_metrics_db_so0143",
+                "Name": "code_build_detail_view",
+                "InputColumns": [
+                    {
+                        "Name": "account",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "region",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "namespace",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "metric_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "timestamp",
+                        "Type": "INTEGER"
+                    },
+                    {
+                        "Name": "project_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "build_id",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "build_number",
+                        "Type": "INTEGER"
+                    },
+                    {
+                        "Name": "count",
+                        "Type": "DECIMAL"
+                    },
+                    {
+                        "Name": "sum",
+                        "Type": "DECIMAL"
+                    },
+                    {
+                        "Name": "max",
+                        "Type": "DECIMAL"
+                    },
+                    {
+                        "Name": "min",
+                        "Type": "DECIMAL"
+                    },
+                    {
+                        "Name": "unit",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "created_at",
+                        "Type": "DATETIME"
+                    }
+                ]
+            }
+        }
+    },
+    "LogicalTableMap": {
+        "d73d53a4-31d4-4c55-b82a-bf00909e0409": {
+            "Alias": "code_build_detail_view",
+            "DataTransforms": [
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "account",
+                        "NewColumnName": "Account"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "region",
+                        "NewColumnName": "Region"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "namespace",
+                        "NewColumnName": "Source"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "metric_name",
+                        "NewColumnName": "Metric Name"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "timestamp",
+                        "NewColumnName": "Time"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "project_name",
+                        "NewColumnName": "Project Name"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "build_id",
+                        "NewColumnName": "Build Id"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "build_number",
+                        "NewColumnName": "Build Number"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "count",
+                        "NewColumnName": "Count"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "sum",
+                        "NewColumnName": "Sum"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "max",
+                        "NewColumnName": "Max"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "min",
+                        "NewColumnName": "Min"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "unit",
+                        "NewColumnName": "Unit"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "created_at",
+                        "NewColumnName": "Created At"
+                    }
+                }
+            ],
+            "Source": {
+                "PhysicalTableId": "d73d53a4-31d4-4c55-b82a-bf00909e0409"
+            }
+        }
+    }
+}

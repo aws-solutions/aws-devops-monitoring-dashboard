@@ -1,0 +1,155 @@
+{
+    "PhysicalTableMap": {
+        "87d25595-8cd8-4375-a3fe-9e4407a834e5": {
+            "RelationalTable": {
+                "DataSourceArn": "{self.data_source.arn}",
+                "Schema": "aws_devops_metrics_db_so0143",
+                "Name": "code_pipeline_detail_view",
+                "InputColumns": [
+                    {
+                        "Name": "account",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "time",
+                        "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "region",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "pipeline_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "execution_id",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "stage",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "action",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "state",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "external_execution_id",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "action_category",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "action_owner",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "action_provider",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "created_at",
+                        "Type": "DATETIME"
+                    }
+                ]
+
+            }
+        }
+    },
+    "LogicalTableMap": {
+        "87d25595-8cd8-4375-a3fe-9e4407a834e5": {
+            "Alias": "code_pipeline_detail_view",
+            "DataTransforms": [
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "account",
+                        "NewColumnName": "Account"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "time",
+                        "NewColumnName": "Time"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "region",
+                        "NewColumnName": "Region"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "pipeline_name",
+                        "NewColumnName": "Pipeline Name"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "execution_id",
+                        "NewColumnName": "Execution Id"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "stage",
+                        "NewColumnName": "Pipeline Stage Name"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "action",
+                        "NewColumnName": "Pipeline action"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "state",
+                        "NewColumnName": "Pipeline action state"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "external_execution_id",
+                        "NewColumnName": "External Execution Id"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "action_category",
+                        "NewColumnName": "Pipeline Action Stage Category"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "action_owner",
+                        "NewColumnName": "Pipeline Action Stage Owner"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "action_provider",
+                        "NewColumnName": "Pipeline Action Stage Provider"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "created_at",
+                        "NewColumnName": "Created At"
+                    }
+                }
+            ],
+            "Source": {
+                "PhysicalTableId": "87d25595-8cd8-4375-a3fe-9e4407a834e5"
+            }
+        }
+
+    }
+}
