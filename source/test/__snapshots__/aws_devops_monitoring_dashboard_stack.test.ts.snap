@@ -36,6 +36,11 @@ Object {
         "MetricsURL": "https://metrics.awssolutionsbuilder.com/generic",
       },
     },
+    "UserAgentExtra": Object {
+      "UserAgentExtra": Object {
+        "Key": "AwsSolution/SO0143/v1.0.0",
+      },
+    },
   },
   "Metadata": Object {
     "AWS::CloudFormation::Interface": Object {
@@ -145,64 +150,64 @@ Object {
     },
   },
   "Parameters": Object {
-    "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cArtifactHashD445E6AF": Object {
-      "Description": "Artifact hash for asset \\"73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35c\\"",
+    "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38ArtifactHashEAA3D63A": Object {
+      "Description": "Artifact hash for asset \\"0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38\\"",
       "Type": "String",
     },
-    "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3Bucket9412E24C": Object {
-      "Description": "S3 bucket for asset \\"73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35c\\"",
+    "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3BucketA7BA65BE": Object {
+      "Description": "S3 bucket for asset \\"0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38\\"",
       "Type": "String",
     },
-    "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3VersionKeyC6233AA0": Object {
-      "Description": "S3 key for asset version \\"73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35c\\"",
+    "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3VersionKey547BF2B2": Object {
+      "Description": "S3 key for asset version \\"0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38\\"",
       "Type": "String",
     },
-    "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbArtifactHash22028B3B": Object {
-      "Description": "Artifact hash for asset \\"79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422db\\"",
+    "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223ArtifactHashE31BF66A": Object {
+      "Description": "Artifact hash for asset \\"3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223\\"",
       "Type": "String",
     },
-    "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3Bucket90773FB9": Object {
-      "Description": "S3 bucket for asset \\"79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422db\\"",
+    "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3Bucket69311B5F": Object {
+      "Description": "S3 bucket for asset \\"3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223\\"",
       "Type": "String",
     },
-    "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3VersionKey9F4DEDB0": Object {
-      "Description": "S3 key for asset version \\"79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422db\\"",
+    "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3VersionKey9E78D83D": Object {
+      "Description": "S3 key for asset version \\"3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223\\"",
       "Type": "String",
     },
-    "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8ArtifactHash3AACE34E": Object {
-      "Description": "Artifact hash for asset \\"a8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8\\"",
+    "AssetParameters7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918eArtifactHashF85A995C": Object {
+      "Description": "Artifact hash for asset \\"7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918e\\"",
       "Type": "String",
     },
-    "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3Bucket9DDC127D": Object {
-      "Description": "S3 bucket for asset \\"a8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8\\"",
+    "AssetParameters7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918eS3Bucket033A7AA3": Object {
+      "Description": "S3 bucket for asset \\"7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918e\\"",
       "Type": "String",
     },
-    "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7": Object {
-      "Description": "S3 key for asset version \\"a8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8\\"",
+    "AssetParameters7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918eS3VersionKeyEF358541": Object {
+      "Description": "S3 key for asset version \\"7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918e\\"",
       "Type": "String",
     },
-    "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0ArtifactHashAE540AE7": Object {
-      "Description": "Artifact hash for asset \\"cdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0\\"",
+    "AssetParameterse48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69ArtifactHashF2AC9CBB": Object {
+      "Description": "Artifact hash for asset \\"e48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69\\"",
       "Type": "String",
     },
-    "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3BucketDF1CB2E9": Object {
-      "Description": "S3 bucket for asset \\"cdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0\\"",
+    "AssetParameterse48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69S3Bucket4817A05F": Object {
+      "Description": "S3 bucket for asset \\"e48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69\\"",
       "Type": "String",
     },
-    "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3VersionKey5B4A7AD0": Object {
-      "Description": "S3 key for asset version \\"cdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0\\"",
+    "AssetParameterse48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69S3VersionKey0D287340": Object {
+      "Description": "S3 key for asset version \\"e48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69\\"",
       "Type": "String",
     },
-    "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241ArtifactHashD5F974C0": Object {
-      "Description": "Artifact hash for asset \\"ff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241\\"",
+    "AssetParameterse7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bcArtifactHash9ADFFA73": Object {
+      "Description": "Artifact hash for asset \\"e7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bc\\"",
       "Type": "String",
     },
-    "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3Bucket9F6A0D53": Object {
-      "Description": "S3 bucket for asset \\"ff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241\\"",
+    "AssetParameterse7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bcS3Bucket61A840C8": Object {
+      "Description": "S3 bucket for asset \\"e7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bc\\"",
       "Type": "String",
     },
-    "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3VersionKey425AB463": Object {
-      "Description": "S3 key for asset version \\"ff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241\\"",
+    "AssetParameterse7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bcS3VersionKey5C6583F1": Object {
+      "Description": "S3 key for asset version \\"e7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bc\\"",
       "Type": "String",
     },
     "CodeCommitRepo": Object {
@@ -258,7 +263,15 @@ Object {
           "rules_to_suppress": Array [
             Object {
               "id": "W58",
-              "reason": "Lambda functions has the required permission to write CloudWatch Logs. It uses custom policy instead of arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole with more tighter permissions.",
+              "reason": "Lambda functions has the required permission to write CloudWatch Logs. It uses custom policy instead of arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole with tighter permissions.",
+            },
+            Object {
+              "id": "W89",
+              "reason": "This is not a rule for the general case, just for specific use cases/industries",
+            },
+            Object {
+              "id": "W92",
+              "reason": "Impossible for us to define the correct concurrency for clients",
             },
           ],
         },
@@ -266,7 +279,7 @@ Object {
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3Bucket9DDC127D",
+            "Ref": "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3Bucket69311B5F",
           },
           "S3Key": Object {
             "Fn::Join": Array [
@@ -279,7 +292,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                          "Ref": "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3VersionKey9E78D83D",
                         },
                       ],
                     },
@@ -292,7 +305,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                          "Ref": "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3VersionKey9E78D83D",
                         },
                       ],
                     },
@@ -319,6 +332,9 @@ Object {
                   },
                 ],
               ],
+            },
+            "CodeBuildMetricsTableName": Object {
+              "Ref": "GlueAthenaDatabaseCodeBuildMetricsGlueTableE0ED7BB0",
             },
             "LOG_LEVEL": "INFO",
             "MetricsDBName": Object {
@@ -351,6 +367,13 @@ Object {
                 "UUID",
               ],
             },
+            "UserAgentExtra": Object {
+              "Fn::FindInMap": Array [
+                "UserAgentExtra",
+                "UserAgentExtra",
+                "Key",
+              ],
+            },
             "Version": "v1.0.0",
           },
         },
@@ -361,7 +384,7 @@ Object {
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs14.x",
         "Timeout": 300,
         "TracingConfig": Object {
           "Mode": "Active",
@@ -369,7 +392,7 @@ Object {
       },
       "Type": "AWS::Lambda::Function",
     },
-    "AddAthenaPartitionLambdaFunctionLambdaInvokePermission6F449EAA": Object {
+    "AddAthenaPartitionLambdaFunctionAwsEventsLambdaInvokePermission19FEC65E3": Object {
       "Properties": Object {
         "Action": "lambda:InvokeFunction",
         "FunctionName": Object {
@@ -836,6 +859,612 @@ Object {
       },
       "Type": "AWS::Events::Rule",
     },
+    "CodeBuildEventsCloudWatchMetricStreamB26149A1": Object {
+      "Properties": Object {
+        "FirehoseArn": Object {
+          "Fn::GetAtt": Array [
+            "CodeBuildEventsCodeBuildKinesisFirehose48AE2746",
+            "Arn",
+          ],
+        },
+        "IncludeFilters": Array [
+          Object {
+            "Namespace": "AWS/CodeBuild",
+          },
+        ],
+        "OutputFormat": "json",
+        "RoleArn": Object {
+          "Fn::GetAtt": Array [
+            "CodeBuildEventsCloudWatchMetricStreamRole047DA47A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::CloudWatch::MetricStream",
+    },
+    "CodeBuildEventsCloudWatchMetricStreamRole047DA47A": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "streams.metrics.cloudwatch.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "firehose:PutRecord",
+                    "firehose:PutRecordBatch",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::GetAtt": Array [
+                      "CodeBuildEventsCodeBuildKinesisFirehose48AE2746",
+                      "Arn",
+                    ],
+                  },
+                  "Sid": "FirehosePutRecordPS",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "FirehosePutRecord-",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "SolutionHelperCreateUniqueIDAF03406A",
+                      "UUID",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeBuildEventsCodeBuildEventParserBA00AD10": Object {
+      "DependsOn": Array [
+        "CodeBuildEventsCodeBuildEventParserLambdaRole6077AACD",
+      ],
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W89",
+              "reason": "There is no need to run this lambda in a VPC",
+            },
+            Object {
+              "id": "W92",
+              "reason": "There is no need for Reserved Concurrency",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3BucketA7BA65BE",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3VersionKey547BF2B2",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3VersionKey547BF2B2",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Description": "AWS DevOps Monitoring Dashboard Solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
+        "Environment": Object {
+          "Variables": Object {
+            "LOG_LEVEL": "INFO",
+            "UserAgentExtra": Object {
+              "Fn::FindInMap": Array [
+                "UserAgentExtra",
+                "UserAgentExtra",
+                "Key",
+              ],
+            },
+          },
+        },
+        "Handler": "codebuild_index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "CodeBuildEventsCodeBuildEventParserLambdaRole6077AACD",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CodeBuildEventsCodeBuildEventParserLambdaRole6077AACD": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/*",
+                      ],
+                    ],
+                  },
+                  "Sid": "CreateCWLogs",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "CodeBuildEventParserLambdaPolicy-",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "SolutionHelperCreateUniqueIDAF03406A",
+                      "UUID",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeBuildEventsCodeBuildKinesisFirehose48AE2746": Object {
+      "DependsOn": Array [
+        "CodeBuildEventsCodeBuildKinesisFirehosePolicy928AD09F",
+      ],
+      "Properties": Object {
+        "DeliveryStreamEncryptionConfigurationInput": Object {
+          "KeyType": "AWS_OWNED_CMK",
+        },
+        "ExtendedS3DestinationConfiguration": Object {
+          "BucketARN": Object {
+            "Fn::GetAtt": Array [
+              "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+              "Arn",
+            ],
+          },
+          "BufferingHints": Object {
+            "IntervalInSeconds": 300,
+            "SizeInMBs": 64,
+          },
+          "CloudWatchLoggingOptions": Object {
+            "Enabled": true,
+            "LogGroupName": Object {
+              "Ref": "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5",
+            },
+            "LogStreamName": Object {
+              "Ref": "CodeBuildEventsCodeBuildfirehoseloggroupfirehoselogstreamEEA2FA4F",
+            },
+          },
+          "CompressionFormat": "UNCOMPRESSED",
+          "DataFormatConversionConfiguration": Object {
+            "Enabled": true,
+            "InputFormatConfiguration": Object {
+              "Deserializer": Object {
+                "OpenXJsonSerDe": Object {
+                  "CaseInsensitive": true,
+                },
+              },
+            },
+            "OutputFormatConfiguration": Object {
+              "Serializer": Object {
+                "ParquetSerDe": Object {
+                  "Compression": "SNAPPY",
+                },
+              },
+            },
+            "SchemaConfiguration": Object {
+              "DatabaseName": Object {
+                "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+              },
+              "RoleARN": Object {
+                "Fn::GetAtt": Array [
+                  "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC",
+                  "Arn",
+                ],
+              },
+              "TableName": Object {
+                "Ref": "GlueAthenaDatabaseCodeBuildMetricsGlueTableE0ED7BB0",
+              },
+            },
+          },
+          "EncryptionConfiguration": Object {
+            "KMSEncryptionConfig": Object {
+              "AWSKMSKeyARN": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":kms:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":alias/aws/s3",
+                  ],
+                ],
+              },
+            },
+          },
+          "ErrorOutputPrefix": "CodeBuildEventsProcessingErrorlogs/result=!{firehose:error-output-type}/created_at=!{timestamp:yyyy-MM-dd}/",
+          "Prefix": "CodeBuildEvents/created_at=!{timestamp:yyyy-MM-dd}/",
+          "ProcessingConfiguration": Object {
+            "Enabled": true,
+            "Processors": Array [
+              Object {
+                "Parameters": Array [
+                  Object {
+                    "ParameterName": "LambdaArn",
+                    "ParameterValue": Object {
+                      "Fn::GetAtt": Array [
+                        "CodeBuildEventsCodeBuildEventParserBA00AD10",
+                        "Arn",
+                      ],
+                    },
+                  },
+                ],
+                "Type": "Lambda",
+              },
+            ],
+          },
+          "RoleARN": Object {
+            "Fn::GetAtt": Array [
+              "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC",
+              "Arn",
+            ],
+          },
+        },
+      },
+      "Type": "AWS::KinesisFirehose::DeliveryStream",
+    },
+    "CodeBuildEventsCodeBuildKinesisFirehosePolicy928AD09F": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:AbortMultipartUpload",
+                "s3:GetBucketLocation",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:ListBucketMultipartUploads",
+                "s3:PutObject",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
+              "Action": "logs:PutLogEvents",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    Object {
+                      "Ref": "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5",
+                    },
+                    ":log-stream:",
+                    Object {
+                      "Ref": "CodeBuildEventsCodeBuildfirehoseloggroupfirehoselogstreamEEA2FA4F",
+                    },
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "CodeBuildEventsCodeBuildEventParserBA00AD10",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "CodeBuildEventsCodeBuildEventParserBA00AD10",
+                          "Arn",
+                        ],
+                      },
+                      ":$LATEST",
+                    ],
+                  ],
+                },
+              ],
+              "Sid": "InvokeLambda",
+            },
+            Object {
+              "Action": Array [
+                "glue:GetTable",
+                "glue:GetTableVersion",
+                "glue:GetTableVersions",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":catalog",
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":database/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":table/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                      },
+                      "/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseCodeBuildMetricsGlueTableE0ED7BB0",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":table/",
+                      Object {
+                        "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+              "Sid": "glueAccessPSForCodeBuildEventsFirehose",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CodeBuildEventsCodeBuildKinesisFirehosePolicy928AD09F",
+        "Roles": Array [
+          Object {
+            "Ref": "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "firehose.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5": Object {
+      "DeletionPolicy": "Retain",
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W84",
+              "reason": "The CloudWatch log group does not need to be encrypted.",
+            },
+            Object {
+              "id": "W86",
+              "reason": "The log data in CloudWatch log group does not need to be expired.",
+            },
+          ],
+        },
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodeBuildEventsCodeBuildfirehoseloggroupfirehoselogstreamEEA2FA4F": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Ref": "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5",
+        },
+      },
+      "Type": "AWS::Logs::LogStream",
+      "UpdateReplacePolicy": "Retain",
+    },
     "CodeCommitEventsRule6F25533B": Object {
       "Properties": Object {
         "Description": "AWS DevOps Monitoring Dashboard Solution - Event rule for AWS CodeCommit",
@@ -926,6 +1555,7 @@ Object {
     "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8": Object {
       "DependsOn": Array [
         "CodeCommitKinesisFirehoseToS3KinesisFirehosePolicy7335C74C",
+        "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
       ],
       "Properties": Object {
         "DeliveryStreamEncryptionConfigurationInput": Object {
@@ -981,6 +1611,7 @@ Object {
               "TableName": Object {
                 "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueTable4661F2E1",
               },
+              "VersionId": "LATEST",
             },
           },
           "EncryptionConfiguration": Object {
@@ -1112,12 +1743,28 @@ Object {
                 "lambda:GetFunctionConfiguration",
               ],
               "Effect": "Allow",
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "EventParserE8B3240E",
-                  "Arn",
-                ],
-              },
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "EventParserE8B3240E",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "EventParserE8B3240E",
+                          "Arn",
+                        ],
+                      },
+                      ":$LATEST",
+                    ],
+                  ],
+                },
+              ],
               "Sid": "InvokeLambda",
             },
             Object {
@@ -1497,6 +2144,38 @@ Object {
       },
       "Type": "AWS::Events::Rule",
     },
+    "CodePipelineEventsCodePipelineEventsRuleB5CD4C2A": Object {
+      "Properties": Object {
+        "Description": "AWS DevOps Monitoring Dashboard Solution - Event rule for AWS CodePipeline",
+        "EventPattern": Object {
+          "detail-type": Array [
+            "CodePipeline Action Execution State Change",
+          ],
+          "source": Array [
+            "aws.codepipeline",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitKinesisFirehoseToS3KinesisFirehoseD3B823A8",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "CodeCommitEventsRuleInvokeKinesisFirehoseRole1CA10D3E",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
     "CustomResourceQueryRunner": Object {
       "DeletionPolicy": "Delete",
       "Properties": Object {
@@ -1513,6 +2192,9 @@ Object {
               },
             ],
           ],
+        },
+        "CodeBuildMetricsTableName": Object {
+          "Ref": "GlueAthenaDatabaseCodeBuildMetricsGlueTableE0ED7BB0",
         },
         "DataDuration": Object {
           "Ref": "DataDuration",
@@ -1540,10 +2222,24 @@ Object {
       "DependsOn": Array [
         "EventParserLambdaRole3A607F90",
       ],
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W89",
+              "reason": "There is no need to run this lambda in a VPC",
+            },
+            Object {
+              "id": "W92",
+              "reason": "There is no need for Reserved Concurrency",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3Bucket9F6A0D53",
+            "Ref": "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3BucketA7BA65BE",
           },
           "S3Key": Object {
             "Fn::Join": Array [
@@ -1556,7 +2252,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3VersionKey425AB463",
+                          "Ref": "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3VersionKey547BF2B2",
                         },
                       ],
                     },
@@ -1569,7 +2265,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParametersff6df66f338d43b120da4333514cd2e36f8d79a4138d45c93c4bff4bf8dd7241S3VersionKey425AB463",
+                          "Ref": "AssetParameters0420608351f59b43f71f5252ed97a0a9fcf5558acba94afa69e19ee7842b8a38S3VersionKey547BF2B2",
                         },
                       ],
                     },
@@ -1592,7 +2288,7 @@ Object {
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs14.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -1687,6 +2383,9 @@ Object {
         "RecursiveDeleteOption": true,
         "State": "ENABLED",
         "WorkGroupConfiguration": Object {
+          "EngineVersion": Object {
+            "SelectedEngineVersion": "Athena engine version 2",
+          },
           "PublishCloudWatchMetricsEnabled": true,
           "ResultConfiguration": Object {
             "EncryptionConfiguration": Object {
@@ -1780,7 +2479,7 @@ Object {
               Object {
                 "Comment": "struct<nested_column:datatype>",
                 "Name": "detail",
-                "Type": "struct<eventName:string,repositoryName:string,branchName:string,authorName:string,commitId:string,canaryAlarmName:string,canaryAlarmAppName:string,canaryAlarmRepoName:string,canaryAlarmCurrState:string,canaryAlarmPrevState:string,canaryAlarmCurrStateTimeStamp:timestamp,canaryAlarmPrevStateTimeStamp:timestamp,recoveryDurationMinutes:int,deploymentState:string,deploymentId:string,deploymentApplication:string>",
+                "Type": "struct<eventName:string,repositoryName:string,branchName:string,authorName:string,commitId:string,canaryAlarmName:string,canaryAlarmAppName:string,canaryAlarmRepoName:string,canaryAlarmCurrState:string,canaryAlarmPrevState:string,canaryAlarmCurrStateTimeStamp:timestamp,canaryAlarmPrevStateTimeStamp:timestamp,recoveryDurationMinutes:int,deploymentState:string,deploymentId:string,deploymentApplication:string,pipelineName:string,executionId:string,stage:string,action:string,state:string,externalExecutionId:string,actionCategory:string,actionOwner:string,actionProvider:string>",
               },
             ],
             "Compressed": false,
@@ -1808,8 +2507,96 @@ Object {
       },
       "Type": "AWS::Glue::Table",
     },
+    "GlueAthenaDatabaseCodeBuildMetricsGlueTableE0ED7BB0": Object {
+      "Properties": Object {
+        "CatalogId": Object {
+          "Ref": "AWS::AccountId",
+        },
+        "DatabaseName": Object {
+          "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+        },
+        "TableInput": Object {
+          "Description": "AWS DevOps Monitoring Dashboard Solution - AWS CodeBuild Metrics Glue table",
+          "Name": "aws_codebuild_metrics_table",
+          "Parameters": Object {
+            "EXTERNAL": "TRUE",
+            "classification": "parquet",
+            "has_encrypted_data": false,
+          },
+          "PartitionKeys": Array [
+            Object {
+              "Name": "created_at",
+              "Type": "timestamp",
+            },
+          ],
+          "StorageDescriptor": Object {
+            "Columns": Array [
+              Object {
+                "Name": "metric_stream_name",
+                "Type": "string",
+              },
+              Object {
+                "Name": "account_id",
+                "Type": "string",
+              },
+              Object {
+                "Name": "region",
+                "Type": "string",
+              },
+              Object {
+                "Name": "namespace",
+                "Type": "string",
+              },
+              Object {
+                "Name": "metric_name",
+                "Type": "string",
+              },
+              Object {
+                "Name": "dimensions",
+                "Type": "struct<ProjectName:string,BuildId:string,BuildNumber:int>",
+              },
+              Object {
+                "Name": "timestamp",
+                "Type": "bigint",
+              },
+              Object {
+                "Comment": "struct<nested_column:datatype>",
+                "Name": "value",
+                "Type": "struct<count:double,sum:double,max:double,min:double>",
+              },
+              Object {
+                "Name": "unit",
+                "Type": "string",
+              },
+            ],
+            "Compressed": false,
+            "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+            "Location": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "s3://",
+                  Object {
+                    "Ref": "CodeCommitKinesisFirehoseToS3S3BucketDD1D151C",
+                  },
+                  "/CodeBuildEvents/",
+                ],
+              ],
+            },
+            "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+            "SerdeInfo": Object {
+              "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+            },
+            "StoredAsSubDirectories": true,
+          },
+          "TableType": "EXTERNAL_TABLE",
+        },
+      },
+      "Type": "AWS::Glue::Table",
+    },
     "QSDashboardNestedStackQSDashboardNestedStackResourceF5171359": Object {
       "Condition": "QuickSightCondition",
+      "DeletionPolicy": "Delete",
       "Description": "(SO0143)AWS DevOps Monitoring Dashboard - Create QuickSight Template. Version: v1.0.0",
       "Metadata": Object {
         "nestedStackFileName": "DevopsDashboardStackQSDashboard0560D204.nested.template",
@@ -1839,11 +2626,11 @@ Object {
           "SolutionID": "SO0143",
           "SolutionName": "AWS DevOps Monitoring Dashboard",
           "SolutionVersion": "v1.0.0",
-          "referencetoDevopsDashboardStackAssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3BucketF7AEA35FRef": Object {
-            "Ref": "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3Bucket90773FB9",
+          "referencetoDevopsDashboardStackAssetParameters7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918eS3Bucket32E32363Ref": Object {
+            "Ref": "AssetParameters7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918eS3Bucket033A7AA3",
           },
-          "referencetoDevopsDashboardStackAssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3VersionKeyBD39948CRef": Object {
-            "Ref": "AssetParameters79f02fcedde4e0c55b682119877dc63c86e5cf09aa491e89d911dca8df5422dbS3VersionKey9F4DEDB0",
+          "referencetoDevopsDashboardStackAssetParameters7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918eS3VersionKeyA759E5C2Ref": Object {
+            "Ref": "AssetParameters7bf18c813b9fa5c43cf4c79233cb2717f5ac439416421248a478cf496987918eS3VersionKeyEF358541",
           },
         },
         "TemplateURL": Object {
@@ -1860,7 +2647,7 @@ Object {
               },
               "/",
               Object {
-                "Ref": "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3Bucket9412E24C",
+                "Ref": "AssetParameterse48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69S3Bucket4817A05F",
               },
               "/",
               Object {
@@ -1870,7 +2657,7 @@ Object {
                     "Fn::Split": Array [
                       "||",
                       Object {
-                        "Ref": "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3VersionKeyC6233AA0",
+                        "Ref": "AssetParameterse48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69S3VersionKey0D287340",
                       },
                     ],
                   },
@@ -1883,7 +2670,7 @@ Object {
                     "Fn::Split": Array [
                       "||",
                       Object {
-                        "Ref": "AssetParameters73015b3765b33a801667437602f025a602ccfcd9154f534a7828ffbac89ef35cS3VersionKeyC6233AA0",
+                        "Ref": "AssetParameterse48e2824c8d79b81cdceddc3ad39d512662bcbae600bf34eb02b0291da069d69S3VersionKey0D287340",
                       },
                     ],
                   },
@@ -1894,15 +2681,30 @@ Object {
         },
       },
       "Type": "AWS::CloudFormation::Stack",
+      "UpdateReplacePolicy": "Delete",
     },
     "QueryRunner0586B77B": Object {
       "DependsOn": Array [
         "queryRunnerLambdaRoleB4DE757D",
       ],
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W89",
+              "reason": "There is no need to run this lambda in a VPC",
+            },
+            Object {
+              "id": "W92",
+              "reason": "There is no need for Reserved Concurrency",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3Bucket9DDC127D",
+            "Ref": "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3Bucket69311B5F",
           },
           "S3Key": Object {
             "Fn::Join": Array [
@@ -1915,7 +2717,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                          "Ref": "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3VersionKey9E78D83D",
                         },
                       ],
                     },
@@ -1928,7 +2730,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParametersa8f7ea2ffb6e23d622d182731af0dba8915c8208e346115fb8359e9b700806e8S3VersionKey659A0CC7",
+                          "Ref": "AssetParameters3a77de34c0860994032efedcf55fc6757d19034252c14b5ca0dcdaa3fbc7e223S3VersionKey9E78D83D",
                         },
                       ],
                     },
@@ -1951,7 +2753,7 @@ Object {
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs14.x",
         "Timeout": 300,
       },
       "Type": "AWS::Lambda::Function",
@@ -2011,10 +2813,24 @@ Object {
       "DependsOn": Array [
         "SolutionHelperHelperRole142364AA",
       ],
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W89",
+              "reason": "There is no need to run this lambda in a VPC",
+            },
+            Object {
+              "id": "W92",
+              "reason": "There is no need for Reserved Concurrency",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3BucketDF1CB2E9",
+            "Ref": "AssetParameterse7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bcS3Bucket61A840C8",
           },
           "S3Key": Object {
             "Fn::Join": Array [
@@ -2027,7 +2843,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3VersionKey5B4A7AD0",
+                          "Ref": "AssetParameterse7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bcS3VersionKey5C6583F1",
                         },
                       ],
                     },
@@ -2040,7 +2856,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParameterscdc3f3dab90e236454c06824a38e90e5f1ea6a354fa76dda7e19fcd283e09cc0S3VersionKey5B4A7AD0",
+                          "Ref": "AssetParameterse7a7ee6b63a3f4e95dd8f7bddad723cce00c2d2a3b2b5ea98fe40a32eca0e5bcS3VersionKey5C6583F1",
                         },
                       ],
                     },
@@ -2051,6 +2867,11 @@ Object {
           },
         },
         "Description": "AWS DevOps Monitoring Dashboard Solution - This function generates UUID for each deployment.",
+        "Environment": Object {
+          "Variables": Object {
+            "UserAgentExtra": "AwsSolution/SO0143/v1.0.0",
+          },
+        },
         "Handler": "lambda_function.handler",
         "Role": Object {
           "Fn::GetAtt": Array [
@@ -2430,6 +3251,33 @@ Object {
                             "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
                           },
                           "/*",
+                        ],
+                      ],
+                    },
+                    Object {
+                      "Fn::Join": Array [
+                        "",
+                        Array [
+                          "arn:",
+                          Object {
+                            "Ref": "AWS::Partition",
+                          },
+                          ":glue:",
+                          Object {
+                            "Ref": "AWS::Region",
+                          },
+                          ":",
+                          Object {
+                            "Ref": "AWS::AccountId",
+                          },
+                          ":table/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+                          },
+                          "/",
+                          Object {
+                            "Ref": "GlueAthenaDatabaseCodeBuildMetricsGlueTableE0ED7BB0",
+                          },
                         ],
                       ],
                     },

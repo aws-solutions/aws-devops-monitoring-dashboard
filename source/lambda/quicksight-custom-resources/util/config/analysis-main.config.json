@@ -13,7 +13,16 @@
                 {
                     "DataSetPlaceholder": "code-deployment-detail",
                     "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/code-deployment"
+                },
+                {
+                    "DataSetPlaceholder": "code-pipeline-detail",
+                    "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/code-pipeline"
+                },
+                {
+                    "DataSetPlaceholder": "code-build-detail",
+                    "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/code-build"
                 }
+
             ],
             "Arn": "{self.source_template_arn}"
         }

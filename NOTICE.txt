@@ -24,7 +24,7 @@ pytest under the Massachusetts Institute of Technology (MIT) license
 pytest-cov under the Massachusetts Institute of Technology (MIT) license
 pytest-mock under the Massachusetts Institute of Technology (MIT) license
 pytest-env under the Massachusetts Institute of Technology (MIT) license
-request under the Apache License Version 2.0
+requests under the Apache License Version 2.0
 coverage under the Apache License Version 2.0
 crhelper under the Apache License Version 2.0
 PyYAML under the Massachusetts Institute of Technology (MIT) license
@@ -40,7 +40,6 @@ uuid under the Massachusetts Institute of Technology (MIT) license
 url under the Massachusetts Institute of Technology (MIT) license
 https under the Massachusetts Institute of Technology (MIT) license
 async under the Massachusetts Institute of Technology (MIT) license
-moment under the Massachusetts Institute of Technology (MIT) license
 axios under the Massachusetts Institute of Technology (MIT) license
 axios-mock-adapter under the Massachusetts Institute of Technology (MIT) license
 chai under the Massachusetts Institute of Technology (MIT) license
@@ -50,3 +49,5 @@ sinon-chai under the WTFPL and BSD dual license
 npm-run-all under the Massachusetts Institute of Technology (MIT) license
 nyc under the Internet Systems Consortium (ISC) license
 source-map-support under the Massachusetts Institute of Technology (MIT) license
+boto3 under the Apache License Version 2.0
+botocore under the Apache License Version 2.0

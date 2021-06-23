@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**********************************************************************************************************************
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
  *                                                                                                                    *
  *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
  *  with the License. A copy of the License is located at                                                             *
  *                                                                                                                    *
- *      http://www.apache.org/licenses/LICENSE-2.0                                                                     *
+ *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
  *                                                                                                                    *
  *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
  *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
@@ -34,7 +34,8 @@ export interface QuickSightProps {
     readonly workgroupName: string;
     readonly logLevel: string;
     readonly role: IRole;
-    readonly parentStackName: string
+    readonly parentStackName: string;
+    readonly userAgentExtra: string;
 }
 export class QuickSight extends cdk.Construct {
     private _analysisURL: string;
@@ -71,12 +72,12 @@ export class QuickSight extends cdk.Construct {
                         "quicksight:CreateDashboard",
                         "quicksight:DeleteDashboard"
                     ],
-                    resources: [ `arn:${cdk.Aws.PARTITION}:quicksight:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:*/*` ]
+                    resources: [`arn:${cdk.Aws.PARTITION}:quicksight:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:*/*`]
                 }),
                 new PolicyStatement({
                     effect: Effect.ALLOW,
-                    actions: [ "quicksight:DescribeTemplate" ],
-                    resources: [ props.sourceTemplateArn ]
+                    actions: ["quicksight:DescribeTemplate"],
+                    resources: [props.sourceTemplateArn]
                 })
             ]
         });
@@ -97,9 +98,28 @@ export class QuickSight extends cdk.Construct {
             description: 'AWS DevOps Monitoring Dashboard Solution - This function creates Amazon QuickSight resources.',
             role: props.role,
             code: lambda.Code.fromAsset('lambda/quicksight-custom-resources'),
-            timeout: cdk.Duration.seconds(30)
+            timeout: cdk.Duration.seconds(30),
+            environment: {
+                UserAgentExtra: props.userAgentExtra
+            }
         });
         customResourceFunction.node.addDependency(customResourcePolicy);
+
+        const refCustomResourceFunction =  customResourceFunction.node.findChild('Resource') as lambda.CfnFunction;
+        refCustomResourceFunction.cfnOptions.metadata = {
+                cfn_nag: {
+                    rules_to_suppress: [
+                        {
+                            id: 'W89',
+                            reason: 'There is no need to run this lambda in a VPC'
+                        },
+                        {
+                            id: 'W92',
+                            reason: 'There is no need for Reserved Concurrency'
+                        }
+                    ]
+                }
+        };
 
         const customResource = new cdk.CustomResource(this, 'QuickSightResources', {
             serviceToken: customResourceFunction.functionArn,

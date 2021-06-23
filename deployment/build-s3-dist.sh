@@ -29,7 +29,7 @@
 set -e
 
 # Important: CDK global version number
-cdk_version=1.75.0
+cdk_version=1.98.0
 
 # Check to see if input has been provided:
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ]; then
@@ -164,7 +164,7 @@ for folder in */ ; do
         pip3 install -q -r requirements.txt --upgrade --target ./
     elif [ -e "package.json" ]; then
         # do_cmd npm ci --only=prod
-        do_cmd npm install
+        do_cmd npm install --production
     fi
 
     cd ..

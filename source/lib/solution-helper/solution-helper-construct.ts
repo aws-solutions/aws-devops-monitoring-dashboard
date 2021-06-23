@@ -1,5 +1,5 @@
 /*********************************************************************************************************************
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
  *                                                                                                                    *
  *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
  *  with the License. A copy of the License is located at                                                             *
@@ -17,11 +17,11 @@ import { ExecutionRole } from './lambda-role-cloudwatch-construct';
 
 
 export interface SolutionHelperProps {
-    readonly solutionId: string;
-    readonly version: string;
-    readonly quickSightPrincipalARN: string;
-    readonly athenaQueryDataDuration: string;
-    readonly codeCommitRepo: string;
+  readonly solutionId: string;
+  readonly version: string;
+  readonly quickSightPrincipalARN: string;
+  readonly athenaQueryDataDuration: string;
+  readonly codeCommitRepo: string;
 }
 
 export class SolutionHelper extends cdk.Construct {
@@ -39,8 +39,27 @@ export class SolutionHelper extends cdk.Construct {
             description: 'AWS DevOps Monitoring Dashboard Solution - This function generates UUID for each deployment.',
             role: helperRole.Role,
             code: lambda.Code.fromAsset(`${__dirname}/../../lambda/solution_helper`),
-            timeout: cdk.Duration.seconds(300)
+            timeout: cdk.Duration.seconds(300),
+            environment: {
+                UserAgentExtra: `AwsSolution/${props.solutionId}/${props.version}`
+            }
         });
+
+        const refhelperFunction =  helperFunction.node.findChild('Resource') as lambda.CfnFunction;
+        refhelperFunction.cfnOptions.metadata = {
+            cfn_nag: {
+                rules_to_suppress: [
+                    {
+                        id: 'W89',
+                        reason: 'There is no need to run this lambda in a VPC'
+                    },
+                    {
+                        id: 'W92',
+                        reason: 'There is no need for Reserved Concurrency'
+                    }
+                ]
+            }
+        };
 
         this.solutionHelperLambda = helperFunction;
 
@@ -54,6 +73,7 @@ export class SolutionHelper extends cdk.Construct {
     }
 
     public get UUIDCustomResource(): cdk.CustomResource {
-        return this._UuidCustomResource;
+      return this._UuidCustomResource;
     }
+
 }

@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
  *  with the License. A copy of the License is located at
@@ -27,12 +27,13 @@ export class Database extends cdk.Construct {
   public readonly metricsGlueDBName: string;
   public readonly metricsGlueTableName: string;
   public readonly metricsAthenaWGName: string;
+  public readonly codeBuildMetricsGlueTableName: string;
 
   constructor(scope: cdk.Construct, id: string, props: DatabaseProps) {
     super(scope, id);
 
     /**
-     * Create AWS Glue database and table
+     * Create AWS Glue database
      */
     const devopsMetricsGlueDB = new glue.Database(this, 'AWSDevopsMetricsGlueDatabase', {
       databaseName: 'aws_devops_metrics_db_' + props.solutionId.toLowerCase()
@@ -40,6 +41,9 @@ export class Database extends cdk.Construct {
 
     this.metricsGlueDBName = devopsMetricsGlueDB.databaseName;
 
+    /**
+     * Create AWS Glue table for CloudWatch Events
+     */
     const devopsMetricsGlueTable =  new glue.Table(this, 'AWSDevopsMetricsGlueTable', {
       description: 'AWS DevOps Monitoring Dashboard Solution - AWS DevOps Metrics Glue table',
       database: devopsMetricsGlueDB,
@@ -147,6 +151,42 @@ export class Database extends cdk.Construct {
         {
           name: 'deploymentApplication',
           type: glue.Schema.STRING
+        },
+        {
+          name: 'pipelineName',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'executionId',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'stage',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'action',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'state',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'externalExecutionId',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'actionCategory',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'actionOwner',
+          type: glue.Schema.STRING
+        },
+        {
+          name: 'actionProvider',
+          type: glue.Schema.STRING
         }]
         ),
         comment: "struct<nested_column:datatype>"
@@ -157,15 +197,110 @@ export class Database extends cdk.Construct {
       }],
     });
 
-   this.metricsGlueTableName = devopsMetricsGlueTable.tableName;
+    this.metricsGlueTableName = devopsMetricsGlueTable.tableName;
 
-   let glue_cfn_table_ref = devopsMetricsGlueTable.node.findChild('Table') as glue.CfnTable;
+    let glue_cfn_table_ref = devopsMetricsGlueTable.node.findChild('Table') as glue.CfnTable;
 
-   glue_cfn_table_ref.addPropertyOverride("TableInput", {
+    glue_cfn_table_ref.addPropertyOverride("TableInput", {
+    Parameters: {
+      "EXTERNAL": "TRUE"
+    }
+    })
+
+    /**
+     * Create AWS Glue table for CloudWatch Metrics for CodeBuild
+     */
+    const codeBuildMetricsGlueTable =  new glue.Table(this, 'CodeBuildMetricsGlueTable', {
+      description: 'AWS DevOps Monitoring Dashboard Solution - AWS CodeBuild Metrics Glue table',
+      database: devopsMetricsGlueDB,
+      tableName: 'aws_codebuild_metrics_table',
+      bucket: props.metricsBucket,
+      s3Prefix: 'CodeBuildEvents/',
+      storedAsSubDirectories: true,
+      dataFormat: glue.DataFormat.PARQUET,
+      columns: [{
+        name: 'metric_stream_name',
+        type: glue.Schema.STRING
+      },
+      {
+        name: 'account_id',
+        type: glue.Schema.STRING
+      },
+      {
+        name: 'region',
+        type: glue.Schema.STRING
+      },
+      {
+        name: 'namespace',
+        type: glue.Schema.STRING
+      },
+      {
+        name: 'metric_name',
+        type: glue.Schema.STRING
+      },
+      {
+        name: 'dimensions',
+        type: glue.Schema.struct([
+          {
+            name: 'ProjectName',
+            type: glue.Schema.STRING
+          },
+          {
+            name: 'BuildId',
+            type: glue.Schema.STRING
+          },
+          {
+            name: 'BuildNumber',
+            type: glue.Schema.INTEGER
+          }
+        ])
+      },
+      {
+        name: 'timestamp',
+        type: glue.Schema.BIG_INT
+      },
+      {
+        name: 'value',
+        type: glue.Schema.struct([
+          {
+            name: 'count',
+            type: glue.Schema.DOUBLE
+          },
+          {
+            name: 'sum',
+            type: glue.Schema.DOUBLE
+          },
+          {
+            name: 'max',
+            type: glue.Schema.DOUBLE
+          },
+          {
+            name: 'min',
+            type: glue.Schema.DOUBLE
+          }
+        ]),
+        comment: "struct<nested_column:datatype>"
+      },
+      {
+        name: 'unit',
+        type: glue.Schema.STRING
+      }],
+      partitionKeys: [{
+        name: 'created_at',
+        type: glue.Schema.TIMESTAMP
+      }],
+    });
+
+   this.codeBuildMetricsGlueTableName = codeBuildMetricsGlueTable.tableName;
+
+   let glue_cfn_codebuild_table_ref = codeBuildMetricsGlueTable.node.findChild('Table') as glue.CfnTable;
+
+   glue_cfn_codebuild_table_ref.addPropertyOverride("TableInput", {
     Parameters: {
       "EXTERNAL": "TRUE"
     }
    })
+
 
    /**
     * Create Athena work group
@@ -183,6 +318,9 @@ export class Database extends cdk.Construct {
           encryptionConfiguration: {
             encryptionOption: 'SSE_S3'
           }
+        },
+        engineVersion : {
+          selectedEngineVersion: "Athena engine version 2"
         }
       }
     })

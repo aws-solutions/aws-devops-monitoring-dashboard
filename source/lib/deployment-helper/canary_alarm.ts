@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
  *  with the License. A copy of the License is located at
@@ -44,7 +44,6 @@ export class CanaryStack extends cdk.Stack {
    */
   constructor(scope: cdk.Construct, id: string, props: iCanaryProps) {
     super(scope, id, props);
-    this.templateOptions.templateFormatVersion = "2010-09-09"
     //=========================================================================
     // PARAMETERS
     //=========================================================================
@@ -367,7 +366,7 @@ export class CanaryStack extends cdk.Stack {
       }
     );
     (canary.node.defaultChild as synth.CfnCanary).addPropertyOverride(
-      "RuntimeVersion", "syn-nodejs-2.0"
+      "RuntimeVersion", "syn-nodejs-puppeteer-3.1"
     );
 
     const canaryServiceRoleResource = canary.node.findChild('ServiceRole').node.findChild('Resource') as iam.CfnRole;

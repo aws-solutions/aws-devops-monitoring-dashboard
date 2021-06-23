@@ -1,15 +1,16 @@
-/**
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+/**********************************************************************************************************************
+ *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+ *                                                                                                                    *
+ *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
+ *  with the License. A copy of the License is located at                                                             *
+ *                                                                                                                    *
+ *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
+ *                                                                                                                    *
+ *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
+ *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
+ *  and limitations under the License.                                                                                *
+ *********************************************************************************************************************/
+
 
 import * as cdk from '@aws-cdk/core';
 import * as iam from '@aws-cdk/aws-iam';
@@ -17,13 +18,16 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as logs from '@aws-cdk/aws-logs';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as events from '@aws-cdk/aws-events';
+import * as glue from '@aws-cdk/aws-glue';
 import { CfnOutput } from '@aws-cdk/core';
-import {EventsRuleToKinesisFirehoseToS3, EventsRuleToKinesisFirehoseToS3Props}  from '@aws-solutions-constructs/aws-events-rule-kinesisfirehose-s3';
+import { EventsRuleToKinesisFirehoseToS3, EventsRuleToKinesisFirehoseToS3Props } from '@aws-solutions-constructs/aws-events-rule-kinesisfirehose-s3';
 import { EventsRuleToLambdaProps, EventsRuleToLambda } from '@aws-solutions-constructs/aws-events-rule-lambda';
 import { QuickSightStack } from './quicksight-custom-resources/quicksight-stack';
 import { SolutionHelper } from './solution-helper/solution-helper-construct';
 import { CanaryEvents } from './events/canary_events_construct';
 import { CodeDeployEvents } from './events/code_deploy_events_construct';
+import { CodePipelineEvents } from './events/code_pipeline_events_construct';
+import { CodeBuildEvents } from './events/code_build_events_construct';
 import { Database } from './database/database_construct';
 export interface DevOpsDashboardStackProps extends cdk.StackProps {
   solutionId: string;
@@ -123,12 +127,15 @@ export class DevOpsDashboardStack extends cdk.Stack {
     //=========================================================================
     const metricsMapping = new cdk.CfnMapping(this, 'AnonymousData', {
       mapping: {
-          'SendAnonymousUsageData': {
-              'Data': 'Yes',
-              'MetricsURL': 'https://metrics.awssolutionsbuilder.com/generic'
-          }
+        'SendAnonymousUsageData': {
+          'Data': 'Yes',
+          'MetricsURL': 'https://metrics.awssolutionsbuilder.com/generic'
+        }
       }
     });
+
+    const userAgentExtraString = new cdk.CfnMapping(this, 'UserAgentExtra')
+    userAgentExtraString.setValue('UserAgentExtra', 'Key', `AwsSolution/${props.solutionId}/${props.solutionVersion}`)
 
 
     //=========================================================================
@@ -146,7 +153,8 @@ export class DevOpsDashboardStack extends cdk.Stack {
       solutionId: props.solutionId, version: props.solutionVersion,
       quickSightPrincipalARN: paramQuickSightPrincipalArn.valueAsString,
       athenaQueryDataDuration: paramDataDuration.valueAsString,
-      codeCommitRepo: paramCodeCommitRepo.valueAsString});
+      codeCommitRepo: paramCodeCommitRepo.valueAsString
+    });
 
     const uuid = solutionHelper.UUIDCustomResource.getAttString('UUID')
 
@@ -190,28 +198,28 @@ export class DevOpsDashboardStack extends cdk.Stack {
     const refFirehoseLogGroup = codecommitERToFHToS3Construct.kinesisFirehoseLogGroup.node.findChild('Resource') as logs.CfnLogGroup
 
     const lifecycleRule = [{
-      NoncurrentVersionTransitions:[
-          {
-            StorageClass: 'GLACIER',
-            TransitionInDays: paramS3TransitionDays.valueAsString
-          },
-        ],
-        Status: 'Enabled'
+      NoncurrentVersionTransitions: [
+        {
+          StorageClass: 'GLACIER',
+          TransitionInDays: paramS3TransitionDays.valueAsString
+        },
+      ],
+      Status: 'Enabled'
     }]
 
     refMetricsBucket.addPropertyOverride('LifecycleConfiguration.Rules', lifecycleRule);
-    refMetricsBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-'+uuid);
-    refLoggingBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-logging-'+uuid);
+    refMetricsBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-' + uuid);
+    refLoggingBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-logging-' + uuid);
 
-    refFirehoseLogGroup.cfnOptions.metadata ={
+    refFirehoseLogGroup.cfnOptions.metadata = {
       cfn_nag: {
         rules_to_suppress: [{
-            id: 'W84',
-            reason: 'The CloudWatch log group does not need to be encrypted.'
+          id: 'W84',
+          reason: 'The CloudWatch log group does not need to be encrypted.'
         },
         {
-            id: 'W86',
-            reason: 'The log data in CloudWatch log group does not need to be expired.'
+          id: 'W86',
+          reason: 'The log data in CloudWatch log group does not need to be expired.'
         }]
       }
     };
@@ -233,6 +241,14 @@ export class DevOpsDashboardStack extends cdk.Stack {
     });
 
     /**
+     * Create CloudWatch Events Rule for AWS CodePipeline
+     */
+    new CodePipelineEvents(this, 'CodePipelineEvents', {
+      firehoseArn: firehose_obj.attrArn,
+      eventsRuleRole: codecommitERToFHToS3Construct.eventsRole
+    });
+
+    /**
      * Create AWS Glue and Athena database resources including database, table and workgroup
      */
     const db = new Database(this, 'GlueAthenaDatabase', {
@@ -243,12 +259,26 @@ export class DevOpsDashboardStack extends cdk.Stack {
     });
 
     /**
+     * Create AWS resources needed to process CloudWatch Metrics for AWS CodeBuild, including:
+     * CloudWatch Metric stream, Kinesis Data Firehose with lambda transformation
+     */
+    new CodeBuildEvents(this, 'CodeBuildEvents', {
+        metricsBucket: codecommitERToFHToS3Construct.s3Bucket,
+        lambdaRunTime: props.lambdaRuntimeNode,
+        uuid: uuid,
+        metricsGlueDBName: db.metricsGlueDBName,
+        codeBuildMetricsGlueTableName: db.codeBuildMetricsGlueTableName,
+        callingStack: this,
+        userAgentExtra: userAgentExtraString.findInMap('UserAgentExtra', 'Key')
+    });
+
+    /**
      * Create Event Parser Lambda: Transform cloudwatch event data within Kinesis Firehose
      */
     const cwLogsPS = new iam.PolicyStatement({
       actions: ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({service: 'logs', resource: 'log-group', sep: ':', resourceName: '/aws/lambda/*'})],
+      resources: [this.formatArn({ service: 'logs', resource: 'log-group', sep: ':', resourceName: '/aws/lambda/*' })],
       sid: 'CreateCWLogs'
     })
 
@@ -278,12 +308,29 @@ export class DevOpsDashboardStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(900)
     })
 
+    const refEventParserLambda =  eventParserLambdaFunction.node.findChild('Resource') as lambda.CfnFunction;
+    const lambdaCfnNag = {
+      cfn_nag: {
+          rules_to_suppress: [
+              {
+                  id: 'W89',
+                  reason: 'There is no need to run this lambda in a VPC'
+              },
+              {
+                  id: 'W92',
+                  reason: 'There is no need for Reserved Concurrency'
+              }
+          ]
+      }
+    };
+    refEventParserLambda.cfnOptions.metadata = lambdaCfnNag;
+
     /* Add more configurations to property ExtendedS3DestinationConfiguration */
-    firehose_obj.addPropertyOverride('ExtendedS3DestinationConfiguration',{
+    firehose_obj.addPropertyOverride('ExtendedS3DestinationConfiguration', {
       CompressionFormat: 'UNCOMPRESSED',
       Prefix: 'DevopsEvents/created_at=!{timestamp:yyyy-MM-dd}/',
       ErrorOutputPrefix: 'DevopsEventsProcessingErrorlogs/result=!{firehose:error-output-type}/created_at=!{timestamp:yyyy-MM-dd}/',
-      ProcessingConfiguration:{
+      ProcessingConfiguration: {
         Enabled: true,
         Processors: [{
           Type: 'Lambda',
@@ -300,96 +347,101 @@ export class DevOpsDashboardStack extends cdk.Stack {
       DataFormatConversionConfiguration: {
         Enabled: true,
         InputFormatConfiguration: {
-            Deserializer: {
-              OpenXJsonSerDe: {
-                CaseInsensitive: true
-              }
+          Deserializer: {
+            OpenXJsonSerDe: {
+              CaseInsensitive: true
             }
+          }
         },
         OutputFormatConfiguration: {
-            Serializer: {
-              ParquetSerDe: {
-                Compression: 'SNAPPY'
-              }
+          Serializer: {
+            ParquetSerDe: {
+              Compression: 'SNAPPY'
             }
+          }
         },
         SchemaConfiguration: {
-            DatabaseName: db.metricsGlueDBName,
-            TableName: db.metricsGlueTableName,
-            RoleARN: firehoserole.roleArn
+          DatabaseName: db.metricsGlueDBName,
+          TableName: db.metricsGlueTableName,
+          RoleARN: firehoserole.roleArn,
+          VersionId: 'LATEST'
         }
       }
     })
 
     /* Add more configurations to property DeliveryStreamEncryptionConfigurationInput */
     firehose_obj.addPropertyOverride('DeliveryStreamEncryptionConfigurationInput', {
-        KeyType: 'AWS_OWNED_CMK'})
+      KeyType: 'AWS_OWNED_CMK'
+    })
 
     const invokeLambdaPS = new iam.PolicyStatement()
     invokeLambdaPS.sid = 'InvokeLambda'
     invokeLambdaPS.effect = iam.Effect.ALLOW
     invokeLambdaPS.addActions("lambda:InvokeFunction", "lambda:GetFunctionConfiguration")
-    invokeLambdaPS.addResources(eventParserLambdaFunction.functionArn)
+    invokeLambdaPS.addResources(eventParserLambdaFunction.functionArn, eventParserLambdaFunction.functionArn + ':$LATEST')
 
     const glueAccessPSForFirehose = new iam.PolicyStatement({
-      actions: [ 'glue:GetTable', 'glue:GetTableVersion', 'glue:GetTableVersions' ],
+      actions: ['glue:GetTable', 'glue:GetTableVersion', 'glue:GetTableVersions'],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({service: 'glue', resource: 'catalog', sep: '', resourceName: ''}),
-                  this.formatArn({service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName}),
-                  this.formatArn({service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}`}),
-                  this.formatArn({service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*`})],
+      resources: [this.formatArn({ service: 'glue', resource: 'catalog', sep: '', resourceName: '' }),
+      this.formatArn({ service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName }),
+      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
+      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*` })],
       sid: 'glueAccessPSForFirehose'
     })
 
     let firehoseRolePolicy = codecommitERToFHToS3Construct.node.findChild('KinesisFirehoseToS3').node.findChild('KinesisFirehosePolicy') as iam.Policy;
     if (firehoseRolePolicy !== undefined) {
-        firehoseRolePolicy.addStatements(invokeLambdaPS)
-        firehoseRolePolicy.addStatements(glueAccessPSForFirehose)
+      firehoseRolePolicy.addStatements(invokeLambdaPS)
+      firehoseRolePolicy.addStatements(glueAccessPSForFirehose)
     }
-
     firehose_obj.node.addDependency(firehoseRolePolicy)
+
+    let refGlueTable = db.node.findChild('AWSDevopsMetricsGlueTable') as glue.Table
+    firehose_obj.node.addDependency(refGlueTable)
 
     /**
      * Create Query Runner Lambda: execute athena queries against devops metrics data
      */
     const s3AccessPS = new iam.PolicyStatement({
-      actions: ["s3:GetBucketLocation","s3:GetObject","s3:ListBucket","s3:ListBucketMultipartUploads",
-                "s3:ListMultipartUploadParts","s3:AbortMultipartUpload","s3:CreateBucket","s3:PutObject"],
+      actions: ["s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:ListBucketMultipartUploads",
+        "s3:ListMultipartUploadParts", "s3:AbortMultipartUpload", "s3:CreateBucket", "s3:PutObject"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName?codecommitERToFHToS3Construct.s3Bucket?.bucketName:'', sep: '/', resourceName: 'athena_results/*'}),
-                  this.formatArn({account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName?codecommitERToFHToS3Construct.s3Bucket?.bucketName:'', sep: '', resourceName: ''}),
-                  this.formatArn({account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName?codecommitERToFHToS3Construct.s3Bucket?.bucketName:'', sep: '/', resourceName: '*'})],
+      resources: [this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: 'athena_results/*' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '', resourceName: '' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: '*' })],
       sid: 'S3AccessPS'
     })
 
     const s3AccessPSwAthena = new iam.PolicyStatement({
-      actions: ["s3:GetBucketLocation","s3:GetObject","s3:ListBucket","s3:ListBucketMultipartUploads",
-                "s3:ListMultipartUploadParts","s3:AbortMultipartUpload","s3:CreateBucket","s3:PutObject"],
+      actions: ["s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:ListBucketMultipartUploads",
+        "s3:ListMultipartUploadParts", "s3:AbortMultipartUpload", "s3:CreateBucket", "s3:PutObject"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName?codecommitERToFHToS3Construct.s3Bucket?.bucketName:'', sep: '/', resourceName: 'athena_results/*'}),
-                  this.formatArn({account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName?codecommitERToFHToS3Construct.s3Bucket?.bucketName:'', sep: '', resourceName: ''}),
-                  this.formatArn({account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName?codecommitERToFHToS3Construct.s3Bucket?.bucketName:'', sep: '/', resourceName: '*'}),
-                  this.formatArn({account: '', region: '', service: 's3', resource: 'aws-athena-query-results-*', sep: '', resourceName: ''}),
-                  this.formatArn({account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', sep: '', resourceName: ''}),
-                  this.formatArn({account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', sep: '/', resourceName: '*'})],
+      resources: [this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: 'athena_results/*' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '', resourceName: '' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: '*' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: 'aws-athena-query-results-*', sep: '', resourceName: '' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', sep: '', resourceName: '' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', sep: '/', resourceName: '*' })],
       sid: 's3AccessPSwAthena'
     })
 
     const athenaQueryExecutionPS = new iam.PolicyStatement({
       actions: ["athena:StartQueryExecution"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({service: 'athena', resource: 'workgroup', sep: '/', resourceName: 'AWSDevOpsDashboard*'}),
-                  this.formatArn({service: 'athena', resource: 'workgroup', sep: '/', resourceName: 'primary'})],
+      resources: [this.formatArn({ service: 'athena', resource: 'workgroup', sep: '/', resourceName: 'AWSDevOpsDashboard*' }),
+      this.formatArn({ service: 'athena', resource: 'workgroup', sep: '/', resourceName: 'primary' })],
       sid: 'AthenaQueryExecutionPS'
     })
 
     const glueAccessPS = new iam.PolicyStatement({
-      actions: ["glue:GetTable","glue:GetPartitions","glue:GetDatabase","glue:CreateTable","glue:UpdateTable","glue:BatchCreatePartition","glue:DeleteTable","glue:DeletePartition"],
+      actions: ["glue:GetTable", "glue:GetPartitions", "glue:GetDatabase", "glue:CreateTable", "glue:UpdateTable", "glue:BatchCreatePartition", "glue:DeleteTable", "glue:DeletePartition"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({service: 'glue', resource: 'catalog', sep: '', resourceName: ''}),
-                  this.formatArn({service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName}),
-                  this.formatArn({service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}`}),
-                  this.formatArn({service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*`})],
+      resources: [this.formatArn({ service: 'glue', resource: 'catalog', sep: '', resourceName: '' }),
+      this.formatArn({ service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName }),
+      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
+      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*` }),
+      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.codeBuildMetricsGlueTableName}` })],
       sid: 'glueAccessPS'
     })
 
@@ -429,6 +481,9 @@ export class DevOpsDashboardStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(300)
     })
 
+    const refQueryRunnerLambda =  queryRunnerLambdaFunction.node.findChild('Resource') as lambda.CfnFunction;
+    refQueryRunnerLambda.cfnOptions.metadata = lambdaCfnNag;
+
    /*
    * Create Custom Resource Query Builder Lambda - build and run athena queries
    */
@@ -438,6 +493,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
       properties: {
         'MetricsDBName': db.metricsGlueDBName,
         'MetricsTableName': db.metricsGlueTableName,
+        'CodeBuildMetricsTableName': db.codeBuildMetricsGlueTableName,
         'AthenaWorkGroup': db.metricsAthenaWGName,
         'RepositoryList': paramCodeCommitRepo.valueAsString,
         'DataDuration': paramDataDuration.valueAsString
@@ -451,16 +507,16 @@ export class DevOpsDashboardStack extends cdk.Stack {
       resourceType: 'Custom::SendAnonymousUsageData',
       serviceToken: queryRunnerLambdaFunction.functionArn,
       properties: {
-          'SendAnonymousUsageData': metricsMapping.findInMap('SendAnonymousUsageData', 'Data'),
-          'SolutionId': props.solutionId,
-          'UUID': uuid,
-          'Version': props.solutionVersion,
-          'Region': cdk.Aws.REGION,
-          'MetricsURL': metricsMapping.findInMap('SendAnonymousUsageData', 'MetricsURL'),
-          'QuickSightPrincipalArn': paramQuickSightPrincipalArn.valueAsString,
-          'AthenaQueryDataDuration': paramDataDuration.valueAsString,
-          'RepositoryList': paramCodeCommitRepo.valueAsString,
-          "S3TransitionDays": paramS3TransitionDays.valueAsString
+        'SendAnonymousUsageData': metricsMapping.findInMap('SendAnonymousUsageData', 'Data'),
+        'SolutionId': props.solutionId,
+        'UUID': uuid,
+        'Version': props.solutionVersion,
+        'Region': cdk.Aws.REGION,
+        'MetricsURL': metricsMapping.findInMap('SendAnonymousUsageData', 'MetricsURL'),
+        'QuickSightPrincipalArn': paramQuickSightPrincipalArn.valueAsString,
+        'AthenaQueryDataDuration': paramDataDuration.valueAsString,
+        'RepositoryList': paramCodeCommitRepo.valueAsString,
+        "S3TransitionDays": paramS3TransitionDays.valueAsString
       },
     });
 
@@ -470,41 +526,41 @@ export class DevOpsDashboardStack extends cdk.Stack {
     * Create Athena Partition Lambda - add a new partition to Athena table
     */
     const glueAccessPSForAddAthenaPartition = new iam.PolicyStatement({
-      actions: ["glue:GetTable","glue:GetPartitions","glue:GetDatabase","glue:CreateTable","glue:UpdateTable","glue:BatchCreatePartition"],
+      actions: ["glue:GetTable", "glue:GetPartitions", "glue:GetDatabase", "glue:CreateTable", "glue:UpdateTable", "glue:BatchCreatePartition"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({service: 'glue', resource: 'catalog', sep: '', resourceName: ''}),
-                  this.formatArn({service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName}),
-                  this.formatArn({service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}`}),
-                  this.formatArn({service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*`})],
+      resources: [this.formatArn({ service: 'glue', resource: 'catalog', sep: '', resourceName: '' }),
+      this.formatArn({ service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName }),
+      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
+      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*` })],
       sid: 'glueAccessPS'
     })
 
     const AthenaParLambdaPolicyName = 'AddAthenaPartitionPolicy-' + uuid
 
     const AthenaParLambdaRole = new iam.Role(this, 'AddAthenaPartitionLambdaRole', {
-        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
-        path: '/',
-        inlinePolicies: {
-          [AthenaParLambdaPolicyName]: new iam.PolicyDocument({
-            statements: [
-              cwLogsPS,
-              s3AccessPS,
-              athenaQueryExecutionPS,
-              glueAccessPSForAddAthenaPartition,
-              cloudwatchAccessPS
-            ]
-          })
-        }
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      path: '/',
+      inlinePolicies: {
+        [AthenaParLambdaPolicyName]: new iam.PolicyDocument({
+          statements: [
+            cwLogsPS,
+            s3AccessPS,
+            athenaQueryExecutionPS,
+            glueAccessPSForAddAthenaPartition,
+            cloudwatchAccessPS
+          ]
+        })
+      }
     });
 
     const refAthenaParLambdaRole = AthenaParLambdaRole.node.defaultChild as iam.CfnRole;
     refAthenaParLambdaRole.cfnOptions.metadata = {
       cfn_nag: {
-         rules_to_suppress: [{
-             id: 'W11',
-             reason: 'Resource * is required for cloudwatch:GetMetricStatistics as it does not support resource-level permissions.'
-          }]
-        }
+        rules_to_suppress: [{
+          id: 'W11',
+          reason: 'Resource * is required for cloudwatch:GetMetricStatistics as it does not support resource-level permissions.'
+        }]
+      }
     };
 
     const athenaParRuleToLambdaProps: EventsRuleToLambdaProps = {
@@ -514,13 +570,15 @@ export class DevOpsDashboardStack extends cdk.Stack {
           LOG_LEVEL: 'INFO',
           MetricsDBName: db.metricsGlueDBName,
           MetricsTableName: db.metricsGlueTableName,
+          CodeBuildMetricsTableName: db.codeBuildMetricsGlueTableName,
           AthenaWorkGroup: db.metricsAthenaWGName,
           SolutionId: props.solutionId,
           UUID: uuid,
           Region: cdk.Aws.REGION,
           Version: props.solutionVersion,
           SendAnonymousUsageData: metricsMapping.findInMap('SendAnonymousUsageData', 'Data'),
-          MetricsURL: metricsMapping.findInMap('SendAnonymousUsageData', 'MetricsURL')
+          MetricsURL: metricsMapping.findInMap('SendAnonymousUsageData', 'MetricsURL'),
+          UserAgentExtra: userAgentExtraString.findInMap('UserAgentExtra', 'Key')
         },
         runtime: props.lambdaRuntimeNode,
         code: lambda.Code.fromAsset(`${__dirname}/../lambda/query_runner`),
@@ -537,24 +595,25 @@ export class DevOpsDashboardStack extends cdk.Stack {
 
     new EventsRuleToLambda(this, 'AddAthenaPartition', athenaParRuleToLambdaProps);
 
+
     /**
      * Create nested template to provision Amazon QuickSight resources as needed
      */
     const qsNestedTemplate = new QuickSightStack(this, 'QSDashboard', {
-        parameters: {
-            "QuickSightSourceTemplateArn": this.node.tryGetContext('quicksight_source_template_arn'),
-            "QuickSightPrincipalArn": paramQuickSightPrincipalArn.valueAsString,
-            "SolutionID": props.solutionId,
-            "SolutionName": props.solutionName,
-            "SolutionVersion": props.solutionVersion,
-            "ParentStackName": cdk.Aws.STACK_NAME,
-            "AthenaWorkGroupName": db.metricsAthenaWGName
-        }
+      parameters: {
+        "QuickSightSourceTemplateArn": this.node.tryGetContext('quicksight_source_template_arn'),
+        "QuickSightPrincipalArn": paramQuickSightPrincipalArn.valueAsString,
+        "SolutionID": props.solutionId,
+        "SolutionName": props.solutionName,
+        "SolutionVersion": props.solutionVersion,
+        "ParentStackName": cdk.Aws.STACK_NAME,
+        "AthenaWorkGroupName": db.metricsAthenaWGName
+      }
     });
 
-    qsNestedTemplate.nestedStackResource?.addMetadata('nestedStackFileName', qsNestedTemplate.templateFile.slice(0, -5));
-    qsNestedTemplate.nestedStackResource?.addOverride('Condition', 'QuickSightCondition');
-    qsNestedTemplate.nestedStackResource?.addOverride('Description', `(${props.solutionId})${props.solutionName} - Create QuickSight Template. Version: ${props.solutionVersion}`);
+    qsNestedTemplate.nestedStackResource?.addMetadata('nestedStackFileName', qsNestedTemplate.templateFile.slice(0, -5))
+    qsNestedTemplate.nestedStackResource?.addOverride('Condition', 'QuickSightCondition')
+    qsNestedTemplate.nestedStackResource?.addOverride('Description', `(${props.solutionId})${props.solutionName} - Create QuickSight Template. Version: ${props.solutionVersion}`)
 
 
     //=========================================================================
@@ -567,9 +626,9 @@ export class DevOpsDashboardStack extends cdk.Stack {
     });
 
     new CfnOutput(this, 'QSDashboardURL', {
-        value: qsNestedTemplate.dashboardURLOutput,
-        description: 'Amazon QuickSight Dashboard URL for AWS DevOps Monitoring Dashboard Solution',
-        condition: quickSightCondition
+      value: qsNestedTemplate.dashboardURLOutput,
+      description: 'Amazon QuickSight Dashboard URL for AWS DevOps Monitoring Dashboard Solution',
+      condition: quickSightCondition
     });
 
     new CfnOutput(this, 'KinesisFirehoseDeliveryStream', {
@@ -588,7 +647,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
     })
 
     new CfnOutput(this, 'DevOpsMetricsS3Bucket', {
-      value: (codecommitERToFHToS3Construct.s3Bucket?.bucketArn? codecommitERToFHToS3Construct.s3Bucket.bucketArn:'Do not exist'),
+      value: (codecommitERToFHToS3Construct.s3Bucket?.bucketArn ? codecommitERToFHToS3Construct.s3Bucket.bucketArn : 'Do not exist'),
       description: 'DevOps Metrics S3 Bucket for AWS DevOps Monitoring Dashboard Solution'
     })
 

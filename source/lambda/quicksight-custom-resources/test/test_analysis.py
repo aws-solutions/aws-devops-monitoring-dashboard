@@ -1,24 +1,22 @@
 #!/usr/bin/env python
 ######################################################################################################################
-#  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           #
+#  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                #
 #                                                                                                                    #
 #  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    #
 #  with the License. A copy of the License is located at                                                             #
 #                                                                                                                    #
-#      http://www.apache.org/licenses/LICENSE-2.0                                                                     #
+#      http://www.apache.org/licenses/LICENSE-2.0                                                                    #
 #                                                                                                                    #
 #  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES #
 #  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    #
 #  and limitations under the License.                                                                                #
 ######################################################################################################################
 
-import test.logger_test_helper
 import logging
 
 import tenacity
 import pytest
 from moto import mock_sts
-
 from util.quicksight_application import QuicksightApplication
 from util.dataset import DataSet
 from util.analysis import Analysis
@@ -34,6 +32,7 @@ from test.fixtures.quicksight_dataset_fixtures import (
 from test.fixtures.quicksight_template_fixtures import template_arn
 from test.fixtures.quicksight_datasource_fixtures import mininmal_data_source_stub
 from test.fixtures.quicksight_test_fixture import quicksight_application_stub
+
 
 from test.logger_test_helper import dump_state
 

@@ -1,5 +1,5 @@
 /*********************************************************************************************************************
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
  *                                                                                                                    *
  *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
  *  with the License. A copy of the License is located at                                                             *
@@ -11,7 +11,6 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 const axios = require('axios');
-const moment = require('moment');
 const LOGGER = new (require('./logger'))();
 
 /**
@@ -26,7 +25,8 @@ const SendMetrics = async (solutionId, uuid, metricsData, metricsURL) => {
         const metrics = {
           Solution: solutionId,
           UUID: uuid,
-          TimeStamp: moment().utc().format('YYYY-MM-DD HH:mm:ss.S'),
+          //Formatting the time string to the format 'YYYY-MM-DD HH:mm:ss.S'
+          TimeStamp: new Date().toISOString().replace('T', ' ').replace('Z', ' ').substring(0, 21),
           Data: metricsData
         };
         const params = {

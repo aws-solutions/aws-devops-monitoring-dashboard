@@ -1,5 +1,5 @@
 # #####################################################################################################################
-#  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                            #
+#  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                 #
 #                                                                                                                     #
 #  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance     #
 #  with the License. A copy of the License is located at                                                              #
@@ -32,8 +32,9 @@ class EnvironmentVariableError(Exception):
 def get_service_client(service_name, arguments):
     """Get the global service boto3 client"""
     global _helpers_service_clients
-    if service_name not in _helpers_service_clients:
+    if service_name not in _helpers_service_clients:        
         config = botocore.config.Config(retries=dict(max_attempts=3))
+
         logger.debug(f"Initializing global boto3 client for {service_name}")
         _helpers_service_clients[service_name] = boto3.client(service_name, config=config, region_name=get_aws_region())
     return _helpers_service_clients[service_name]

@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
  *                                                                                                                    *
- *  Licensed under the Apache License Version 2.0 (the 'License'). You may not use this file except in compliance        *
+ *  Licensed under the Apache License Version 2.0 (the 'License'). You may not use this file except in compliance     *
  *  with the License. A copy of the License is located at                                                             *
  *                                                                                                                    *
- *      http://www.apache.org/licenses/                                                                                   *
+ *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
  *                                                                                                                    *
  *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
  *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
@@ -135,6 +135,70 @@ let BuildDeploymentQuery = (athenaDB, athenaTable, dataDuration) => {
     return queryString;
 };
 
+/*
+* Build an athena query to create a view for code pipeline executions.
+*/
+let BuildCodePipelineQuery = (athenaDB, athenaTable, dataDuration) => {
+    LOGGER.log('INFO', '[BuildCodePipelineQuery] Start');
+
+    let queryString =
+        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_pipeline_detail_view AS ' + '\n' +
+        'SELECT account, time, region, ' + '\n' +
+        'detail.pipelineName as pipeline_name, \n' +
+        'detail.executionId as execution_id, \n' +
+        'detail.stage as stage, ' + '\n' +
+        'detail.action as action, ' + '\n' +
+        'detail.state as state,' + '\n' +
+        'detail.externalExecutionId as external_execution_id,' + '\n' +
+        'detail.actionCategory as action_category,' + '\n' +
+        'detail.actionOwner as action_owner,' + '\n' +
+        'detail.actionProvider as action_provider,' + '\n' +
+        'created_at' + '\n' +
+        'FROM' + '\n' +
+        athenaDB + '.' + athenaTable + '\n' +
+        "WHERE source = 'aws.codepipeline'"
+
+    const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
+    queryString = queryString + '\nAND ' + dataDurationQueryString + ';';
+
+    LOGGER.log('INFO', 'Query string: \n'+ queryString);
+    LOGGER.log('INFO', '[BuildCodePipelineQuery] END');
+
+    return queryString;
+}
+
+/**
+ * Build an athena query to create a view for code build metrics
+ */
+ let BuildCodeBuildQuery = (athenaDB, athenaTable, dataDuration) => {
+    LOGGER.log('INFO', '[BuildCodeBuildQuery] Start');
+
+    let queryString =
+        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_build_detail_view AS ' + '\n' +
+        'SELECT account_id as account,' + '\n' +
+        'region, namespace, metric_name, timestamp,' + '\n' +
+        'dimensions.ProjectName as project_name,' + '\n' +
+        'dimensions.BuildId as build_id,' + '\n' +
+        'dimensions.BuildNumber as build_number,' + '\n' +
+        'value.count as count,' + '\n' +
+        'value.sum as sum,' + '\n' +
+        'value.max as max,' + '\n' +
+        'value.min as min,' + '\n' +
+        'unit,' + '\n' +
+        'created_at' + '\n' +
+        'FROM' + '\n' +
+        athenaDB + '.' + athenaTable + '\n' +
+        "WHERE namespace = 'AWS/CodeBuild'"
+
+    const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
+    queryString = queryString + '\nAND ' + dataDurationQueryString + ';';
+
+    LOGGER.log('INFO', 'Query string: \n'+ queryString);
+    LOGGER.log('INFO', '[BuildCodeBuildQuery] END');
+
+    return queryString;
+};
+
 /**
  * Build a query string for data duration
  */
@@ -171,5 +235,7 @@ module.exports = {
     buildRecoveryTimeQuery: BuildRecoveryTimeQuery,
     buildDeploymentQuery: BuildDeploymentQuery,
     buildDropViewQuery: BuildDropViewQuery,
-    buildDataDurationQuery: BuildDataDurationQuery
+    buildDataDurationQuery: BuildDataDurationQuery,
+    buildCodePipelineQuery: BuildCodePipelineQuery,
+    buildCodeBuildQuery: BuildCodeBuildQuery
 };

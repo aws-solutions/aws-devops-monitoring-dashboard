@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
  *                                                                                                                    *
- *  Licensed under the Apache License Version 2.0 (the 'License'). You may not use this file except in compliance        *
+ *  Licensed under the Apache License Version 2.0 (the 'License'). You may not use this file except in compliance     *
  *  with the License. A copy of the License is located at                                                             *
  *                                                                                                                    *
- *      http://www.apache.org/licenses/                                                                                   *
+ *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
  *                                                                                                                    *
  *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
  *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
@@ -22,6 +22,7 @@ const LOGGER = new (require('./lib/logger'))();
 const codeCommitEvents = require('./codecommit_events');
 const synCanaryAlarmEvents = require('./synthetic_canary_alarm_events');
 const codeDeployEvents = require('./codedeploy_events');
+const codePipelineEvents = require('./codepipeline_events');
 
 /**
  * Transform AWS CloudWatch event data
@@ -58,6 +59,9 @@ exports.handler = async (event, context, callback) => {
                 else if (parsedData['source'] == 'aws.codedeploy') {
                     transformedRecord = codeDeployEvents.transformCodeDeployEvents(parsedData, recordCount);
                 }
+                else if (parsedData['source'] == 'aws.codepipeline') {
+                    transformedRecord = codePipelineEvents.transformCodePipelineEvents(parsedData, recordCount)
+                }
                 // Drop record and notify as needed
                 if (Object.keys(transformedRecord).length === 0){
                     droppedCount++;
@@ -85,7 +89,7 @@ exports.handler = async (event, context, callback) => {
                 };
         }
         catch (err) {
-            LOGGER.log('INFO', "Processing record " + recordTotalCount.toString() + " failled. Error: " + err.message);
+            LOGGER.log('INFO', "Processing record " + recordTotalCount.toString() + " failed. Error: " + err.message);
         }
     });
 

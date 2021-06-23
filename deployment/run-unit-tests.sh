@@ -21,7 +21,7 @@ set -e
 
 # Get reference for all important folders
 template_dir="$PWD"
-source_dir="$template_dir/../source"
+source_dir="$(cd $template_dir/../source; pwd -P)"
 
 echo "Current directory: $template_dir"
 echo "Source directory: $source_dir"
@@ -172,7 +172,7 @@ run_cdk_project_test "CDK - AWS DevOps Monitoring Dashboard"
 # echo "[Test] Lambda Tests"
 # echo "------------------------------------------------------------------------------"
 run_python_lambda_test quicksight-custom-resources "Quicksight - Custom Resources"
-run_javascript_lambda_test event_parser "Parser CloudWatch Events "
+run_javascript_lambda_test event_parser "Lambda transformation of Source Data"
 run_javascript_lambda_test query_runner "Build Athena Queries"
 
 # Return to the directory where we started

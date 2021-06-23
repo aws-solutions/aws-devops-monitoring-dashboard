@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 ######################################################################################################################
-#  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           #
+#  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                #
 #                                                                                                                    #
 #  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    #
 #  with the License. A copy of the License is located at                                                             #
 #                                                                                                                    #
-#      http://www.apache.org/licenses/LICENSE-2.0                                                                     #
+#      http://www.apache.org/licenses/LICENSE-2.0                                                                    #
 #                                                                                                                    #
 #  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES #
 #  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    #
@@ -16,14 +16,15 @@ import logging
 import pytest
 
 import boto3
+from botocore.stub import ANY
+
+# import other fixutres
 from botocore.stub import Stubber, ANY
 from moto import mock_sts
 
 from util.quicksight import QuicksightApi
 from util.quicksight_application import QuicksightApplication
 from util.dataset import DataSet
-
-# import other fixutres
 from test.fixtures.quicksight_test_fixture import get_quicksight_api_stubber
 from test.fixtures.quicksight_test_fixture import TestHelper
 

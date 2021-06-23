@@ -1,10 +1,10 @@
 /*********************************************************************************************************************
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
  *                                                                                                                    *
- *  Licensed under the Apache License Version 2.0 (the 'License'). You may not use this file except in compliance        *
+ *  Licensed under the Apache License Version 2.0 (the 'License'). You may not use this file except in compliance     *
  *  with the License. A copy of the License is located at                                                             *
  *                                                                                                                    *
- *      http://www.apache.org/licenses/                                                                                   *
+ *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
  *                                                                                                                    *
  *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
  *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
@@ -17,9 +17,14 @@
 
 'use strict';
 const aws = require('aws-sdk');
-const cloudwatch = new aws.CloudWatch();
-const lambda = new aws.Lambda()
 
+let userAgentExtra = process.env["UserAgentExtra"]
+let options = {}
+if (userAgentExtra) {
+    options = { customUserAgent: userAgentExtra }
+} 
+
+const cloudwatch = new aws.CloudWatch(options);
 
 const LOGGER = new (require('./lib/logger'))();
 const buildAthenaQuery = require('./build_athena_query');
@@ -28,6 +33,7 @@ const metricsHelper = require('./lib/metrics_helper');
 
 const athenaDB = process.env.MetricsDBName
 const athenaTable = process.env.MetricsTableName
+const athenaCodeBuildTable = process.env.CodeBuildMetricsTableName
 const athenaWorkGroup = process.env.AthenaWorkGroup
 const sendAnonymousUsageData = process.env.SendAnonymousUsageData;
 const solutionId = process.env.SolutionId;
@@ -58,8 +64,13 @@ let AddPartition = async () => {
     try{
             LOGGER.log('INFO', 'Start adding athena partition lambda function');
 
-            const queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB,athenaTable);
-            const queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
+            // Run query to add athena partitions to devops metrics table as needed
+            let queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB,athenaTable);
+            let queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
+
+            // Run query to add athena partitions to codebuild metrics table as needed
+            queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB,athenaCodeBuildTable);
+            queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
 
             LOGGER.log('INFO', 'End adding athena partition lambda function');
 

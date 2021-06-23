@@ -34,8 +34,8 @@ For a detailed solution implementation guide, refer to Solution Landing Page [AW
   <br/>
 </p>
 
-1.	A developer initiates an activity in an AWS CI/CD pipeline, such as pushing a code change to AWS CodeCommit or deploying an application using AWS CodeDeploy. These activities create events.
-2.	An Amazon EventBridge events rule detects the events based on predefined event patterns and then sends the event data to an Amazon Kinesis Data Firehose delivery stream. One event rule is created per event source.
+1.	A developer initiates an activity in an AWS CI/CD pipeline, such as pushing a code change to AWS CodeCommit or deploying an application using AWS CodeDeploy. These activities create events. In addition, activities in AWS CodeBuild generates CloudWatch metrics.
+2.	An Amazon EventBridge events rule detects the events based on predefined event patterns and then sends the event data to an Amazon Kinesis Data Firehose delivery stream. One event rule is created per event source. For AWS CodeBuild, a CloudWatch metric stream is setup to capture its CloudWatch metrics and deliver it to a Kinese Data Firehose delivery stream.
 3.	An Amazon EventBridge events rule is also created to capture events from an Amazon CloudWatch alarm that monitors the status of an Amazon CloudWatch synthetics canary, if you have set up the canary and alarm in your account. This alarm is needed to gather data for calculating Mean Time to Recover (MTTR) metrics.
 4.	Amazon Kinesis Data Firehose uses an AWS Lambda function for data transformation. The Lambda function extracts relevant data to each metric and sends it to an Amazon S3 bucket for downstream processing.
 5.	An Amazon Athena database queries the Amazon S3 bucket data and returns query results to Amazon QuickSight.
@@ -77,7 +77,16 @@ git clone https://github.com/awslabs/aws-devops-monitoring-dashboard.git
 wget https://github.com/awslabs/aws-devops-monitoring-dashboard/archive/master.zip
 ```
 
-#### 2. Create S3 buckets for storing deployment assets
+#### 2. Unit test
+Next, run unit tests to make sure your customized code passes the tests
+
+```
+cd <rootDir>/deployment
+chmod +x ./run-unit-tests.sh
+./run-unit-tests.sh
+```
+
+#### 3. Create S3 buckets for storing deployment assets
 
 AWS Solutions use two buckets:
 
@@ -85,52 +94,101 @@ AWS Solutions use two buckets:
 * One regional bucket for each region where you plan to deploy the solution. Use the name of the global bucket as the prefix of the bucket name, and suffixed with the region name. Regional assets such as Lambda code are stored here. Ex. "mybucket-us-east-1"
 * The assets in buckets must be accessible by your account
 
-#### 03. Declare enviroment variables
+#### 4. Declare environment variables
 ```
-export TEMPLATE_OUTPUT_BUCKET=<YOUR_TEMPLATE_OUTPUT_BUCKET> # Name of the global bucket where CloudFormation template is stored
 export DIST_OUTPUT_BUCKET=<YOUR_DIST_OUTPUT_BUCKET> # Name for the regional bucket where regional assets are stored
 export SOLUTION_NAME="aws-devops-monitoring-dashboard" # name of the solution
 export VERSION=<VERSION> # version number for the customized solution
 export AWS_REGION=<AWS_REGION> # region where the solution is deployed
+export CF_TEMPLATE_BUCKET_NAME=<YOUR_CF_TEMPLATE_BUCKET_NAME> # Name of the global bucket where CloudFormation templates are stored
 export QUICKSIGHT_TEMPLATE_ACCOUNT = <YOUR_QUICKSIGHT_TEMPLATE_ACCOUNT> # The AWS account from which the Amazon QuickSight templates should be sourced for Amazon QuickSight Analysis and Dashboard creation
 export DIST_QUICKSIGHT_NAMESPACE = <YOUR_DIST_QUICKSIGHT_NAMESPACE >
 # The namesapce in QuickSight account ARN. Ex. "default"
 ```
-#### 04. Build the solution
+#### 5. Build the solution
 ```
 cd <rootDir>/deployment
 chmod +x build-s3-dist.sh
 ./build-s3-dist.sh $DIST_OUTPUT_BUCKET $SOLUTION_NAME $VERSION $CF_TEMPLATE_BUCKET_NAME $QUICKSIGHT_TEMPLATE_ACCOUNT $DIST_QUICKSIGHT_NAMESPACE
 ```
 
-#### 05. Run Unit Tests
+<a name="Upload-deployment-assets-to-your-S3-buckets"></a>
+## Upload Deployment Assets
+* Copy the files `aws-devops-monitoring-dashboard.template` and `canary-alarm.template` in the directory `./deployment/global-s3-assets`, to the bucket with the name referenced to `$DIST_OUTPUT_BUCKET`
+* Copy the file with the name format `awsdevopsmonitoringdashboardQSDashboard*.nested.template` in the directory `./deployment/global-s3-assets`, to the bucket with the name referenced to `$CF_TEMPLATE_BUCKET_NAME`
+* Copy the lambda distribution files from the folder `./deployment/regional-s3-assets` in to the S3 bucket with the name as `$DIST_OUTPUT_BUCKET-[REGION]`, `[REGION]` is the specific region where the solution is being deployed.
 
+<a name="create-quicksight-template"></a>
+## Create QuickSight Template
+
+If you customize the solution, you will need to create the Amazon QuickSight template in your AWS account where the out-of-box solution is originally deployed, in order to successfully deploy QuickSight resources as part of your customized solution. Follow these steps to create the template using [QuickSight CLI commands](https://docs.aws.amazon.com/cli/latest/reference/quicksight/index.html):
+* Run list commands to get the ARNs of the QuickSight analysis and datasets used by the out-of-box solution in your AWS account where the solution is deployed.
 ```
-cd <rootDir>/deployment
-chmod +x ./run-unit-tests.sh
-./run-unit-tests.sh
+aws quicksight list-analyses --aws-account-id your-aws-account-id
+aws quicksight list-data-sets --aws-account-id your-aws-account-id
 ```
-
-Confirm that all unit tests pass.
-
-#### 06. Upload deployment assets to your buckets
-
-Run upload_s3_dist.sh, passing the name of the region where you want to deploy the solution (ex. us-east-1). Note that this prepares your templates for deployment, but does not do the actual deployment in your account.
+* Create a json data as shown below with your information such as AWS account id, QuickSight template id/name, analysis and dataset ARNs. Save it as a json file, for example, “create-template-from-analysis-cli-input.json”.
 ```
-cd <rootDir>/deployment
-./upload_s3_dist.sh $AWS_REGION
+{
+    "AwsAccountId": "your-aws-account-id",
+    "TemplateId": "your-quicksight-template-id",
+    "Name": "your-quicksight-template-name",
+    "SourceEntity": {
+        "SourceAnalysis": {
+            "Arn": "your-quicksight-analysis-arn",
+            "DataSetReferences": [
+                {
+                    "DataSetPlaceholder": "code-change-activity",
+                    "DataSetArn": "your-quicksight-code-change-activity-dataset-arn"
+                },
+                {
+                    "DataSetPlaceholder": "code-deployment-detail",
+                    "DataSetArn": "your-quicksight-code-deployment-detail-dataset-arn"
+                },
+                {
+                    "DataSetPlaceholder": "recovery-time-detail",
+                    "DataSetArn": "your-quicksight-recovery-time-detail-dataset-arn"
+                },
+                {
+                    "DataSetPlaceholder": "code-pipeline-detail",
+                    "DataSetArn": "your-quicksight-code-pipeline-detail-dataset-arn"
+                }
+                ,
+                {
+                    "DataSetPlaceholder": "code-build-detail",
+                    "DataSetArn": "your-quicksight-code-build-detail-dataset-arn"
+                }
+            ]
+        }
+    },
+    "VersionDescription": "1"
+}
 ```
-
-<a name="unit-test"></a>
-## Unit Test
-
+* Run create-template command to create template from the analysis json file above.
 ```
-cd <rootDir>/deployment
-chmod +x ./run-unit-tests.sh
-./run-unit-tests.sh
+aws quicksight create-template \
+    --cli-input-json file://./create-template-from-analysis-cli-input.json \
+    --region your-region
 ```
-
-Confirm that all unit tests pass.
+* (Optional) If you want to use the QuickSight template in another account, run update-template-permissions command to grant the quicksight:DescribeTemplate permission to public or your target account. This is NOT needed if you use the template in the same account where the solution is deployed.
+```
+aws quicksight update-template-permissions --region $AWS_REGION \
+     --aws-account-id your-aws-account-id \
+     --template-id your-quicksight-template-id \
+     --grant-permissions "[{\"Principal\": \"*\", \"Actions\": [\"quicksight:DescribeTemplate\"]}]"
+```
+* Run describe-template command to view the template created above.
+```
+aws quicksight describe-template \
+    --aws-account-id your-aws-account-id \
+    --template-id your-quicksight-template-id
+```
+* (Optional) If you customize QuickSight such as adding a new dataset to analysis or making changes to visualization, you can update the analysis json file as needed and then call update-template command to update your template accordingly.
+```
+aws quicksight update-template \
+    --cli-input-json file://./create-template-from-analysis-cli-input.json \
+    -—region your-region
+```
 
 <a name="deploy"></a>
 ## Deploy
@@ -165,6 +223,11 @@ AWS DevOps Monitoring Dashboard solution consists of:
     │   └── solution-helper             [CDK constructs for creating solution helper lambda resources in CloudFormation]
     ├── test                            [test folder for CDK]
 </pre>
+
+<a name="Collection of operational metrics"></a>
+# Collection of operational metrics
+
+This solution collects anonymous operational metrics to help AWS improve the quality and features of the solution. For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/solutions/latest/aws-devops-monitoring-dashboard/collection-of-operational-metrics.html).
 
 <a name="license"></a>
 # License

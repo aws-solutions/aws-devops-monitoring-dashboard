@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
  *  with the License. A copy of the License is located at
@@ -10,40 +10,90 @@
  *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
  *  and limitations under the License.
  */
+const index = require('../index');
 
-'use strict';
+jest.mock('../lib/metrics_helper', () => {
+    return {
+        __esmodule: true,
+        sendMetrics: jest.fn().mockImplementation((solutionId, solutionUUID, data, metricsURL) => {
+            expect(solutionId).toBe("SO0103");
+            expect(solutionUUID).toBe("2820b493-864c-4ca1-99d3-7174fef7f374");
+            expect(metricsURL).toBe("https://metrics-url.com")
+        })
+    }
 
-const expect = require('chai').expect;
-const queryRunner = require('../build_athena_query');
+}, { virtual: true })
 
-const athenaDB = 'testAthenaDB'
-const athenaTable = 'testAthenaTable'
-const currentTimeStamp = new Date()
-const year = currentTimeStamp.getFullYear()
-const month = currentTimeStamp.getMonth() + 1
-const day = currentTimeStamp.getDate()
-const hour = currentTimeStamp.getHours()
+jest.mock("../lib/execute_athena_query", () => {
+    return {
+        __esmodule: true,
+        executeAthenaQuery: jest.fn().mockImplementation((athenaDB, athenaWorkGroup, queryString) => {
+            expect(queryString).toBe("queryString");
+            expect(athenaDB).toBe("metrics_db")
+            expect(athenaWorkGroup).toBe("AWSDevOpsDashboardWG-2820b493-864c-4ca1-99d3-7174fef7f374");
+        })
+    }
+}, { virtual: true });
 
-let expectedQueryString =
-    'ALTER TABLE ' + athenaDB + '.' + athenaTable  + '\n' +
-    'ADD IF NOT EXISTS'  + '\n' +
-    "PARTITION (\n"  +
-    "\tcreated_at = '" + year.toString() + "-"  +
-        (month.toString() < 10 ? '0' : '') + month.toString() + "-"  +
-        (day.toString() < 10 ? '0' : '') + day.toString() + "');"
+jest.mock("../build_athena_query", () => {
+    return {
+        __esmodule: true,
+        buildAddAthenaPartitionQuery: jest.fn().mockImplementation((athenaDB, athenaTable) => {
+            expect(athenaDB).toBe("metrics_db")
+            expect(athenaTable).toBe("metrics_table")
+            //athenaCodeBuildTable "aws_codebuild_metrics_table"
+            return "queryString";
+        })
+    }
+}, { virtual: true });
 
-describe('When testing query builder', () => {
+jest.mock("../lib/cfn", () => {
+    return {
+        __esmodule: true,
+        send: jest.fn().mockReturnValue({
 
-    let queryString;
+        })
+    }
+}, { virual: true })
 
-    it('expect matching query for adding athena partitions', async () => {
-      queryString = await queryRunner.buildAddAthenaPartitionQuery(athenaDB, athenaTable);
+jest.mock("aws-sdk", () => {
+    return {
+        __esmodule: true,
+        Glue: jest.fn().mockImplementation((options) => {
+            expect(options.customUserAgent).toBe("/AwsSolutions/SO0103/v1.2.0")
+            return {
+                deletePartition: jest.fn().mockImplementation((data) => {
+                    expect(data.DatabaseName).toBe("metrics_db")
+                    expect(data.TableName).toBe("metrics_table")
+                    const date = new Date()
+                    const expectedDate = date.toISOString().substring(0, 10)
+                    expect(data.PartitionValues[0]).toBe(expectedDate)
+                    return {
+                        promise: jest.fn().mockImplementation(() => {
+                            return Promise.resolve({})
+                        })
+                    }
+                })
+            }
+        })
+    }
+}, { virual: true })
 
-      console.log("Generated query string: " + queryString);
-      console.log("Expected query string: " + expectedQueryString);
-
-      expect(queryString).to.equal(expectedQueryString);
-
-   });
-
-});
+describe("Test index", () => {
+    test('handle Create', async () => {
+        await index.handler({
+            ResourceType: 'Custom::QueryRunner',
+            RequestType: 'Create'
+        }, {});
+    })
+    test('handle Update', async () => {
+        await index.handler({
+            ResourceType: 'Custom::QueryRunner',
+            RequestType: 'Update',
+            ResourceProperties: {
+                MetricsDBName: "metrics_db",
+                MetricsTableName: "metrics_table"
+            }
+        }, {});
+    })
+})

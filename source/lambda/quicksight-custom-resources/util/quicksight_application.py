@@ -1,5 +1,5 @@
 # #####################################################################################################################
-#  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                            #
+#  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                 #
 #                                                                                                                     #
 #  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance     #
 #  with the License. A copy of the License is located at                                                              #
@@ -50,7 +50,7 @@ def read_config(file_name):
 class QuicksightApplication:
     def __init__(self, resource_properties):
         # TODO: use the config data / file to figure out the supported_data_set_types
-        supported_data_set_types = ["code-change-activity", "code-deployment-detail", "recovery-time-detail"]
+        supported_data_set_types = ["code-change-activity", "code-deployment-detail", "recovery-time-detail", "code-pipeline-detail", "code-build-detail"]
 
         self.resource_properties = resource_properties
         self.global_state = get_global_state()
