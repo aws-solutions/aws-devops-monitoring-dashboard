@@ -1,15 +1,5 @@
-/**
- *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import * as cdk from '@aws-cdk/core';
 import * as iam from '@aws-cdk/aws-iam';
@@ -18,6 +8,7 @@ import * as logs from '@aws-cdk/aws-logs';
 import * as lambda from '@aws-cdk/aws-lambda';
 import { CfnMetricStream } from '@aws-cdk/aws-cloudwatch';
 import { KinesisFirehoseToS3 } from '@aws-solutions-constructs/aws-kinesisfirehose-s3';
+import {addCfnSuppressRules} from "@aws-solutions-constructs/core";
 
 export interface CodeBuildEventsProps {
   metricsBucket: s3.Bucket | undefined;
@@ -41,7 +32,7 @@ export class CodeBuildEvents extends cdk.Construct {
     const cwLogsPS = new iam.PolicyStatement({
       actions: ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
       effect: iam.Effect.ALLOW,
-      resources: [parentStack.formatArn({service: 'logs', resource: 'log-group', sep: ':', resourceName: '/aws/lambda/*'})],
+      resources: [parentStack.formatArn({service: 'logs', resource: 'log-group', arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME, resourceName: '/aws/lambda/*'})],
       sid: 'CreateCWLogs'
     })
 
@@ -69,25 +60,21 @@ export class CodeBuildEvents extends cdk.Construct {
       code: lambda.Code.fromAsset(`${__dirname}/../../lambda/event_parser`),
       handler: 'codebuild_index.handler',
       role: codeBuildEventParserLambdaRole,
-      timeout: cdk.Duration.seconds(900)
+      timeout: cdk.Duration.seconds(900),
+      logRetention: logs.RetentionDays.THREE_MONTHS
     })
 
     const refCodeBuildEventParserLambda =  codeBuildEventParserLambda.node.findChild('Resource') as lambda.CfnFunction;
-    const lambdaCfnNag = {
-      cfn_nag: {
-          rules_to_suppress: [
-              {
-                  id: 'W89',
-                  reason: 'There is no need to run this lambda in a VPC'
-              },
-              {
-                  id: 'W92',
-                  reason: 'There is no need for Reserved Concurrency'
-              }
-          ]
-      }
-    };
-    refCodeBuildEventParserLambda.cfnOptions.metadata = lambdaCfnNag;
+    addCfnSuppressRules(refCodeBuildEventParserLambda, [
+          {
+            id: 'W89',
+            reason: 'There is no need to run this lambda in a VPC'
+          },
+          {
+            id: 'W92',
+            reason: 'There is no need for Reserved Concurrency'
+          }
+    ]);
 
     /**
      * Create Kinesis Data Firehose using KinesisFirehoseToS3 construct
@@ -95,20 +82,6 @@ export class CodeBuildEvents extends cdk.Construct {
     const firehoseToS3Construct = new KinesisFirehoseToS3(this, 'CodeBuild', {
       existingBucketObj: props.metricsBucket
     });
-
-    const refFirehoseLogGroup = firehoseToS3Construct.kinesisFirehoseLogGroup.node.findChild('Resource') as logs.CfnLogGroup
-    refFirehoseLogGroup.cfnOptions.metadata = {
-      cfn_nag: {
-        rules_to_suppress: [{
-          id: 'W84',
-          reason: 'The CloudWatch log group does not need to be encrypted.'
-        },
-        {
-          id: 'W86',
-          reason: 'The log data in CloudWatch log group does not need to be expired.'
-        }]
-      }
-    };
 
     /* Add more configurations to property ExtendedS3DestinationConfiguration */
     const firehoseObj = firehoseToS3Construct.kinesisFirehose
@@ -129,7 +102,7 @@ export class CodeBuildEvents extends cdk.Construct {
       },
       BufferingHints: {
         IntervalInSeconds: 300,
-        SizeInMBs: 64
+        SizeInMBs: 128
       },
       DataFormatConversionConfiguration: {
         Enabled: true,
@@ -170,10 +143,10 @@ export class CodeBuildEvents extends cdk.Construct {
     const glueAccessPSForFirehose = new iam.PolicyStatement({
       actions: ['glue:GetTable', 'glue:GetTableVersion', 'glue:GetTableVersions'],
       effect: iam.Effect.ALLOW,
-      resources: [parentStack.formatArn({ service: 'glue', resource: 'catalog', sep: '', resourceName: '' }),
-      parentStack.formatArn({ service: 'glue', resource: 'database', sep: '/', resourceName: props.metricsGlueDBName }),
-      parentStack.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${props.metricsGlueDBName}/${props.codeBuildMetricsGlueTableName}` }),
-      parentStack.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${props.metricsGlueDBName}/*` })],
+      resources: [parentStack.formatArn({ service: 'glue', resource: 'catalog', arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      parentStack.formatArn({ service: 'glue', resource: 'database', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: props.metricsGlueDBName }),
+      parentStack.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${props.metricsGlueDBName}/${props.codeBuildMetricsGlueTableName}` }),
+      parentStack.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${props.metricsGlueDBName}/*` })],
       sid: 'glueAccessPSForCodeBuildEventsFirehose'
     })
 

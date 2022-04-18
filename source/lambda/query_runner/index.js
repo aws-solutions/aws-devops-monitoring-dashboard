@@ -11,9 +11,6 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
-/**
- * @author Solution Builders
- */
 
 'use strict';
 
@@ -39,7 +36,7 @@ exports.handler = async (event, context) => {
         // run Athena queries
         if (resourceType === 'Custom::QueryRunner') {
             if (requestType === 'Update') {
-                await deletePartitionForUpdate(requestType, resourceProperties)   
+                await deletePartitionForUpdate(requestType, resourceProperties)
             }
             await QueryRunner(requestType, resourceProperties);
         }
@@ -71,10 +68,12 @@ let QueryRunner = async (requestType, resourceProperties) => {
         const athenaDB = resourceProperties['MetricsDBName']
         const athenaTable = resourceProperties['MetricsTableName']
         const athenaCodeBuildTable = resourceProperties['CodeBuildMetricsTableName']
+        const athenaGitHubTable = resourceProperties['GitHubMetricsTableName']
         const athenaWorkGroup = resourceProperties['AthenaWorkGroup']
         const dataDuration = resourceProperties['DataDuration']
         const repositoryList = resourceProperties['RepositoryList']
-        const athenaViews = ['code_change_activity_view', 'code_deployment_detail_view', 'recovery_time_detail_view', 'code_pipeline_detail_view', 'code_build_detail_view']
+        const athenaViews = ['code_change_activity_view', 'code_deployment_detail_view', 'recovery_time_detail_view',
+            'code_pipeline_detail_view', 'code_build_detail_view', 'github_change_activity_view']
 
         // Create Athena views at stack creation or update
         if (requestType === 'Create' || requestType === 'Update') {
@@ -86,6 +85,10 @@ let QueryRunner = async (requestType, resourceProperties) => {
 
             // First run query to add athena partitions to codebuild metrics table as needed
             queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB, athenaCodeBuildTable);
+            await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
+
+            // First run query to add athena partitions to github metrics table as needed
+            queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB, athenaGitHubTable);
             await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
 
             // Run query to build view for codecommit events
@@ -107,6 +110,11 @@ let QueryRunner = async (requestType, resourceProperties) => {
             // Run query to build view for codebuild events
             queryString = buildAthenaQuery.buildCodeBuildQuery(athenaDB, athenaCodeBuildTable, dataDuration);
             await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
+
+            // Run query to build view for github events
+            queryString = buildAthenaQuery.buildGitHubQuery(athenaDB, athenaGitHubTable, dataDuration);
+            await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
+
         }
         // Drop Athena views at stack deletion
         else if (requestType === 'Delete') {
@@ -139,7 +147,9 @@ let SendAnonymousUsageData = async (requestType, resourceProperties) => {
                 "quicksight_deployed": resourceProperties.hasOwnProperty('QuickSightPrincipalArn') && resourceProperties["QuickSightPrincipalArn"] != null ? 'yes' : 'no',
                 "athena_query_data_duration": resourceProperties['AthenaQueryDataDuration'],
                 "repository": resourceProperties["RepositoryList"] == "'ALL'" ? 'all' : 'customer list',
-                "s3_transition_days": resourceProperties['S3TransitionDays']
+                "s3_transition_days": resourceProperties['S3TransitionDays'],
+                "use_github_repository": resourceProperties['UseGitHubRepository'],
+                "use_github_webhook_secret_token": resourceProperties['UseWebhookSecret']
             }
 
             LOGGER.log("INFO", `[SendAnonymousUsageData] data: ${JSON.stringify(data)}`);

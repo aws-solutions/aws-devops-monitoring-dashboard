@@ -1,23 +1,14 @@
 #!/usr/bin/env node
-/**********************************************************************************************************************
- *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
- *                                                                                                                    *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
- *  with the License. A copy of the License is located at                                                             *
- *                                                                                                                    *
- *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
- *                                                                                                                    *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
- *  and limitations under the License.                                                                                *
- *********************************************************************************************************************/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
-import { CanaryStack } from '../lib/deployment-helper/canary_alarm';
-import { DevOpsDashboardStack } from '../lib/aws_devops_monitoring_dashboard_stack';
+import {CanaryStack} from '../lib/deployment-helper/canary_alarm/canary_alarm_stack';
+import {PipelineAlarmStack} from '../lib/deployment-helper/codepipeline_alarm/codepipeline_alarm_stack';
+import {DevOpsDashboardStack} from '../lib/aws_devops_monitoring_dashboard_stack';
 
 // SOLUTION_* - set by solution_env.sh
 const SOLUTION_ID = process.env['SOLUTION_ID'] || 'undefined';
@@ -27,6 +18,7 @@ const DIST_VERSION = process.env['DIST_VERSION'] || '%%VERSION%%';
 const DIST_OUTPUT_BUCKET = process.env['DIST_OUTPUT_BUCKET'] || '%%BUCKET%%';
 const DIST_SOLUTION_NAME = process.env['DIST_SOLUTION_NAME'] || '%%SOLUTION%%';
 const LAMBDA_RUNTIME_NODEJS = lambda.Runtime.NODEJS_14_X
+const TEMPLATE_FORMAT_VERSIOIN = '2010-09-09'
 
 const app = new cdk.App();
 
@@ -50,5 +42,13 @@ const devopsDashboardStack = new DevOpsDashboardStack(app, 'aws-devops-monitorin
 	lambdaRuntimeNode: LAMBDA_RUNTIME_NODEJS
 });
 
-devopsDashboardStack.templateOptions.templateFormatVersion = "2010-09-09"
-canaryStack.templateOptions.templateFormatVersion = "2010-09-09"
+/* Stack for creating codepipeline alarm */
+const pipelineAlarmStack = new PipelineAlarmStack(app, 'pipeline-alarm', {
+	description: `(${SOLUTION_ID}P) ${SOLUTION_NAME} - Create CodePipeline Alarm Template. Version: ${DIST_VERSION}`,
+	solutionId: SOLUTION_ID,
+	solutionVersion: DIST_VERSION
+})
+
+devopsDashboardStack.templateOptions.templateFormatVersion = TEMPLATE_FORMAT_VERSIOIN
+canaryStack.templateOptions.templateFormatVersion = TEMPLATE_FORMAT_VERSIOIN
+pipelineAlarmStack.templateOptions.templateFormatVersion = TEMPLATE_FORMAT_VERSIOIN

@@ -11,9 +11,6 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
-/**
- * @author Solution Builders
- */
 
 'use strict';
 
@@ -31,26 +28,26 @@ const athena = new AWS.Athena(options);
  * Execute Athena Query
  */
 let ExecuteAthenaQuery = async (dbName, workGroup, queryString) => {
-    try{
-            LOGGER.log('INFO', '[ExecuteAthenaQuery] Start');
+    try {
+        LOGGER.log('INFO', '[ExecuteAthenaQuery] Start');
 
-            let params = {
-                QueryString: queryString.toString(),
-                QueryExecutionContext: { Database: dbName },
-                WorkGroup: workGroup
-            }
+        let params = {
+            QueryString: queryString.toString(),
+            QueryExecutionContext: { Database: dbName },
+            WorkGroup: workGroup
+        }
 
-            LOGGER.log('INFO', 'Query params: '+ JSON.stringify(params, null, 2));
-            LOGGER.log('INFO', 'Query string: \n'+ queryString.toString());
+        LOGGER.log('INFO', 'Query params: ' + JSON.stringify(params, null, 2));
+        LOGGER.log('INFO', 'Query string: \n' + queryString.toString());
 
-            let response = await athena.startQueryExecution(params).promise();
-            let queryExecutionId = response.QueryExecutionId
+        let response = await athena.startQueryExecution(params).promise();
+        let queryExecutionId = response.QueryExecutionId
 
-            LOGGER.log('INFO', '[ExecuteAthenaQuery] response: ' + JSON.stringify(response));
-            LOGGER.log('INFO', '[ExecuteAthenaQuery] queryExecutionId: ' + queryExecutionId);
-            LOGGER.log('INFO', '[ExecuteAthenaQuery] END');
+        LOGGER.log('INFO', '[ExecuteAthenaQuery] response: ' + JSON.stringify(response));
+        LOGGER.log('INFO', '[ExecuteAthenaQuery] queryExecutionId: ' + queryExecutionId);
+        LOGGER.log('INFO', '[ExecuteAthenaQuery] END');
 
-            return queryExecutionId;
+        return queryExecutionId;
     }
     catch (err) {
         LOGGER.log('ERROR', err);

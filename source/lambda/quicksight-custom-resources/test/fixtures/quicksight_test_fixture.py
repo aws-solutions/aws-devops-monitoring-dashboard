@@ -1,16 +1,6 @@
 #!/usr/bin/env python
-######################################################################################################################
-#  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                #
-#                                                                                                                    #
-#  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    #
-#  with the License. A copy of the License is located at                                                             #
-#                                                                                                                    #
-#      http://www.apache.org/licenses/LICENSE-2.0                                                                    #
-#                                                                                                                    #
-#  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES #
-#  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    #
-#  and limitations under the License.                                                                                #
-######################################################################################################################
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: Apache-2.0
 
 import json
 import logging
@@ -49,7 +39,7 @@ class TestHelper:
     @staticmethod
     def get_supported_data_set_sub_types():
         # ENHANCEMENT: Should we use the config data / file for test to figure out the supported_data_set_types?
-        return ["code-change-activity", "code-deployment-detail", "recovery-time-detail", "code-pipeline-detail", "code-build-detail"]
+        return ["code-change-activity", "code-deployment-detail", "recovery-time-detail", "code-pipeline-detail", "code-build-detail", "github-change-activity"]
 
     @staticmethod
     def get_resource_properties():
@@ -110,7 +100,7 @@ def quicksight_application_stub():
             self.athena_workgroup = "mock-WorkGroup"
 
         def get_supported_data_set_sub_types(self):
-            return ["code-change-activity", "code-deployment-detail", "recovery-time-detail", "code-pipeline-detail", "code-build-detail"]
+            return ["code-change-activity", "code-deployment-detail", "recovery-time-detail", "code-pipeline-detail", "code-build-detail", "github-change-activity"]
 
     return QuicksightApplicationStub()
 
@@ -162,6 +152,11 @@ def quicksight_state_all():
                     "id": "ADMDUT_code-build-detail_DataSet",
                     "name": "ADMDUT_code-build-detail_DataSet",
                     "arn": "arn:aws:quicksight:us-east-1:FAKE_ACCOUNT:dataset/ADMD_code-build-detail_DataSet",
+                },
+                "github-change-activity": {
+                    "id": "ADMDUT_github-change-activity_DataSet",
+                    "name": "ADMDUT_github-change-activity_DataSet",
+                    "arn": "arn:aws:quicksight:us-east-1:FAKE_ACCOUNT:dataset/ADMD_github-change-activity_DataSet",
                 },
             },
         }

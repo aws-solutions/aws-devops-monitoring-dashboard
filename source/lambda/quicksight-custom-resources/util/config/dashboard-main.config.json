@@ -21,6 +21,10 @@
                 {
                     "DataSetPlaceholder": "code-build-detail",
                     "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/code-build"
+                },
+                {
+                    "DataSetPlaceholder": "github-change-activity",
+                    "DataSetArn": "arn:{Aws.PARTITION}:quicksight:{Aws.REGION}:{Aws.ACCOUNT_ID}:dataset/github-change-activity"
                 }
             ],
             "Arn": "{self.source_template_arn}"

@@ -1,0 +1,499 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test for codepipeline alarm stack 1`] = `
+Object {
+  "Conditions": Object {
+    "CodePipelineAlarmCreateLogGroupTrue2C38BECE": Object {
+      "Fn::Equals": Array [
+        "YES",
+        Object {
+          "Ref": "CreateLogGroup",
+        },
+      ],
+    },
+  },
+  "Mappings": Object {
+    "CodePipelineMetrics": Object {
+      "CodePipelineMetrics": Object {
+        "NameSpace": "CodePipeline/SO0143/Pipelines",
+      },
+    },
+  },
+  "Metadata": Object {
+    "AWS::CloudFormation::Interface": Object {
+      "ParameterGroups": Array [
+        Object {
+          "Label": Object {
+            "default": "Events Rule Configuration",
+          },
+          "Parameters": Array [
+            "CodePipelineName",
+            "CreateLogGroup",
+            "LogGroupName",
+          ],
+        },
+        Object {
+          "Label": Object {
+            "default": "Alarm Configuration",
+          },
+          "Parameters": Array [
+            "RepoName",
+          ],
+        },
+      ],
+      "ParameterLabels": Object {
+        "CodePipelineName": Object {
+          "default": "CodePipeline Name",
+        },
+        "CreateLogGroup": Object {
+          "default": "Create a new log Group?",
+        },
+        "LogGroupName": Object {
+          "default": "Log Group Name",
+        },
+        "RepoName": Object {
+          "default": "Repository Name",
+        },
+      },
+    },
+  },
+  "Outputs": Object {
+    "AlarmName": Object {
+      "Description": "Name of the CodePipeline alarm",
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "SO0143-[",
+            Object {
+              "Ref": "CodePipelineName",
+            },
+            "]-[",
+            Object {
+              "Ref": "RepoName",
+            },
+            "]-MTTR",
+          ],
+        ],
+      },
+    },
+    "LogGroupName": Object {
+      "Description": "Name of the log group",
+      "Value": Object {
+        "Ref": "LogGroupName",
+      },
+    },
+    "SolutionVersion": Object {
+      "Description": "Version for AWS DevOps Monitoring Dashboard Solution",
+      "Value": "v1.0.0",
+    },
+  },
+  "Parameters": Object {
+    "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dArtifactHash6BDDF757": Object {
+      "Description": "Artifact hash for asset \\"70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8d\\"",
+      "Type": "String",
+    },
+    "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3BucketF0537962": Object {
+      "Description": "S3 bucket for asset \\"70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8d\\"",
+      "Type": "String",
+    },
+    "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3VersionKey46386A78": Object {
+      "Description": "S3 key for asset version \\"70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8d\\"",
+      "Type": "String",
+    },
+    "CodePipelineName": Object {
+      "Description": "Name of the CodePipeline. Change the default value as needed.",
+      "Type": "String",
+    },
+    "CreateLogGroup": Object {
+      "AllowedValues": Array [
+        "YES",
+        "NO",
+      ],
+      "Default": "YES",
+      "Description": "Create a new log group? Select YES to create a new log group if this is the first time you deploy the stack. For subsequent stack update, recommend to select NO to reuse the existing log group. Specify the Log group name below.",
+      "Type": "String",
+    },
+    "LogGroupName": Object {
+      "Default": "my-codepipeline-log-group",
+      "Description": "Name of the CodePipeline log group to which the pipeline events are sent. Change the default value as needed.",
+      "Type": "String",
+    },
+    "RepoName": Object {
+      "Description": "Name of source repository for the code pipeline. It will be part of the alarm name. Change the default value as needed.",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "AWS679f53fac002430cb0da5b7982bd22872D164C4C": Object {
+      "DependsOn": Array [
+        "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+      ],
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W58",
+              "reason": "Lambda has the required permission to write CloudWatch Logs through a custom policy.",
+            },
+            Object {
+              "id": "W89",
+              "reason": "No need to deploy this Lambda to a VPC.",
+            },
+            Object {
+              "id": "W92",
+              "reason": "No need for simultaneous executions.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3BucketF0537962",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3VersionKey46386A78",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters70893b631249dc61260989e92e90d60ae94fbbec490a1e065680d77383084d8dS3VersionKey46386A78",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs12.x",
+        "Timeout": 120,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodePipelineAlarmAppAlarmC62B9C08": Object {
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W28",
+              "reason": "Static names chosen intentionally to provide fixed name structure required in the solution",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "AlarmDescription": "Goes to alarm state when there is one failed code pipeline exectuion on the most recent check.",
+        "AlarmName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "SO0143-[",
+              Object {
+                "Ref": "CodePipelineName",
+              },
+              "]-[",
+              Object {
+                "Ref": "RepoName",
+              },
+              "]-MTTR",
+            ],
+          ],
+        },
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "DatapointsToAlarm": 1,
+        "EvaluationPeriods": 1,
+        "MetricName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "FailedExecution-",
+              Object {
+                "Ref": "CodePipelineName",
+              },
+            ],
+          ],
+        },
+        "Namespace": Object {
+          "Fn::FindInMap": Array [
+            "CodePipelineMetrics",
+            "CodePipelineMetrics",
+            "NameSpace",
+          ],
+        },
+        "Period": 60,
+        "Statistic": "Sum",
+        "Threshold": 1,
+        "TreatMissingData": "ignore",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "CodePipelineAlarmFailedPipelineExecutionMetricFilter36FFD4B2": Object {
+      "DependsOn": Array [
+        "CodePipelineAlarmPipelineLogGroupB061BB52",
+      ],
+      "Properties": Object {
+        "FilterPattern": "{($.detail.state = \\"FAILED\\")}",
+        "LogGroupName": Object {
+          "Ref": "LogGroupName",
+        },
+        "MetricTransformations": Array [
+          Object {
+            "DefaultValue": 0,
+            "MetricName": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "FailedExecution-",
+                  Object {
+                    "Ref": "CodePipelineName",
+                  },
+                ],
+              ],
+            },
+            "MetricNamespace": Object {
+              "Fn::FindInMap": Array [
+                "CodePipelineMetrics",
+                "CodePipelineMetrics",
+                "NameSpace",
+              ],
+            },
+            "MetricValue": "1",
+          },
+        ],
+      },
+      "Type": "AWS::Logs::MetricFilter",
+    },
+    "CodePipelineAlarmPipelineEventsRule97CA1513": Object {
+      "Properties": Object {
+        "EventPattern": Object {
+          "detail": Object {
+            "state": Array [
+              "FAILED",
+              "SUCCEEDED",
+            ],
+          },
+          "detail-type": Array [
+            "CodePipeline Pipeline Execution State Change",
+          ],
+          "source": Array [
+            "aws.codepipeline",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "arn:",
+                  Object {
+                    "Ref": "AWS::Partition",
+                  },
+                  ":logs:",
+                  Object {
+                    "Ref": "AWS::Region",
+                  },
+                  ":",
+                  Object {
+                    "Ref": "AWS::AccountId",
+                  },
+                  ":log-group:",
+                  Object {
+                    "Ref": "LogGroupName",
+                  },
+                ],
+              ],
+            },
+            "Id": "Target0",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodePipelineAlarmPipelineLogGroupB061BB52": Object {
+      "Condition": "CodePipelineAlarmCreateLogGroupTrue2C38BECE",
+      "DeletionPolicy": "Delete",
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W84",
+              "reason": "CloudWatch LogGroups are encrypted by default.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Ref": "LogGroupName",
+        },
+        "RetentionInDays": 90,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "EventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864CustomResourcePolicyD35BFE30": Object {
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W12",
+              "reason": "Resource * is required by the Lambda Execution role, so that the Lambda can add ResourcePolicies to all required resources.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "logs:PutResourcePolicy",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": "logs:DeleteResourcePolicy",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "EventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864CustomResourcePolicyD35BFE30",
+        "Roles": Array [
+          Object {
+            "Ref": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "EventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864F2A10BA1": Object {
+      "DeletionPolicy": "Delete",
+      "DependsOn": Array [
+        "EventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864CustomResourcePolicyD35BFE30",
+      ],
+      "Properties": Object {
+        "Create": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "{\\"service\\":\\"CloudWatchLogs\\",\\"action\\":\\"putResourcePolicy\\",\\"parameters\\":{\\"policyName\\":\\"CodePipelineAlarmEventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864184E82F4\\",\\"policyDocument\\":\\"{\\\\\\"Statement\\\\\\":[{\\\\\\"Action\\\\\\":[\\\\\\"logs:PutLogEvents\\\\\\",\\\\\\"logs:CreateLogStream\\\\\\"],\\\\\\"Effect\\\\\\":\\\\\\"Allow\\\\\\",\\\\\\"Principal\\\\\\":{\\\\\\"Service\\\\\\":\\\\\\"events.amazonaws.com\\\\\\"},\\\\\\"Resource\\\\\\":\\\\\\"arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":logs:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":log-group:",
+              Object {
+                "Ref": "LogGroupName",
+              },
+              ":*\\\\\\"}],\\\\\\"Version\\\\\\":\\\\\\"2012-10-17\\\\\\"}\\"},\\"physicalResourceId\\":{\\"id\\":\\"EventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864\\"}}",
+            ],
+          ],
+        },
+        "Delete": "{\\"service\\":\\"CloudWatchLogs\\",\\"action\\":\\"deleteResourcePolicy\\",\\"parameters\\":{\\"policyName\\":\\"CodePipelineAlarmEventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864184E82F4\\"},\\"ignoreErrorCodesMatching\\":\\"400\\"}",
+        "InstallLatestAwsSdk": true,
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+            "Arn",
+          ],
+        },
+        "Update": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "{\\"service\\":\\"CloudWatchLogs\\",\\"action\\":\\"putResourcePolicy\\",\\"parameters\\":{\\"policyName\\":\\"CodePipelineAlarmEventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864184E82F4\\",\\"policyDocument\\":\\"{\\\\\\"Statement\\\\\\":[{\\\\\\"Action\\\\\\":[\\\\\\"logs:PutLogEvents\\\\\\",\\\\\\"logs:CreateLogStream\\\\\\"],\\\\\\"Effect\\\\\\":\\\\\\"Allow\\\\\\",\\\\\\"Principal\\\\\\":{\\\\\\"Service\\\\\\":\\\\\\"events.amazonaws.com\\\\\\"},\\\\\\"Resource\\\\\\":\\\\\\"arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":logs:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":log-group:",
+              Object {
+                "Ref": "LogGroupName",
+              },
+              ":*\\\\\\"}],\\\\\\"Version\\\\\\":\\\\\\"2012-10-17\\\\\\"}\\"},\\"physicalResourceId\\":{\\"id\\":\\"EventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864\\"}}",
+            ],
+          ],
+        },
+      },
+      "Type": "Custom::CloudwatchLogResourcePolicy",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+}
+`;

@@ -28,9 +28,6 @@
 [ "$DEBUG" == 'true' ] && set -x
 set -e
 
-# Important: CDK global version number
-cdk_version=1.98.0
-
 # Check to see if input has been provided:
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ]; then
     echo "Please provide all required parameters for the build script"
@@ -71,9 +68,9 @@ do_replace() {
 # for solution ID, name, and trademarked name
 # Ex:
 # #!/bin/bash
-# SOLUTION_ID='SO0111'
-# SOLUTION_NAME='AWS Security Hub Automated Response & Remediation'
-# SOLUTION_TRADEMARKEDNAME='aws-security-hub-automated-response-and-remediation'
+# SOLUTION_ID='SO0134'
+# SOLUTION_NAME='AWS DevOps Monitoring Dashboard'
+# SOLUTION_TRADEMARKEDNAME='aws-devops-monitoring-dashboard'
 if [[ -e './solution_env.sh' ]]; then
     chmod +x ./solution_env.sh
     source ./solution_env.sh
@@ -174,8 +171,9 @@ echo "--------------------------------------------------------------------------
 echo "[Synth] CDK Project"
 echo "------------------------------------------------------------------------------"
 cd $temp_work_dir
-do_cmd npm install      # local install per package.json
-do_cmd npm install aws-cdk@$cdk_version
+do_cmd npm install
+export overrideWarningsEnabled=false
+node_modules/aws-cdk/bin/cdk synth --output=$staging_dist_dir
 export PATH=$(npm bin):$PATH
 do_cmd npm run build
 
