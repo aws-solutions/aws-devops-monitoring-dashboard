@@ -49,29 +49,29 @@ let TransformSyntheticCanaryAlarmEvents = (data, recordNumber) => {
 
             // extract current state data from alarm name
             const currentState = detailData['state'];
-            transformedDetail['alarmCurrState'] = currentState['value'];
-            transformedDetail['alarmCurrStateTimeStamp']  //convert to Athena's timestamp format: yyyy-mm-ddThh:mm:ssZ
+            transformedDetail['canaryAlarmCurrState'] = currentState['value'];
+            transformedDetail['canaryAlarmCurrStateTimeStamp']  //convert to Athena's timestamp format: yyyy-mm-ddThh:mm:ssZ
                 = currentState.hasOwnProperty("timestamp") ? new Date(currentState['timestamp']).toISOString().substring(0, 19) + 'Z' : '';
 
             // extract previous state data from alarm name
             const previousState = detailData['previousState'];
-            transformedDetail['alarmPrevState'] = previousState['value'];
-            transformedDetail['alarmPrevStateTimeStamp'] //convert to Athena's timestamp format: yyyy-mm-ddThh:mm:ssZ
+            transformedDetail['canaryAlarmPrevState'] = previousState['value'];
+            transformedDetail['canaryAlarmPrevStateTimeStamp'] //convert to Athena's timestamp format: yyyy-mm-ddThh:mm:ssZ
                 = previousState.hasOwnProperty("timestamp") ? new Date(previousState['timestamp']).toISOString().substring(0, 19) + 'Z' : '';
 
             // get MTTR canary alarm name: SolutionId-[AppName]-[RepoName]-MTTR
             const alarmName = detailData["alarmName"];
-            transformedDetail['alarmName'] = alarmName;
+            transformedDetail['canaryAlarmName'] = alarmName;
 
             // extract application name from alarm name
             let startIndex = alarmName.indexOf('[');
             let endIndex = alarmName.indexOf(']');
-            transformedDetail['alarmAppName'] = (startIndex !== -1 && endIndex !== -1) ? alarmName.substring(startIndex + 1, endIndex) : '';
+            transformedDetail['canaryAlarmAppName'] = (startIndex !== -1 && endIndex !== -1) ? alarmName.substring(startIndex + 1, endIndex) : '';
 
             // extract repository name from alarm name
             startIndex = alarmName.lastIndexOf('[');
             endIndex = alarmName.lastIndexOf(']');
-            transformedDetail['alarmRepoName'] = (startIndex !== -1 && endIndex !== -1) ? alarmName.substring(startIndex + 1, endIndex) : '';
+            transformedDetail['canaryAlarmRepoName'] = (startIndex !== -1 && endIndex !== -1) ? alarmName.substring(startIndex + 1, endIndex) : '';
 
             // extract namespace as alarm type
             const alarmType = detailData['configuration']['metrics'][0]['metricStat']['metric']['namespace'];
@@ -79,9 +79,9 @@ let TransformSyntheticCanaryAlarmEvents = (data, recordNumber) => {
 
             // calculate recovery duration minutes
             let durationMinutes = -1;
-            if (transformedDetail['alarmCurrStateTimeStamp'].length > 0 && transformedDetail['alarmPrevStateTimeStamp'].length > 0) {
-                const startTime = new Date(transformedDetail['alarmPrevStateTimeStamp']);
-                const endTime = new Date(transformedDetail['alarmCurrStateTimeStamp']);
+            if (transformedDetail['canaryAlarmCurrStateTimeStamp'].length > 0 && transformedDetail['canaryAlarmPrevStateTimeStamp'].length > 0) {
+                const startTime = new Date(transformedDetail['canaryAlarmPrevStateTimeStamp']);
+                const endTime = new Date(transformedDetail['canaryAlarmCurrStateTimeStamp']);
                 const difference = endTime.getTime() - startTime.getTime(); // This will give difference in milliseconds
                 durationMinutes = Math.round(difference / 60000);
             }

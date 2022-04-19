@@ -245,13 +245,13 @@ const expectedTransformedCanaryAlarmRecord = {
         "arn:aws:cloudwatch:us-east-1:xxxxxxxxxxxx:alarm:SO0143-[MyDemoApplication2]-[MyDemoRepo2]-MTTR"
     ],
     "detail": {
-        "alarmCurrState": "OK",
-        "alarmCurrStateTimeStamp": "2020-09-29T06:05:01Z",
-        "alarmPrevState": "ALARM",
-        "alarmPrevStateTimeStamp": "2020-09-29T05:59:01Z",
-        "alarmName": "SO0143-[MyDemoApplication2]-[MyDemoRepo2]-MTTR",
-        "alarmAppName": "MyDemoApplication2",
-        "alarmRepoName": "MyDemoRepo2",
+        "canaryAlarmCurrState": "OK",
+        "canaryAlarmCurrStateTimeStamp": "2020-09-29T06:05:01Z",
+        "canaryAlarmPrevState": "ALARM",
+        "canaryAlarmPrevStateTimeStamp": "2020-09-29T05:59:01Z",
+        "canaryAlarmName": "SO0143-[MyDemoApplication2]-[MyDemoRepo2]-MTTR",
+        "canaryAlarmAppName": "MyDemoApplication2",
+        "canaryAlarmRepoName": "MyDemoRepo2",
         "alarmType": "Canary",
         "recoveryDurationMinutes": 6
     }

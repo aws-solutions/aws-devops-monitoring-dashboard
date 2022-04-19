@@ -102,35 +102,31 @@ export class GlueDatabase extends Construct {
             type: Schema.STRING
           },
           {
-            name: 'alarmName',
+            name: 'canaryAlarmName',
             type: Schema.STRING
           },
           {
-            name: 'alarmType',
+            name: 'canaryAlarmAppName',
             type: Schema.STRING
           },
           {
-            name: 'alarmAppName',
+            name: 'canaryAlarmRepoName',
             type: Schema.STRING
           },
           {
-            name: 'alarmRepoName',
+            name: 'canaryAlarmCurrState',
             type: Schema.STRING
           },
           {
-            name: 'alarmCurrState',
+            name: 'canaryAlarmPrevState',
             type: Schema.STRING
           },
           {
-            name: 'alarmPrevState',
-            type: Schema.STRING
-          },
-          {
-            name: 'alarmCurrStateTimeStamp',
+            name: 'canaryAlarmCurrStateTimeStamp',
             type: Schema.TIMESTAMP
           },
           {
-            name: 'alarmPrevStateTimeStamp',
+            name: 'canaryAlarmPrevStateTimeStamp',
             type: Schema.TIMESTAMP
           },
           {
@@ -184,6 +180,10 @@ export class GlueDatabase extends Construct {
           {
             name: 'actionProvider',
             type: Schema.STRING
+          },
+          {
+            name: 'alarmType',
+            type: Schema.STRING
           }]
         ),
         comment: "struct<nested_column:datatype>"
@@ -195,7 +195,7 @@ export class GlueDatabase extends Construct {
     });
 
     this.metricsGlueTableName = devopsMetricsGlueTable.tableName;
-
+    
 
     /**
      * Create AWS Glue table for CloudWatch Metrics for CodeBuild

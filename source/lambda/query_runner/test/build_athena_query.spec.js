@@ -141,14 +141,14 @@ describe("When testing query builder", () => {
 
     const buildRecoveryTimeQuery = `CREATE OR REPLACE VIEW ${athenaDB}.recovery_time_detail_view AS
         SELECT account, time, region,
-        detail.alarmName as alarm_name,
+        detail.canaryAlarmName as alarm_name,
         detail.alarmType as alarm_type,
-        detail.alarmAppName as application_name,
-        detail.alarmRepoName as repository_name,
-        detail.alarmCurrState as current_state,
-        detail.alarmPrevState as previous_state,
-        detail.alarmCurrStateTimeStamp as current_state_timestamp,
-        detail.alarmPrevStateTimeStamp as previous_state_timestamp,
+        detail.canaryAlarmAppName as application_name,
+        detail.canaryAlarmRepoName as repository_name,
+        detail.canaryAlarmCurrState as current_state,
+        detail.canaryAlarmPrevState as previous_state,
+        detail.canaryAlarmCurrStateTimeStamp as current_state_timestamp,
+        detail.canaryAlarmPrevStateTimeStamp as previous_state_timestamp,
         detail.recoveryDurationMinutes as duration_minutes, created_at
         FROM ${athenaDB}.${athenaTable}
         WHERE source = 'aws.cloudwatch' 
