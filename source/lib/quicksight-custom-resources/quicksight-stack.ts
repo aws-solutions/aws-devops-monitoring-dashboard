@@ -1,25 +1,16 @@
 #!/usr/bin/env node
-/**********************************************************************************************************************
- *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
- *                                                                                                                    *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
- *  with the License. A copy of the License is located at                                                             *
- *                                                                                                                    *
- *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
- *                                                                                                                    *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
- *  and limitations under the License.                                                                                *
- *********************************************************************************************************************/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { CfnParameter, Construct, NestedStack, NestedStackProps } from '@aws-cdk/core';
+import { CfnParameter, Construct, NestedStack, NestedStackProps} from '@aws-cdk/core';
 import { ExecutionRole } from '../solution-helper/lambda-role-cloudwatch-construct';
 import { QuickSight, QuickSightSetup } from './quicksight-construct';
+import { ApplyCfnSuppressRulesToLogRententionResourc } from "../util/apply_to_construct";
 
 export class QuickSightStack extends NestedStack {
     private _quickSight: QuickSight;
 
-    constructor(scope: Construct, id: string, props:NestedStackProps) {
+    constructor(scope: Construct, id: string, props: NestedStackProps) {
         super(scope, id, props);
 
         /**
@@ -116,6 +107,9 @@ export class QuickSightStack extends NestedStack {
             parentStackName: parentStackName.valueAsString,
             userAgentExtra: `AwsSolution/${solutionID}/${solutionVersion}`
         });
+
+        ApplyCfnSuppressRulesToLogRententionResourc(this, 'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a');
+
     }
 
     public get analysisURLOutput(): string {

@@ -29,6 +29,14 @@ Object {
         "Yes",
       ],
     },
+    "IntervalEqualsOne": Object {
+      "Fn::Equals": Array [
+        Object {
+          "Ref": "Interval",
+        },
+        1,
+      ],
+    },
   },
   "Metadata": Object {
     "AWS::CloudFormation::Interface": Object {
@@ -141,7 +149,7 @@ Object {
   "Parameters": Object {
     "AlarmPeriods": Object {
       "Default": 1,
-      "Description": "Number of collection periods over which the threshold is exceeded before alarming.         This value must be less than or equal to Evaluation Periods",
+      "Description": "Number of collection periods over which the threshold is exceeded before alarming. This value must be less than or equal to Evaluation Periods",
       "Type": "Number",
     },
     "AppName": Object {
@@ -149,7 +157,7 @@ Object {
       "Type": "String",
     },
     "BucketName": Object {
-      "Description": "Name of the bucket (new or existing) for logging         Canary artifacts. Each Canary will log to this bucket to a different         prefix.",
+      "Description": "Name of the bucket (new or existing) for logging Canary artifacts. Each Canary will log to this bucket to a different prefix.",
       "Type": "String",
     },
     "CanaryName": Object {
@@ -164,7 +172,7 @@ Object {
         "Yes",
       ],
       "Default": "No",
-      "Description": "Canaries store artifacts in an S3 bucket. Should this         canary create a new bucket? Enter the bucket name (new or existing) below.",
+      "Description": "Canaries store artifacts in an S3 bucket. Should this canary create a new bucket? Enter the bucket name (new or existing) below.",
       "Type": "String",
     },
     "CreateCanary": Object {
@@ -182,9 +190,9 @@ Object {
       "Type": "Number",
     },
     "Interval": Object {
-      "Default": "5",
+      "Default": 5,
       "Description": "Interval, in minutes.",
-      "Type": "String",
+      "Type": "Number",
     },
     "PercentThreshold": Object {
       "Default": 100,
@@ -313,28 +321,38 @@ Object {
         "PolicyDocument": Object {
           "Statement": Array [
             Object {
-              "Action": "*",
+              "Action": "s3:*",
               "Condition": Object {
                 "Bool": Object {
                   "aws:SecureTransport": "false",
                 },
               },
               "Effect": "Deny",
-              "Principal": "*",
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    Object {
-                      "Fn::GetAtt": Array [
-                        "ArtifactBucket7410C9EF",
-                        "Arn",
-                      ],
-                    },
-                    "/*",
-                  ],
-                ],
+              "Principal": Object {
+                "AWS": "*",
               },
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "ArtifactBucket7410C9EF",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "ArtifactBucket7410C9EF",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
               "Sid": "HttpsOnly",
             },
           ],
@@ -412,19 +430,25 @@ exports.handler = async () => {
         "Name": Object {
           "Ref": "CanaryName",
         },
-        "RuntimeVersion": "syn-nodejs-puppeteer-3.1",
+        "RuntimeVersion": "syn-nodejs-puppeteer-3.3",
         "Schedule": Object {
           "DurationInSeconds": "0",
           "Expression": Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                "rate(",
-                Object {
-                  "Ref": "Interval",
-                },
-                " minutes)",
-              ],
+            "Fn::If": Array [
+              "IntervalEqualsOne",
+              "rate(1 minute)",
+              Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "rate(",
+                    Object {
+                      "Ref": "Interval",
+                    },
+                    " minutes)",
+                  ],
+                ],
+              },
             ],
           },
         },
@@ -466,10 +490,26 @@ exports.handler = async () => {
                   "Resource": "*",
                 },
                 Object {
-                  "Action": Array [
-                    "s3:PutObject",
-                    "s3:GetBucketLocation",
-                  ],
+                  "Action": "s3:GetBucketLocation",
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":s3:::",
+                        Object {
+                          "Ref": "BucketName",
+                        },
+                      ],
+                    ],
+                  },
+                },
+                Object {
+                  "Action": "s3:PutObject",
                   "Effect": "Allow",
                   "Resource": Object {
                     "Fn::Join": Array [
@@ -517,7 +557,15 @@ exports.handler = async () => {
                         Object {
                           "Ref": "AWS::Partition",
                         },
-                        ":logs:::*",
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/cwsyn-*",
                       ],
                     ],
                   },

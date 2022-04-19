@@ -1,15 +1,5 @@
-/**
- *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 'use strict';
 
@@ -23,80 +13,80 @@ const CanaryAlarmEventsLambda = require('../synthetic_canary_alarm_events');
 const recordNumber = 1
 
 const codeCommitSourceEventData = {
-  "version": "0",
-  "id": "someId",
-  "detail-type": "AWS API Call via CloudTrail",
-  "source": "aws.codecommit",
-  "account": "xxxxxxxxxxxx",
-  "time": "2020-12-17T23:09:56Z",
-  "region": "us-east-1",
-  "resources": [],
-  "detail": {
-      "eventVersion": "1.08",
-      "userIdentity": {
-          "type": "IAMUser",
-          "principalId": "someID",
-          "arn": "arn:aws:iam::xxxxxxxxxxxx:user/codecommituser-DoNOTDELETE",
-          "accountId": "xxxxxxxxxxxx",
-          "userName": "codecommituser-DoNOTDELETE"
-      },
-      "eventTime": "2020-12-17T23:09:56Z",
-      "eventSource": "codecommit.amazonaws.com",
-      "eventName": "GitPush",
-      "awsRegion": "us-east-1",
-      "sourceIPAddress": "someIP",
-      "userAgent": "SSH-2.0-OpenSSH_7.8",
-      "requestParameters": {
-          "references": [
-              {
-                  "commit": "someId",
-                  "ref": "refs/heads/master"
-              }
-          ]
-      },
-      "responseElements": null,
-      "additionalEventData": {
-          "protocol": "SSH",
-          "capabilities": [
-              "report-status",
-              "side-band-64k"
-          ],
-          "dataTransferred": true,
-          "repositoryName": "MyDemoRepo",
-          "repositoryId": "someId"
-      },
-      "requestID": "someId",
-      "eventID": "someId",
-      "readOnly": false,
-      "resources": [
-          {
-              "accountId": "xxxxxxxxxxxx",
-              "type": "AWS::CodeCommit::Repository",
-              "ARN": "arn:aws:codecommit:us-east-1:xxxxxxxxxxxx:MyDemoRepo"
-          }
-      ],
-      "eventType": "AwsApiCall",
-      "managementEvent": true,
-      "eventCategory": "Management"
-  }
+    "version": "0",
+    "id": "someId",
+    "detail-type": "AWS API Call via CloudTrail",
+    "source": "aws.codecommit",
+    "account": "xxxxxxxxxxxx",
+    "time": "2020-12-17T23:09:56Z",
+    "region": "us-east-1",
+    "resources": [],
+    "detail": {
+        "eventVersion": "1.08",
+        "userIdentity": {
+            "type": "IAMUser",
+            "principalId": "someID",
+            "arn": "arn:aws:iam::xxxxxxxxxxxx:user/codecommituser-DoNOTDELETE",
+            "accountId": "xxxxxxxxxxxx",
+            "userName": "codecommituser-DoNOTDELETE"
+        },
+        "eventTime": "2020-12-17T23:09:56Z",
+        "eventSource": "codecommit.amazonaws.com",
+        "eventName": "GitPush",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "someIP",
+        "userAgent": "SSH-2.0-OpenSSH_7.8",
+        "requestParameters": {
+            "references": [
+                {
+                    "commit": "someId",
+                    "ref": "refs/heads/master"
+                }
+            ]
+        },
+        "responseElements": null,
+        "additionalEventData": {
+            "protocol": "SSH",
+            "capabilities": [
+                "report-status",
+                "side-band-64k"
+            ],
+            "dataTransferred": true,
+            "repositoryName": "MyDemoRepo",
+            "repositoryId": "someId"
+        },
+        "requestID": "someId",
+        "eventID": "someId",
+        "readOnly": false,
+        "resources": [
+            {
+                "accountId": "xxxxxxxxxxxx",
+                "type": "AWS::CodeCommit::Repository",
+                "ARN": "arn:aws:codecommit:us-east-1:xxxxxxxxxxxx:MyDemoRepo"
+            }
+        ],
+        "eventType": "AwsApiCall",
+        "managementEvent": true,
+        "eventCategory": "Management"
+    }
 }
 
-const  expectedTransformedCodeCommitRecord = {
-  "version": "0",
-  "id": "someId",
-  "detail_type": "AWS API Call via CloudTrail",
-  "source": "aws.codecommit",
-  "account": "xxxxxxxxxxxx",
-  "time": "2020-12-17T23:09:56Z",
-  "region": "us-east-1",
-  "resources": [],
-  "detail": {
-      "eventName": "GitPush",
-      "authorName": "codecommituser-DoNOTDELETE",
-      "commitId": "someId",
-      "branchName": "master",
-      "repositoryName": "MyDemoRepo"
-  }
+const expectedTransformedCodeCommitRecord = {
+    "version": "0",
+    "id": "someId",
+    "detail_type": "AWS API Call via CloudTrail",
+    "source": "aws.codecommit",
+    "account": "xxxxxxxxxxxx",
+    "time": "2020-12-17T23:09:56Z",
+    "region": "us-east-1",
+    "resources": [],
+    "detail": {
+        "eventName": "GitPush",
+        "authorName": "codecommituser-DoNOTDELETE",
+        "commitId": "someId",
+        "branchName": "master",
+        "repositoryName": "MyDemoRepo"
+    }
 }
 
 const codeDeploySourceEventData = {
@@ -121,7 +111,7 @@ const codeDeploySourceEventData = {
     }
 }
 
-const  expectedTransformedCodeDeployRecord = {
+const expectedTransformedCodeDeployRecord = {
     "version": "0",
     "id": "someId",
     "detail_type": "CodeDeploy Deployment State-change Notification",
@@ -172,7 +162,7 @@ const codePipelineSourceEventData = {
     }
 }
 
-const  expectedTransformedCodePipelineRecord = {
+const expectedTransformedCodePipelineRecord = {
     "version": "0",
     "id": "someId",
     "detail_type": "CodePipeline Action Execution State Change",
@@ -262,6 +252,7 @@ const expectedTransformedCanaryAlarmRecord = {
         "canaryAlarmName": "SO0143-[MyDemoApplication2]-[MyDemoRepo2]-MTTR",
         "canaryAlarmAppName": "MyDemoApplication2",
         "canaryAlarmRepoName": "MyDemoRepo2",
+        "alarmType": "Canary",
         "recoveryDurationMinutes": 6
     }
 }
@@ -273,21 +264,21 @@ const expectedTransformedCodeBuildRecord = '{\"metric_stream_name\":\"CodeBuildM
 describe('When testing event parser', () => {
 
     it('expect record match after CodeCommit event transformation', async () => {
-      const transformedRecord = await codeCommitEventsLambda.transformCodeCommitEvents(codeCommitSourceEventData,recordNumber);
-      const transformedRecordString = JSON.stringify(transformedRecord,null,2);
-      const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodeCommitRecord,null,2);
+        const transformedRecord = await codeCommitEventsLambda.transformCodeCommitEvents(codeCommitSourceEventData, recordNumber);
+        const transformedRecordString = JSON.stringify(transformedRecord, null, 2);
+        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodeCommitRecord, null, 2);
 
-      console.log("Transformed record string for CodeCommit: " + transformedRecordString);
-      console.log("Expected record string for CodeCommit: " + expectedTransformedRecordString);
+        console.log("Transformed record string for CodeCommit: " + transformedRecordString);
+        console.log("Expected record string for CodeCommit: " + expectedTransformedRecordString);
 
-      expect(transformedRecordString).to.equal(expectedTransformedRecordString);
+        expect(transformedRecordString).to.equal(expectedTransformedRecordString);
 
-   });
+    });
 
-   it('expect record match after CodeDeploy event transformation', async () => {
-        const transformedRecord = await codeDeployEventsLambda.transformCodeDeployEvents(codeDeploySourceEventData,recordNumber);
-        const transformedRecordString = JSON.stringify(transformedRecord,null,2);
-        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodeDeployRecord,null,2);
+    it('expect record match after CodeDeploy event transformation', async () => {
+        const transformedRecord = await codeDeployEventsLambda.transformCodeDeployEvents(codeDeploySourceEventData, recordNumber);
+        const transformedRecordString = JSON.stringify(transformedRecord, null, 2);
+        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodeDeployRecord, null, 2);
 
         console.log("Transformed record string for CodeDeploy: " + transformedRecordString);
         console.log("Expected record string for CodeDeploy: " + expectedTransformedRecordString);
@@ -297,9 +288,9 @@ describe('When testing event parser', () => {
     });
 
     it('expect record match after CodePipeline event transformation', async () => {
-        const transformedRecord = await codePipelineEventsLambda.transformCodePipelineEvents(codePipelineSourceEventData,recordNumber);
-        const transformedRecordString = JSON.stringify(transformedRecord,null,2);
-        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodePipelineRecord,null,2);
+        const transformedRecord = await codePipelineEventsLambda.transformCodePipelineEvents(codePipelineSourceEventData, recordNumber);
+        const transformedRecordString = JSON.stringify(transformedRecord, null, 2);
+        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodePipelineRecord, null, 2);
 
         console.log("Transformed record string for CodePipeline: " + transformedRecordString);
         console.log("Expected record string for CodePipeline: " + expectedTransformedRecordString);
@@ -309,9 +300,9 @@ describe('When testing event parser', () => {
     });
 
     it('expect record match after Synthetics canary alarm event transformation', async () => {
-        const transformedRecord = await CanaryAlarmEventsLambda.transformSyntheticCanaryAlarmEvents(canaryAlarmSourceEventData,recordNumber);
-        const transformedRecordString = JSON.stringify(transformedRecord,null,2);
-        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCanaryAlarmRecord,null,2);
+        const transformedRecord = await CanaryAlarmEventsLambda.transformSyntheticCanaryAlarmEvents(canaryAlarmSourceEventData, recordNumber);
+        const transformedRecordString = JSON.stringify(transformedRecord, null, 2);
+        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCanaryAlarmRecord, null, 2);
 
         console.log("Transformed record string for Synthetics canary alarm: " + transformedRecordString);
         console.log("Expected record string for Synthetics canary alarm: " + expectedTransformedRecordString);
@@ -320,10 +311,10 @@ describe('When testing event parser', () => {
 
     });
 
-   it('expect record match after transformation of CodeBuild event with project', async () => {
-        const transformedRecord = await codeBuildEventsLambda.transformCodeBuildCWMetrics(decodedCodeBuildSourceData,recordNumber);
-        const transformedRecordString = JSON.stringify(transformedRecord,null,2);
-        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodeBuildRecord,null,2);
+    it('expect record match after transformation of CodeBuild event with project', async () => {
+        const transformedRecord = await codeBuildEventsLambda.transformCodeBuildCWMetrics(decodedCodeBuildSourceData, recordNumber);
+        const transformedRecordString = JSON.stringify(transformedRecord, null, 2);
+        const expectedTransformedRecordString = JSON.stringify(expectedTransformedCodeBuildRecord, null, 2);
 
         console.log("Transformed record string for Code Build " + transformedRecordString);
         console.log("Expected record string for Code Build: " + expectedTransformedRecordString);

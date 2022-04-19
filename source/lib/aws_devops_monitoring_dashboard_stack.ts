@@ -1,7 +1,7 @@
-/**********************************************************************************************************************
- *  Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.                                           *
+/*********************************************************************************************************************
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
  *                                                                                                                    *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
+ *  Licensed under the Apache License Version 2.0 (the 'License'). You may not use this file except in compliance     *
  *  with the License. A copy of the License is located at                                                             *
  *                                                                                                                    *
  *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
@@ -19,16 +19,24 @@ import * as logs from '@aws-cdk/aws-logs';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as events from '@aws-cdk/aws-events';
 import * as glue from '@aws-cdk/aws-glue';
-import { CfnOutput } from '@aws-cdk/core';
-import { EventsRuleToKinesisFirehoseToS3, EventsRuleToKinesisFirehoseToS3Props } from '@aws-solutions-constructs/aws-events-rule-kinesisfirehose-s3';
-import { EventsRuleToLambdaProps, EventsRuleToLambda } from '@aws-solutions-constructs/aws-events-rule-lambda';
+import {
+  EventbridgeToKinesisFirehoseToS3,
+  EventbridgeToKinesisFirehoseToS3Props
+} from '@aws-solutions-constructs/aws-eventbridge-kinesisfirehose-s3';
+
+import { EventbridgeToLambda, EventbridgeToLambdaProps } from '@aws-solutions-constructs/aws-eventbridge-lambda';
 import { QuickSightStack } from './quicksight-custom-resources/quicksight-stack';
 import { SolutionHelper } from './solution-helper/solution-helper-construct';
 import { CanaryEvents } from './events/canary_events_construct';
 import { CodeDeployEvents } from './events/code_deploy_events_construct';
 import { CodePipelineEvents } from './events/code_pipeline_events_construct';
 import { CodeBuildEvents } from './events/code_build_events_construct';
-import { Database } from './database/database_construct';
+import { GlueDatabase } from './database/database_construct';
+import { GitHubStack } from './github/github_stack';
+import { addCfnSuppressRules } from "@aws-solutions-constructs/core";
+import { CodePipelineAlarmEvents } from "./events/codepipeline_alarm_events_construct";
+import { ApplyCfnSuppressRulesToLogRententionResourc } from "./util/apply_to_construct";
+
 export interface DevOpsDashboardStackProps extends cdk.StackProps {
   solutionId: string;
   solutionVersion: string;
@@ -70,6 +78,16 @@ export class DevOpsDashboardStack extends cdk.Stack {
             "Parameters": [
               "QuickSightPrincipalArn"
             ]
+          },
+          {
+            "Label": {
+              "default": "GitHub Configuration"
+            },
+            "Parameters": [
+              "UseGitHub",
+              "WebhookSecretToken",
+              "AllowedIPs"
+            ]
           }
         ],
         "ParameterLabels": {
@@ -84,6 +102,15 @@ export class DevOpsDashboardStack extends cdk.Stack {
           },
           "S3TransitionDays": {
             "default": "S3 Transition Days"
+          },
+          "UseGitHub": {
+            "default": "Use GitHub Repository"
+          },
+          "WebhookSecretToken": {
+            "default": "Webhook Secret Token"
+          },
+          "AllowedIPs": {
+            "default": "Allowed IP Addresses"
           }
         }
       }
@@ -121,6 +148,27 @@ export class DevOpsDashboardStack extends cdk.Stack {
       default: "365"
     });
 
+    const paramUseGitHub = new cdk.CfnParameter(this, 'UseGitHub', {
+      description: "Select Yes if GitHub is used as code repository, otherwise leave it to No.",
+      type: "String",
+      default: "No",
+      allowedValues: ['Yes', 'No']
+    });
+
+    const paramWebhookSecretToken = new cdk.CfnParameter(this, 'WebhookSecretToken', {
+      description: "Enter a random string with high entropy to authenticate access to webhooks in GitHub. If a webhook payload header contains a matching secret, IP address authentication is bypassed. The string cannot contain commas (,), backward slashes (\\), or quotes (\"). It is highly recommended to use secret to secure your GitHub webhook. To turn off secret authentication, leave it blank. Ignore this field if GitHub is not used.",
+      type: "String",
+      default: "",
+      noEcho: true
+    });
+
+    const paramAllowedIPs = new cdk.CfnParameter(this, 'AllowedIPs', {
+      description: "Enter a comma-separated list of allowed IPV4 CIDR blocks. By default GitHub IP ranges are used. Note that GitHub changes their IP addresses from time to time so we strongly encourage regular monitoring of their API. If API secret is used, IP address authentication is bypassed. Ignore this field if GitHub is not used.",
+      type: "String",
+      default: "192.30.252.0/22,185.199.108.0/22,140.82.112.0/20,143.55.64.0/20",
+      allowedPattern: "^(?:((?!0\\d)(1?\\d?\\d|25[0-5]|2[0-4]\\d))\\.){3}((?!0\\d)(1?\\d?\\d|25[0-5]|2[0-4]\\d))(?:\\/([1-9]|[12]\\d|3[0-2]))?(?: *, *(?:((?!0\\d)(1?\\d?\\d|25[0-5]|2[0-4]\\d)){1,3}\\.){3}((?!0\\d)(1?\\d?\\d|25[0-5]|2[0-4]\\d))(?:\\/([1-9]|[12]\\d|3[0-2]))?)*$"
+    });
+
 
     //=========================================================================
     // MAPPINGS
@@ -149,6 +197,14 @@ export class DevOpsDashboardStack extends cdk.Stack {
       expression: cdk.Fn.conditionNot(cdk.Fn.conditionEquals(paramQuickSightPrincipalArn, ""))
     });
 
+    const gitHubCondition = new cdk.CfnCondition(this, "GitHubCondition", {
+      expression: cdk.Fn.conditionEquals(paramUseGitHub, 'Yes')
+    });
+
+    const webhookSecretTokenCond = new cdk.CfnCondition(this, "WebhookSecretTokenCondition", {
+      expression: cdk.Fn.conditionNot(cdk.Fn.conditionEquals(paramWebhookSecretToken, ""))
+    });
+
     const solutionHelper = new SolutionHelper(this, 'SolutionHelper', {
       solutionId: props.solutionId, version: props.solutionVersion,
       quickSightPrincipalARN: paramQuickSightPrincipalArn.valueAsString,
@@ -165,11 +221,12 @@ export class DevOpsDashboardStack extends cdk.Stack {
     /**
      * Create AWS CODECOMMIT CloudWatch Events Rule, Kinesis Firehose, S3 Bucket
      *
-     * Use aws_events_rule_kinesisfirehose_s3 construct pattern to
+     * Use aws-eventbridge-kinesisfirehose-s3 construct pattern to
      * create resources for sending cw events data for CODECOMMIT to
      * kinesis firehose to s3
      */
-    const codeCommitEventRuleToKinesisFirehoseProps: EventsRuleToKinesisFirehoseToS3Props = {
+
+      const codeCommitEventRuleToKinesisFirehoseProps: EventbridgeToKinesisFirehoseToS3Props = {
       eventRuleProps: {
         description: 'AWS DevOps Monitoring Dashboard Solution - Event rule for AWS CodeCommit',
         eventPattern: {
@@ -190,12 +247,11 @@ export class DevOpsDashboardStack extends cdk.Stack {
       }
     }
 
-    const codecommitERToFHToS3Construct = new EventsRuleToKinesisFirehoseToS3(this, 'CodeCommit', codeCommitEventRuleToKinesisFirehoseProps);
-    const firehose_obj = codecommitERToFHToS3Construct.kinesisFirehose
-    const firehoserole = codecommitERToFHToS3Construct.kinesisFirehoseRole
+    const codecommitERToFHToS3Construct = new EventbridgeToKinesisFirehoseToS3(this, 'CodeCommit', codeCommitEventRuleToKinesisFirehoseProps);
+    const firehoseObj = codecommitERToFHToS3Construct.kinesisFirehose
+    const firehoseRole = codecommitERToFHToS3Construct.kinesisFirehoseRole
     const refMetricsBucket = codecommitERToFHToS3Construct.s3Bucket?.node.defaultChild as s3.CfnBucket;
     const refLoggingBucket = codecommitERToFHToS3Construct.s3LoggingBucket?.node.defaultChild as s3.CfnBucket;
-    const refFirehoseLogGroup = codecommitERToFHToS3Construct.kinesisFirehoseLogGroup.node.findChild('Resource') as logs.CfnLogGroup
 
     const lifecycleRule = [{
       NoncurrentVersionTransitions: [
@@ -211,32 +267,28 @@ export class DevOpsDashboardStack extends cdk.Stack {
     refMetricsBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-' + uuid);
     refLoggingBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-logging-' + uuid);
 
-    refFirehoseLogGroup.cfnOptions.metadata = {
-      cfn_nag: {
-        rules_to_suppress: [{
-          id: 'W84',
-          reason: 'The CloudWatch log group does not need to be encrypted.'
-        },
-        {
-          id: 'W86',
-          reason: 'The log data in CloudWatch log group does not need to be expired.'
-        }]
-      }
-    };
-
     /**
      * Create CloudWatch Events Rule for Canary events
      */
     new CanaryEvents(this, 'CanaryEvents', {
-      firehoseArn: firehose_obj.attrArn,
+      firehoseArn: firehoseObj.attrArn,
       eventsRuleRole: codecommitERToFHToS3Construct.eventsRole
+    });
+
+    /**
+     * Create CloudWatch Events Rule for CodePipeline Alarm events
+     */
+    new CodePipelineAlarmEvents(this, 'CodePipelineAlarmEvents', {
+      firehoseArn: firehoseObj.attrArn,
+      eventsRuleRole: codecommitERToFHToS3Construct.eventsRole,
+      solutionId: props.solutionId
     });
 
     /**
      * Create CloudWatch Events Rule for AWS CodeDeploy
      */
     new CodeDeployEvents(this, 'CodeDeployEvents', {
-      firehoseArn: firehose_obj.attrArn,
+      firehoseArn: firehoseObj.attrArn,
       eventsRuleRole: codecommitERToFHToS3Construct.eventsRole
     });
 
@@ -244,14 +296,14 @@ export class DevOpsDashboardStack extends cdk.Stack {
      * Create CloudWatch Events Rule for AWS CodePipeline
      */
     new CodePipelineEvents(this, 'CodePipelineEvents', {
-      firehoseArn: firehose_obj.attrArn,
+      firehoseArn: firehoseObj.attrArn,
       eventsRuleRole: codecommitERToFHToS3Construct.eventsRole
     });
 
     /**
      * Create AWS Glue and Athena database resources including database, table and workgroup
      */
-    const db = new Database(this, 'GlueAthenaDatabase', {
+    const db = new GlueDatabase(this, 'GlueAthenaDatabase', {
       solutionId: props.solutionId,
       uuid: uuid,
       metricsBucket: codecommitERToFHToS3Construct.s3Bucket,
@@ -263,13 +315,13 @@ export class DevOpsDashboardStack extends cdk.Stack {
      * CloudWatch Metric stream, Kinesis Data Firehose with lambda transformation
      */
     new CodeBuildEvents(this, 'CodeBuildEvents', {
-        metricsBucket: codecommitERToFHToS3Construct.s3Bucket,
-        lambdaRunTime: props.lambdaRuntimeNode,
-        uuid: uuid,
-        metricsGlueDBName: db.metricsGlueDBName,
-        codeBuildMetricsGlueTableName: db.codeBuildMetricsGlueTableName,
-        callingStack: this,
-        userAgentExtra: userAgentExtraString.findInMap('UserAgentExtra', 'Key')
+      metricsBucket: codecommitERToFHToS3Construct.s3Bucket,
+      lambdaRunTime: props.lambdaRuntimeNode,
+      uuid: uuid,
+      metricsGlueDBName: db.metricsGlueDBName,
+      codeBuildMetricsGlueTableName: db.codeBuildMetricsGlueTableName,
+      callingStack: this,
+      userAgentExtra: userAgentExtraString.findInMap('UserAgentExtra', 'Key')
     });
 
     /**
@@ -278,7 +330,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
     const cwLogsPS = new iam.PolicyStatement({
       actions: ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({ service: 'logs', resource: 'log-group', sep: ':', resourceName: '/aws/lambda/*' })],
+      resources: [this.formatArn({ service: 'logs', resource: 'log-group', arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME, resourceName: '/aws/lambda/*' })],
       sid: 'CreateCWLogs'
     })
 
@@ -305,28 +357,25 @@ export class DevOpsDashboardStack extends cdk.Stack {
       code: lambda.Code.fromAsset(`${__dirname}/../lambda/event_parser`),
       handler: 'index.handler',
       role: eventParserLambdaRole,
-      timeout: cdk.Duration.seconds(900)
+      timeout: cdk.Duration.seconds(900),
+      logRetention: logs.RetentionDays.THREE_MONTHS
     })
 
-    const refEventParserLambda =  eventParserLambdaFunction.node.findChild('Resource') as lambda.CfnFunction;
-    const lambdaCfnNag = {
-      cfn_nag: {
-          rules_to_suppress: [
-              {
-                  id: 'W89',
-                  reason: 'There is no need to run this lambda in a VPC'
-              },
-              {
-                  id: 'W92',
-                  reason: 'There is no need for Reserved Concurrency'
-              }
-          ]
+    const refEventParserLambda = eventParserLambdaFunction.node.findChild('Resource') as lambda.CfnFunction;
+    const lambdaCfnNag = [
+      {
+        id: 'W89',
+        reason: 'There is no need to run this lambda in a VPC'
+      },
+      {
+        id: 'W92',
+        reason: 'There is no need for Reserved Concurrency'
       }
-    };
-    refEventParserLambda.cfnOptions.metadata = lambdaCfnNag;
+    ]
+    addCfnSuppressRules(refEventParserLambda, lambdaCfnNag);
 
     /* Add more configurations to property ExtendedS3DestinationConfiguration */
-    firehose_obj.addPropertyOverride('ExtendedS3DestinationConfiguration', {
+    firehoseObj.addPropertyOverride('ExtendedS3DestinationConfiguration', {
       CompressionFormat: 'UNCOMPRESSED',
       Prefix: 'DevopsEvents/created_at=!{timestamp:yyyy-MM-dd}/',
       ErrorOutputPrefix: 'DevopsEventsProcessingErrorlogs/result=!{firehose:error-output-type}/created_at=!{timestamp:yyyy-MM-dd}/',
@@ -342,7 +391,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
       },
       BufferingHints: {
         IntervalInSeconds: 300,
-        SizeInMBs: 64
+        SizeInMBs: 128
       },
       DataFormatConversionConfiguration: {
         Enabled: true,
@@ -363,14 +412,14 @@ export class DevOpsDashboardStack extends cdk.Stack {
         SchemaConfiguration: {
           DatabaseName: db.metricsGlueDBName,
           TableName: db.metricsGlueTableName,
-          RoleARN: firehoserole.roleArn,
+          RoleARN: firehoseRole.roleArn,
           VersionId: 'LATEST'
         }
       }
     })
 
     /* Add more configurations to property DeliveryStreamEncryptionConfigurationInput */
-    firehose_obj.addPropertyOverride('DeliveryStreamEncryptionConfigurationInput', {
+    firehoseObj.addPropertyOverride('DeliveryStreamEncryptionConfigurationInput', {
       KeyType: 'AWS_OWNED_CMK'
     })
 
@@ -383,33 +432,37 @@ export class DevOpsDashboardStack extends cdk.Stack {
     const glueAccessPSForFirehose = new iam.PolicyStatement({
       actions: ['glue:GetTable', 'glue:GetTableVersion', 'glue:GetTableVersions'],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({ service: 'glue', resource: 'catalog', sep: '', resourceName: '' }),
-      this.formatArn({ service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName }),
-      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
-      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*` })],
+      resources: [this.formatArn({ service: 'glue', resource: 'catalog', arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      this.formatArn({ service: 'glue', resource: 'database', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: db.metricsGlueDBName }),
+      this.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
+      this.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${db.metricsGlueDBName}/*` })],
       sid: 'glueAccessPSForFirehose'
     })
 
     let firehoseRolePolicy = codecommitERToFHToS3Construct.node.findChild('KinesisFirehoseToS3').node.findChild('KinesisFirehosePolicy') as iam.Policy;
+
     if (firehoseRolePolicy !== undefined) {
       firehoseRolePolicy.addStatements(invokeLambdaPS)
       firehoseRolePolicy.addStatements(glueAccessPSForFirehose)
     }
-    firehose_obj.node.addDependency(firehoseRolePolicy)
+    firehoseObj.node.addDependency(firehoseRolePolicy)
 
     let refGlueTable = db.node.findChild('AWSDevopsMetricsGlueTable') as glue.Table
-    firehose_obj.node.addDependency(refGlueTable)
+    firehoseObj.node.addDependency(refGlueTable)
 
     /**
      * Create Query Runner Lambda: execute athena queries against devops metrics data
      */
+
+    const metricsBucketName = codecommitERToFHToS3Construct.s3Bucket?.bucketName || ''
+
     const s3AccessPS = new iam.PolicyStatement({
       actions: ["s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:ListBucketMultipartUploads",
         "s3:ListMultipartUploadParts", "s3:AbortMultipartUpload", "s3:CreateBucket", "s3:PutObject"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: 'athena_results/*' }),
-      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '', resourceName: '' }),
-      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: '*' })],
+      resources: [this.formatArn({ account: '', region: '', service: 's3', resource: metricsBucketName, arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: 'athena_results/*' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: metricsBucketName, arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: metricsBucketName, arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: '*' })],
       sid: 'S3AccessPS'
     })
 
@@ -417,31 +470,31 @@ export class DevOpsDashboardStack extends cdk.Stack {
       actions: ["s3:GetBucketLocation", "s3:GetObject", "s3:ListBucket", "s3:ListBucketMultipartUploads",
         "s3:ListMultipartUploadParts", "s3:AbortMultipartUpload", "s3:CreateBucket", "s3:PutObject"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: 'athena_results/*' }),
-      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '', resourceName: '' }),
-      this.formatArn({ account: '', region: '', service: 's3', resource: codecommitERToFHToS3Construct.s3Bucket?.bucketName ? codecommitERToFHToS3Construct.s3Bucket?.bucketName : '', sep: '/', resourceName: '*' }),
-      this.formatArn({ account: '', region: '', service: 's3', resource: 'aws-athena-query-results-*', sep: '', resourceName: '' }),
-      this.formatArn({ account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', sep: '', resourceName: '' }),
-      this.formatArn({ account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', sep: '/', resourceName: '*' })],
+      resources: [this.formatArn({ account: '', region: '', service: 's3', resource: metricsBucketName, arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: 'athena_results/*' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: metricsBucketName, arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: metricsBucketName, arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: '*' }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: 'aws-athena-query-results-*', arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      this.formatArn({ account: '', region: '', service: 's3', resource: 'query-results-custom-bucket', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: '*' })],
       sid: 's3AccessPSwAthena'
     })
 
     const athenaQueryExecutionPS = new iam.PolicyStatement({
       actions: ["athena:StartQueryExecution"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({ service: 'athena', resource: 'workgroup', sep: '/', resourceName: 'AWSDevOpsDashboard*' }),
-      this.formatArn({ service: 'athena', resource: 'workgroup', sep: '/', resourceName: 'primary' })],
+      resources: [this.formatArn({ service: 'athena', resource: 'workgroup', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: 'AWSDevOpsDashboard*' }),
+      this.formatArn({ service: 'athena', resource: 'workgroup', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: 'primary' })],
       sid: 'AthenaQueryExecutionPS'
     })
 
     const glueAccessPS = new iam.PolicyStatement({
       actions: ["glue:GetTable", "glue:GetPartitions", "glue:GetDatabase", "glue:CreateTable", "glue:UpdateTable", "glue:BatchCreatePartition", "glue:DeleteTable", "glue:DeletePartition"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({ service: 'glue', resource: 'catalog', sep: '', resourceName: '' }),
-      this.formatArn({ service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName }),
-      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
-      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*` }),
-      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.codeBuildMetricsGlueTableName}` })],
+      resources: [this.formatArn({ service: 'glue', resource: 'catalog', arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      this.formatArn({ service: 'glue', resource: 'database', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: db.metricsGlueDBName }),
+      this.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
+      this.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${db.metricsGlueDBName}/*` }),
+      this.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${db.metricsGlueDBName}/${db.codeBuildMetricsGlueTableName}` })],
       sid: 'glueAccessPS'
     })
 
@@ -478,22 +531,24 @@ export class DevOpsDashboardStack extends cdk.Stack {
       code: lambda.Code.fromAsset(`${__dirname}/../lambda/query_runner`),
       handler: 'index.handler',
       role: queryRunnerLambdaRole,
-      timeout: cdk.Duration.seconds(300)
+      timeout: cdk.Duration.seconds(300),
+      logRetention: logs.RetentionDays.THREE_MONTHS
     })
 
-    const refQueryRunnerLambda =  queryRunnerLambdaFunction.node.findChild('Resource') as lambda.CfnFunction;
-    refQueryRunnerLambda.cfnOptions.metadata = lambdaCfnNag;
+    const refQueryRunnerLambda = queryRunnerLambdaFunction.node.findChild('Resource') as lambda.CfnFunction;
+    addCfnSuppressRules(refQueryRunnerLambda, lambdaCfnNag);
 
-   /*
-   * Create Custom Resource Query Builder Lambda - build and run athena queries
-   */
-   new cdk.CustomResource(this, 'CustomResourceQueryRunner', {
+    /*
+    * Create Custom Resource Query Builder Lambda - build and run athena queries
+    */
+    new cdk.CustomResource(this, 'CustomResourceQueryRunner', {
       resourceType: 'Custom::QueryRunner',
       serviceToken: queryRunnerLambdaFunction.functionArn,
       properties: {
         'MetricsDBName': db.metricsGlueDBName,
         'MetricsTableName': db.metricsGlueTableName,
         'CodeBuildMetricsTableName': db.codeBuildMetricsGlueTableName,
+        'GitHubMetricsTableName': db.gitHubMetricsGlueTableName,
         'AthenaWorkGroup': db.metricsAthenaWGName,
         'RepositoryList': paramCodeCommitRepo.valueAsString,
         'DataDuration': paramDataDuration.valueAsString
@@ -516,7 +571,9 @@ export class DevOpsDashboardStack extends cdk.Stack {
         'QuickSightPrincipalArn': paramQuickSightPrincipalArn.valueAsString,
         'AthenaQueryDataDuration': paramDataDuration.valueAsString,
         'RepositoryList': paramCodeCommitRepo.valueAsString,
-        "S3TransitionDays": paramS3TransitionDays.valueAsString
+        "S3TransitionDays": paramS3TransitionDays.valueAsString,
+        "UseGitHubRepository": paramUseGitHub.valueAsString,
+        "UseWebhookSecret": cdk.Fn.conditionIf(webhookSecretTokenCond.logicalId, 'yes', 'no').toString()
       },
     });
 
@@ -528,10 +585,10 @@ export class DevOpsDashboardStack extends cdk.Stack {
     const glueAccessPSForAddAthenaPartition = new iam.PolicyStatement({
       actions: ["glue:GetTable", "glue:GetPartitions", "glue:GetDatabase", "glue:CreateTable", "glue:UpdateTable", "glue:BatchCreatePartition"],
       effect: iam.Effect.ALLOW,
-      resources: [this.formatArn({ service: 'glue', resource: 'catalog', sep: '', resourceName: '' }),
-      this.formatArn({ service: 'glue', resource: 'database', sep: '/', resourceName: db.metricsGlueDBName }),
-      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
-      this.formatArn({ service: 'glue', resource: 'table', sep: '/', resourceName: `${db.metricsGlueDBName}/*` })],
+      resources: [this.formatArn({ service: 'glue', resource: 'catalog', arnFormat: cdk.ArnFormat.NO_RESOURCE_NAME }),
+      this.formatArn({ service: 'glue', resource: 'database', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: db.metricsGlueDBName }),
+      this.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${db.metricsGlueDBName}/${db.metricsGlueTableName}` }),
+      this.formatArn({ service: 'glue', resource: 'table', arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${db.metricsGlueDBName}/*` })],
       sid: 'glueAccessPS'
     })
 
@@ -554,16 +611,12 @@ export class DevOpsDashboardStack extends cdk.Stack {
     });
 
     const refAthenaParLambdaRole = AthenaParLambdaRole.node.defaultChild as iam.CfnRole;
-    refAthenaParLambdaRole.cfnOptions.metadata = {
-      cfn_nag: {
-        rules_to_suppress: [{
-          id: 'W11',
-          reason: 'Resource * is required for cloudwatch:GetMetricStatistics as it does not support resource-level permissions.'
-        }]
-      }
-    };
+    addCfnSuppressRules(refAthenaParLambdaRole, [{
+      id: 'W11',
+      reason: 'Resource * is required for cloudwatch:GetMetricStatistics as it does not support resource-level permissions.'
+    }]);
 
-    const athenaParRuleToLambdaProps: EventsRuleToLambdaProps = {
+    const athenaParRuleToLambdaProps: EventbridgeToLambdaProps = {
       lambdaFunctionProps: {
         description: 'AWS DevOps Monitoring Dashboard Solution - This function runs on a daily schedule and adds a new partition to Amazon Athena table',
         environment: {
@@ -571,6 +624,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
           MetricsDBName: db.metricsGlueDBName,
           MetricsTableName: db.metricsGlueTableName,
           CodeBuildMetricsTableName: db.codeBuildMetricsGlueTableName,
+          GitHubMetricsTableName: db.gitHubMetricsGlueTableName,
           AthenaWorkGroup: db.metricsAthenaWGName,
           SolutionId: props.solutionId,
           UUID: uuid,
@@ -593,7 +647,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
       }
     };
 
-    new EventsRuleToLambda(this, 'AddAthenaPartition', athenaParRuleToLambdaProps);
+    new EventbridgeToLambda(this, 'AddAthenaPartition', athenaParRuleToLambdaProps);
 
 
     /**
@@ -616,44 +670,60 @@ export class DevOpsDashboardStack extends cdk.Stack {
     qsNestedTemplate.nestedStackResource?.addOverride('Description', `(${props.solutionId})${props.solutionName} - Create QuickSight Template. Version: ${props.solutionVersion}`)
 
 
+    /**
+     * Create nested stack to provision AWS resources for GitHub events as needed
+     */
+    const gitHubNestedStack = new GitHubStack(this, 'GitHubStack', {
+      solutionId: props.solutionId,
+      solutionVersion: props.solutionVersion,
+      solutionName: props.solutionName,
+      solutionDistBucket: props.solutionDistBucket,
+      solutionDistName: props.solutionDistName,
+      lambdaRuntimeNode: props.lambdaRuntimeNode,
+      webhookSecretToken: paramWebhookSecretToken.valueAsString,
+      allowedIPs: paramAllowedIPs.valueAsString,
+      metricsBucket: codecommitERToFHToS3Construct.s3Bucket,
+      uuid: uuid,
+      metricsGlueDBName: db.metricsGlueDBName,
+      gitHubMetricsGlueTableName: db.gitHubMetricsGlueTableName
+    });
+
+    gitHubNestedStack.nestedStackResource?.addMetadata('nestedStackFileName', gitHubNestedStack.templateFile.slice(0, -5))
+    gitHubNestedStack.nestedStackResource?.addOverride('Condition', 'GitHubCondition')
+    gitHubNestedStack.nestedStackResource?.addOverride('Description', `(${props.solutionId})${props.solutionName} - Create AWS Resources needed to process GitHub events. Version: ${props.solutionVersion}`)
+
+    ApplyCfnSuppressRulesToLogRententionResourc(this, 'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a');
+
     //=========================================================================
     // OUTPUTS
     //=========================================================================
-    new CfnOutput(this, 'QSAnalysisURL', {
+    new cdk.CfnOutput(this, 'QSAnalysisURL', {
       value: qsNestedTemplate.analysisURLOutput,
       description: 'Amazon QuickSight Analysis URL for AWS DevOps Monitoring Dashboard Solution',
       condition: quickSightCondition
     });
 
-    new CfnOutput(this, 'QSDashboardURL', {
+    new cdk.CfnOutput(this, 'QSDashboardURL', {
       value: qsNestedTemplate.dashboardURLOutput,
       description: 'Amazon QuickSight Dashboard URL for AWS DevOps Monitoring Dashboard Solution',
       condition: quickSightCondition
     });
 
-    new CfnOutput(this, 'KinesisFirehoseDeliveryStream', {
-      value: firehose_obj.attrArn,
-      description: 'Kinesis Firehose Delivery Stream for AWS DevOps Monitoring Dashboard Solution'
-    })
+    new cdk.CfnOutput(this, 'APIEndpoint', {
+      value: gitHubNestedStack.apiEndpointOutput,
+      description: 'Amazon API Endpoint to receive GitHub events for AWS DevOps Monitoring Dashboard Solution',
+      condition: gitHubCondition
+    });
 
-    new CfnOutput(this, 'EventParserLambdaFunction', {
-      value: eventParserLambdaFunction.functionArn,
-      description: 'Event Parser Lambda Function for AWS DevOps Monitoring Dashboard Solution'
-    })
-
-    new CfnOutput(this, 'QueryRunnerLambdaFunction', {
-      value: queryRunnerLambdaFunction.functionArn,
-      description: 'Query Runner Lambda Function for AWS DevOps Monitoring Dashboard Solution'
-    })
-
-    new CfnOutput(this, 'DevOpsMetricsS3Bucket', {
+    new cdk.CfnOutput(this, 'DevOpsMetricsS3Bucket', {
       value: (codecommitERToFHToS3Construct.s3Bucket?.bucketArn ? codecommitERToFHToS3Construct.s3Bucket.bucketArn : 'Do not exist'),
       description: 'DevOps Metrics S3 Bucket for AWS DevOps Monitoring Dashboard Solution'
     })
 
-    new CfnOutput(this, 'SolutionVersion', {
+    new cdk.CfnOutput(this, 'SolutionVersion', {
       value: props.solutionVersion,
       description: 'Version for AWS DevOps Monitoring Dashboard Solution'
     })
+
   }
 }

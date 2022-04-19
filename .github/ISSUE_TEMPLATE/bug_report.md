@@ -19,13 +19,13 @@ assignees: ''
 **Please complete the following information about the solution:**
 - [ ] Version: [e.g. v1.0.0]
 
-To get the version of the solution, you can look at the description of the created CloudFormation stack. For example, "_(SO0134) - The AWS CloudFormation template for deployment of the AWS Centralized WAF & SG Management. Version **v1.0.0**_". You can also find the version from [releases](https://github.com/awslabs/aws-devops-monitoring-dashboard/releases)
+To get the version of the solution, you can look at the description of the created CloudFormation stack. For example, "_(SO0134) - The AWS CloudFormation template for deployment of the AWS DevOps Monitoring Dashboard. Version **v1.0.0**_". You can also find the version from [releases](https://github.com/aws-solutions/aws-devops-monitoring-dashboard/releases)
 
 - [ ] Region: [e.g. us-east-1]
 - [ ] Was the solution modified from the version published on this repository?
 - [ ] If the answer to the previous question was yes, are the changes available on GitHub?
 - [ ] Have you checked your [service quotas](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html) for the sevices this solution uses?
-- [ ] Were there any errors in the CloudWatch Logs? [How to enable debug mode?](https://github.com/awslabs/aws-devops-monitoring-dashboard/#enable-debug-mode)
+- [ ] Were there any errors in the CloudWatch Logs? [How to enable debug mode?](https://github.com/aws-solutions/aws-devops-monitoring-dashboard/#enable-debug-mode)
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem (please **DO NOT include sensitive information**).

@@ -1,20 +1,12 @@
 #!/usr/bin/env node
-/**********************************************************************************************************************
- *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
- *                                                                                                                    *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
- *  with the License. A copy of the License is located at                                                             *
- *                                                                                                                    *
- *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
- *                                                                                                                    *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
- *  and limitations under the License.                                                                                *
- *********************************************************************************************************************/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-import { CfnPolicy, Effect, IRole, Policy, PolicyStatement } from '@aws-cdk/aws-iam';
+import {Effect, IRole, Policy, PolicyStatement} from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
+import {addCfnSuppressRules} from "@aws-solutions-constructs/core";
+import {RetentionDays} from '@aws-cdk/aws-logs';
 
 
 export enum QuickSightSetup {
@@ -81,14 +73,12 @@ export class QuickSight extends cdk.Construct {
                 })
             ]
         });
-        (customResourcePolicy.node.defaultChild as CfnPolicy).cfnOptions.metadata = {
-            cfn_nag: {
-                rules_to_suppress: [{
-                    id: 'W12',
-                    reason: 'The DescribeTemplate API call requires the resource to \'*\' in us-east-1.'
-                }]
+        addCfnSuppressRules(customResourcePolicy, [
+            {
+                id: 'W12',
+                reason: 'The DescribeTemplate API call requires the resource to \'*\' in us-east-1.'
             }
-        };
+        ]);
 
         customResourcePolicy.attachToRole(props.role);
 
@@ -101,25 +91,22 @@ export class QuickSight extends cdk.Construct {
             timeout: cdk.Duration.seconds(30),
             environment: {
                 UserAgentExtra: props.userAgentExtra
-            }
+            },
+            logRetention: RetentionDays.THREE_MONTHS
         });
         customResourceFunction.node.addDependency(customResourcePolicy);
 
         const refCustomResourceFunction =  customResourceFunction.node.findChild('Resource') as lambda.CfnFunction;
-        refCustomResourceFunction.cfnOptions.metadata = {
-                cfn_nag: {
-                    rules_to_suppress: [
-                        {
-                            id: 'W89',
-                            reason: 'There is no need to run this lambda in a VPC'
-                        },
-                        {
-                            id: 'W92',
-                            reason: 'There is no need for Reserved Concurrency'
-                        }
-                    ]
-                }
-        };
+        addCfnSuppressRules(refCustomResourceFunction, [
+            {
+                id: 'W89',
+                reason: 'There is no need to run this lambda in a VPC'
+            },
+            {
+                id: 'W92',
+                reason: 'There is no need for Reserved Concurrency'
+            }
+        ]);
 
         const customResource = new cdk.CustomResource(this, 'QuickSightResources', {
             serviceToken: customResourceFunction.functionArn,

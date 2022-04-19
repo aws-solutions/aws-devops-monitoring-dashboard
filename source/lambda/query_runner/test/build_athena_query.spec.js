@@ -1,160 +1,193 @@
-/**
- *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
-'use strict';
+"use strict";
 
-const expect = require('chai').expect;
-const queryRunner = require('../build_athena_query');
+const expect = require("chai").expect;
+const { buildDataDurationQuery } = require("../build_athena_query");
+const queryRunner = require("../build_athena_query");
 
-const athenaDB = 'testAthenaDB'
-const athenaTable = 'testAthenaTable'
-const athenaView = 'testView'
-const currentTimeStamp = new Date()
-const year = currentTimeStamp.getFullYear()
-const month = currentTimeStamp.getMonth() + 1
-const day = currentTimeStamp.getDate()
-const hour = currentTimeStamp.getHours()
+const athenaDB = "testAthenaDB";
+const athenaTable = "testAthenaTable";
+const athenaView = "testView";
+const dataDuration = 90;
 
-let expectedQueryString =
-    'ALTER TABLE ' + athenaDB + '.' + athenaTable + '\n' +
-    'ADD IF NOT EXISTS' + '\n' +
-    "PARTITION (\n" +
-    "\tcreated_at = '" + year.toString() + "-" +
-    (month.toString() < 10 ? '0' : '') + month.toString() + "-" +
-    (day.toString() < 10 ? '0' : '') + day.toString() + "');"
+function generateQueryString(currentTimeStamp) {
+    const year = currentTimeStamp.getFullYear();
+    const month = currentTimeStamp.getMonth() + 1;
+    const day = currentTimeStamp.getDate();
 
-describe('When testing query builder', () => {
+    const queryString = `ALTER TABLE ${athenaDB}.${athenaTable}
+        ADD IF NOT EXISTS
+        PARTITION(
+            created_at = '${year.toString()}-${month.toString() < 10 ? "0" : ""}${month.toString()}-${day.toString() < 10 ? "0" : ""}${day.toString()}'
+        )`;
 
-    let queryString;
+    return queryString;
+}
 
-    it('expect matching query for adding athena partitions', async () => {
-        queryString = await queryRunner.buildAddAthenaPartitionQuery(athenaDB, athenaTable);
+describe("When testing query builder", () => {
+    let queryString, expectedQueryString;
+
+    beforeAll(() => {
+        jest.useFakeTimers("modern");
+    });
+
+    afterAll(() => {
+        jest.useRealTimers();
+    });
+
+    it("should expect matching query for adding athena partitions (pad month/day)", () => {
+        jest.setSystemTime(new Date(2020, 1, 1));
+
+        expectedQueryString = generateQueryString(new Date());
+
+        queryString = queryRunner.buildAddAthenaPartitionQuery(athenaDB, athenaTable);
 
         console.log("Generated query string: " + queryString);
         console.log("Expected query string: " + expectedQueryString);
 
         expect(queryString).to.equal(expectedQueryString);
-
     });
 
-    const codePipelineQueryString =
-        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_pipeline_detail_view AS ' + '\n' +
-        'SELECT account, time, region, ' + '\n' +
-        'detail.pipelineName as pipeline_name, \n' +
-        'detail.executionId as execution_id, \n' +
-        'detail.stage as stage, ' + '\n' +
-        'detail.action as action, ' + '\n' +
-        'detail.state as state,' + '\n' +
-        'detail.externalExecutionId as external_execution_id,' + '\n' +
-        'detail.actionCategory as action_category,' + '\n' +
-        'detail.actionOwner as action_owner,' + '\n' +
-        'detail.actionProvider as action_provider,' + '\n' +
-        'created_at' + '\n' +
-        'FROM' + '\n' +
-        athenaDB + '.' + athenaTable + '\n' +
-        "WHERE source = 'aws.codepipeline'" + '\nAND' + " created_at between date_add('day', -90, current_date) and current_date;"
+    it("should expect matching query for adding athena partitions (don't pad month/day)", () => {
+        jest.setSystemTime(new Date(2020, 10, 10));
 
-    it('code pipeline query', async () => {
+        expectedQueryString = generateQueryString(new Date());
+        queryString = queryRunner.buildAddAthenaPartitionQuery(athenaDB, athenaTable);
 
-        const response = await queryRunner.buildCodePipelineQuery(athenaDB, athenaTable, 90);
-        expect(response).to.equal(codePipelineQueryString)
+        console.log("Generated query string: " + queryString);
+        console.log("Expected query string: " + expectedQueryString);
+
+        expect(queryString).to.equal(expectedQueryString);
     });
 
+    const codePipelineQueryString = `CREATE OR REPLACE VIEW ${athenaDB}.code_pipeline_detail_view AS
+        SELECT account, time, region,
+        detail.pipelineName as pipeline_name,
+        detail.executionId as execution_id,
+        detail.stage as stage,
+        detail.action as action, 
+        detail.state as state,
+        detail.externalExecutionId as external_execution_id,
+        detail.actionCategory as action_category,
+        detail.actionOwner as action_owner,
+        detail.actionProvider as action_provider,
+        created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.codepipeline' 
+            AND created_at between date_add('day', -${dataDuration}, current_date) and current_date;`;
 
-    const codeBuildQueryString =
-        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_build_detail_view AS ' + '\n' +
-        'SELECT account_id as account,' + '\n' +
-        'region, namespace, metric_name, timestamp,' + '\n' +
-        'dimensions.ProjectName as project_name,' + '\n' +
-        'dimensions.BuildId as build_id,' + '\n' +
-        'dimensions.BuildNumber as build_number,' + '\n' +
-        'value.count as count,' + '\n' +
-        'value.sum as sum,' + '\n' +
-        'value.max as max,' + '\n' +
-        'value.min as min,' + '\n' +
-        'unit,' + '\n' +
-        'created_at' + '\n' +
-        'FROM' + '\n' +
-        athenaDB + '.' + athenaTable + '\n' +
-        "WHERE namespace = 'AWS/CodeBuild'" + '\nAND ' + "created_at between date_add('day', -90, current_date) and current_date;";
-
-    it('code build query', async () => {
-
-        const response = await queryRunner.buildCodeBuildQuery(athenaDB, athenaTable, 90);
-        expect(response).to.equal(codeBuildQueryString)
+    it("should build the code pipeline query", () => {
+        const response = queryRunner.buildCodePipelineQuery(athenaDB, athenaTable, dataDuration);
+        expect(response).to.equal(codePipelineQueryString);
     });
 
+    const codeBuildQueryString = `CREATE OR REPLACE VIEW ${athenaDB}.code_build_detail_view AS
+        SELECT account_id as account, region, namespace, metric_name, timestamp,
+        dimensions.ProjectName as project_name, dimensions.BuildId as build_id,
+        dimensions.BuildNumber as build_number, value.count as count, value.sum as sum, 
+        value.max as max, value.min as min, unit, created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE namespace = 'AWS/CodeBuild' 
+            AND created_at between date_add('day', -${dataDuration}, current_date) and current_date;`;
 
-    const codeChangeActivity = 'CREATE OR REPLACE VIEW ' + athenaDB + '.code_change_activity_view AS ' + '\n' +
-        'SELECT account, time, region, ' + '\n' +
-        'detail.eventName as event_name, ' + '\n' +
-        'detail.repositoryName as repository_name, ' + '\n' +
-        'detail.branchName as branch_name, ' + '\n' +
-        'detail.authorName as author_name, ' + '\n' +
-        'detail.commitId as commit_id, ' + '\n' +
-        'created_at' + '\n' +
-        'FROM' + '\n' +
-        athenaDB + '.' + athenaTable + '\n' +
-        "WHERE source = 'aws.codecommit'" + "\nAND " + "created_at between date_add('day', -90, current_date) and current_date;"
-
-    it('code change activity query', async () => {
-
-        const response = await queryRunner.buildCodeChangeActivityQuery(athenaDB, athenaTable, "", 90);
-        expect(response).to.equal(codeChangeActivity)
+    it("should build the code build query", () => {
+        const response = queryRunner.buildCodeBuildQuery(athenaDB, athenaTable, dataDuration);
+        expect(response).to.equal(codeBuildQueryString);
     });
 
-    const buildRecoveryTimeQuery =             'CREATE OR REPLACE VIEW ' + athenaDB + '.recovery_time_detail_view AS ' + '\n' +
-    'SELECT account, time, region, ' + '\n' +
-    'detail.canaryAlarmName as alarm_name, ' + '\n' +
-    'detail.canaryAlarmAppName as application_name, ' + '\n' +
-    'detail.canaryAlarmRepoName as repository_name, ' + '\n' +
-    'detail.canaryAlarmCurrState as current_state, ' + '\n' +
-    'detail.canaryAlarmPrevState as previous_state, ' + '\n' +
-    'detail.canaryAlarmCurrStateTimeStamp as current_state_timestamp, ' + '\n' +
-    'detail.canaryAlarmPrevStateTimeStamp as previous_state_timestamp, ' + '\n' +
-    'detail.recoveryDurationMinutes as duration_minutes,' + '\n' +
-    'created_at' + '\n' +
-    'FROM' + '\n' +
-    athenaDB + '.' + athenaTable + '\n' +
-    "WHERE source = 'aws.cloudwatch'" + "\nAND " + "created_at between date_add('day', -90, current_date) and current_date;"
+    const codeChangeActivity = `CREATE OR REPLACE VIEW ${athenaDB}.code_change_activity_view AS
+        SELECT account, time, region,
+        detail.eventName as event_name,
+        detail.repositoryName as repository_name,
+        detail.branchName as branch_name, 
+        detail.authorName as author_name,
+        detail.commitId as commit_id,
+        created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.codecommit'
+            AND created_at between date_add('day', -${dataDuration}, current_date) and current_date
+            ;`;
 
-    it('recover time query', async() => {
-        const response = await queryRunner.buildRecoveryTimeQuery(athenaDB, athenaTable, 90);
-        expect(response).to.equal(buildRecoveryTimeQuery)
-    })
+    const includedRepositoryList = "IncludedRepositoryList";
+    const codeChangeActivityIncluded = `CREATE OR REPLACE VIEW ${athenaDB}.code_change_activity_view AS
+        SELECT account, time, region,
+        detail.eventName as event_name,
+        detail.repositoryName as repository_name,
+        detail.branchName as branch_name, 
+        detail.authorName as author_name,
+        detail.commitId as commit_id,
+        created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.codecommit'
+            AND created_at between date_add('day', -${dataDuration}, current_date) and current_date
+            AND detail.repositoryName in (${includedRepositoryList});`;
 
+    it("should build the code change activity query", () => {
+        const response = queryRunner.buildCodeChangeActivityQuery(athenaDB, athenaTable, "", dataDuration);
+        expect(response).to.equal(codeChangeActivity);
+    });
 
-    const expectedDeploymentQuery =         'CREATE OR REPLACE VIEW ' + athenaDB + '.code_deployment_detail_view AS ' + '\n' +
-    'SELECT account, time, region, ' + '\n' +
-    'detail.deploymentId as deployment_id, ' + '\n' +
-    'detail.deploymentApplication as application, ' + '\n' +
-    'detail.deploymentState as state,' + '\n' +
-    'created_at' + '\n' +
-    'FROM' + '\n' +
-    athenaDB + '.' + athenaTable + '\n' +
-    "WHERE source = 'aws.codedeploy'" + "\nAND " + "created_at between date_add('day', -90, current_date) and current_date;"
+    it("should build the code change activity query with includedRepositoryList = 'ALL'", () => {
+        const response = queryRunner.buildCodeChangeActivityQuery(athenaDB, athenaTable, "'ALL'", dataDuration);
+        expect(response).to.equal(codeChangeActivity);
+    });
 
-    it('recover time query', async() => {
-        const response = await queryRunner.buildDeploymentQuery(athenaDB, athenaTable, 90);
-        expect(response).to.equal(expectedDeploymentQuery)
-    })
+    it("should build the code change activity query with includedRepositoryList = IncludedRepoList", () => {
+        const response = queryRunner.buildCodeChangeActivityQuery(athenaDB, athenaTable, includedRepositoryList, dataDuration);
+        expect(response).to.equal(codeChangeActivityIncluded);
+    });
 
-    const expectedDropViewQuery = 'DROP VIEW IF EXISTS '+ athenaDB + '.' + athenaView + ';'
+    const buildRecoveryTimeQuery = `CREATE OR REPLACE VIEW ${athenaDB}.recovery_time_detail_view AS
+        SELECT account, time, region,
+        detail.canaryAlarmName as alarm_name,
+        detail.alarmType as alarm_type,
+        detail.canaryAlarmAppName as application_name,
+        detail.canaryAlarmRepoName as repository_name,
+        detail.canaryAlarmCurrState as current_state,
+        detail.canaryAlarmPrevState as previous_state,
+        detail.canaryAlarmCurrStateTimeStamp as current_state_timestamp,
+        detail.canaryAlarmPrevStateTimeStamp as previous_state_timestamp,
+        detail.recoveryDurationMinutes as duration_minutes, created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.cloudwatch' 
+            AND created_at between date_add('day', -${dataDuration}, current_date) and current_date;`;
 
-    it('drop view', async () => {
-        const response = await queryRunner.buildDropViewQuery(athenaDB, athenaView);
-        expect(response).to.equal(expectedDropViewQuery)
-    })
+    it("should build the recover time query", () => {
+        const response = queryRunner.buildRecoveryTimeQuery(athenaDB, athenaTable, dataDuration);
+        expect(response).to.equal(buildRecoveryTimeQuery);
+    });
 
+    const expectedDeploymentQuery = `CREATE OR REPLACE VIEW ${athenaDB}.code_deployment_detail_view AS
+        SELECT account, time, region,
+        detail.deploymentId as deployment_id,
+        detail.deploymentApplication as application,
+        detail.deploymentState as state,
+        created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.codedeploy' 
+            AND created_at between date_add('day', -${dataDuration}, current_date) and current_date;`;
 
+    it("should build the deployment query", () => {
+        const response = queryRunner.buildDeploymentQuery(athenaDB, athenaTable, dataDuration);
+        expect(response).to.equal(expectedDeploymentQuery);
+    });
+
+    const expectedDropViewQuery = `DROP VIEW IF EXISTS ${athenaDB}.${athenaView};`;
+
+    it("should build the drop view query", () => {
+        const response = queryRunner.buildDropViewQuery(athenaDB, athenaView);
+        expect(response).to.equal(expectedDropViewQuery);
+    });
+
+    const expectedGitHubQuery = `CREATE OR REPLACE VIEW ${athenaDB}.github_change_activity_view AS
+        SELECT repository_name, branch_name, author_name, event_name, cast(cardinality(commit_id) as int) as commit_count, time, created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE created_at between date_add('day', -${dataDuration}, current_date) and current_date;`;
+
+    it("should build the github query", () => {
+        const response = queryRunner.buildGitHubQuery(athenaDB, athenaTable, dataDuration);
+        expect(response).to.equal(expectedGitHubQuery);
+    });
 });

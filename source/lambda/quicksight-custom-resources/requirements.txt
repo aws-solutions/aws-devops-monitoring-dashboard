@@ -1,4 +1,4 @@
-crhelper==2.0.6
-requests==2.24.0
+crhelper==2.0.7
+requests==2.25.1
 pyyaml
 tenacity==6.2.0

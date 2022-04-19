@@ -1,0 +1,38 @@
+# Ignore TS compile output
+**/*.js
+**/*.d.ts
+# Exclude required .js files from above ignore rule
+!deployment/.typescript/cdk-solution-helper/index.js
+!jest.config.js
+!source/.typescript/lambda/**/*.js
+!source/lambda/**/*.js
+!**/cdk-solution-helper/index.js
+
+package-lock.json
+node_modules
+**/__pycache__/*
+*.venv-test/
+*_yaml/
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+
+deployment/global-s3-assets
+deployment/regional-s3-assets
+deployment/temp
+open-source/
+.DS_Store
+deployment/setenv.sh
+internal/source/tools/setenv.sh
+
+#nodejs
+*dist*
+*coverage*
+
+#intellij
+/.idea
+
+#SonarQube
+.scannerwork/

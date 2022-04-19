@@ -11,9 +11,6 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
-/**
- * @author Solution Builders
- */
 
 'use strict';
 
@@ -29,27 +26,27 @@ let TransformCodeDeployEvents = (data, recordNumber) => {
 
     let detailData = {};
     let transformedRecord = {};
-    let transformedDetail ={};
+    let transformedDetail = {};
 
     //Process event data
-    for(var key in data){
+    for (var key in data) {
         //Keep all key values that are not under detail tag and are common in all cloudwatch events
         if (key != 'detail') {
             if (key != 'detail-type')
-                transformedRecord[key] = !transformedRecord.hasOwnProperty(key)? data[key]: null;
+                transformedRecord[key] = !transformedRecord.hasOwnProperty(key) ? data[key] : null;
             //rename key detail-type to detail_type to support athena query
-            else transformedRecord['detail_type'] = !transformedRecord.hasOwnProperty(key)? data[key]: null;
+            else transformedRecord['detail_type'] = !transformedRecord.hasOwnProperty(key) ? data[key] : null;
         }
         //process key values under detail tag that are specific only for this event
-        else{
-                detailData = data["detail"];
-                transformedDetail['deploymentState'] = detailData.hasOwnProperty("state")?detailData['state']:'';
+        else {
+            detailData = data["detail"];
+            transformedDetail['deploymentState'] = detailData.hasOwnProperty("state") ? detailData['state'] : '';
 
-                // filter out deployments that are not completed
-                if (transformedDetail['deploymentState'] !== 'SUCCESS' && transformedDetail['deploymentState'] !== 'FAILURE' ) return {};
+            // filter out deployments that are not completed
+            if (transformedDetail['deploymentState'] !== 'SUCCESS' && transformedDetail['deploymentState'] !== 'FAILURE') return {};
 
-                transformedDetail['deploymentId'] = detailData.hasOwnProperty("deploymentId")?detailData['deploymentId']:'';
-                transformedDetail['deploymentApplication'] = detailData.hasOwnProperty("application")?detailData['application']:'';
+            transformedDetail['deploymentId'] = detailData.hasOwnProperty("deploymentId") ? detailData['deploymentId'] : '';
+            transformedDetail['deploymentApplication'] = detailData.hasOwnProperty("application") ? detailData['application'] : '';
         }//end else
 
     }//end for loop
@@ -63,6 +60,6 @@ let TransformCodeDeployEvents = (data, recordNumber) => {
 
 };
 
- module.exports = {
-     transformCodeDeployEvents: TransformCodeDeployEvents
- };
+module.exports = {
+    transformCodeDeployEvents: TransformCodeDeployEvents
+};

@@ -1,19 +1,11 @@
-/*********************************************************************************************************************
- *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.                                                *
- *                                                                                                                    *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance    *
- *  with the License. A copy of the License is located at                                                             *
- *                                                                                                                    *
- *      http://www.apache.org/licenses/LICENSE-2.0                                                                    *
- *                                                                                                                    *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES *
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions    *
- *  and limitations under the License.                                                                                *
- *********************************************************************************************************************/
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
 import { ExecutionRole } from './lambda-role-cloudwatch-construct';
+import {addCfnSuppressRules} from "@aws-solutions-constructs/core";
+import {RetentionDays } from '@aws-cdk/aws-logs';
 
 
 export interface SolutionHelperProps {
@@ -42,24 +34,21 @@ export class SolutionHelper extends cdk.Construct {
             timeout: cdk.Duration.seconds(300),
             environment: {
                 UserAgentExtra: `AwsSolution/${props.solutionId}/${props.version}`
-            }
+            },
+            logRetention: RetentionDays.THREE_MONTHS
         });
 
         const refhelperFunction =  helperFunction.node.findChild('Resource') as lambda.CfnFunction;
-        refhelperFunction.cfnOptions.metadata = {
-            cfn_nag: {
-                rules_to_suppress: [
-                    {
-                        id: 'W89',
-                        reason: 'There is no need to run this lambda in a VPC'
-                    },
-                    {
-                        id: 'W92',
-                        reason: 'There is no need for Reserved Concurrency'
-                    }
-                ]
+        addCfnSuppressRules(refhelperFunction, [
+            {
+                id: 'W89',
+                reason: 'There is no need to run this lambda in a VPC'
+            },
+            {
+                id: 'W92',
+                reason: 'There is no need for Reserved Concurrency'
             }
-        };
+        ]);
 
         this.solutionHelperLambda = helperFunction;
 

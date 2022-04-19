@@ -11,36 +11,32 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
-/**
- * @author Solution Builders
- */
 
-'use strict';
+"use strict";
 
-const LOGGER = new (require('./lib/logger'))();
+const LOGGER = new (require("./lib/logger"))();
 
 /**
  * Build an athena query to alter table add partition as needed
  */
 let BuildAddAthenaPartitionQuery = (athenaDB, athenaTable) => {
-    LOGGER.log('INFO', '[BuildAddAthenaPartitionQuery] Start');
+    LOGGER.log("INFO", "[BuildAddAthenaPartitionQuery] Start");
 
     // Get today's date and time
-    const currentTimeStamp = new Date()
-    const year = currentTimeStamp.getFullYear()
-    const month = currentTimeStamp.getMonth() + 1
-    const day = currentTimeStamp.getDate()
+    const currentTimeStamp = new Date();
+    const year = currentTimeStamp.getFullYear();
+    const month = currentTimeStamp.getMonth() + 1;
+    const day = currentTimeStamp.getDate();
 
-    let queryString =
-        'ALTER TABLE ' + athenaDB + '.' + athenaTable  + '\n' +
-        'ADD IF NOT EXISTS'  + '\n' +
-        "PARTITION (\n"  +
-            "\tcreated_at = '" + year.toString() + "-"  +
-            (month.toString() < 10 ? '0' : '') + month.toString() + "-"  +
-            (day.toString() < 10 ? '0' : '') + day.toString() + "');"
-
-    LOGGER.log('INFO', 'Query string: \n'+ queryString);
-    LOGGER.log('INFO', '[BuildAddAthenaPartitionQuery] END');
+    // Create Athena partition using date on created_at. For example, created_at = '2022-03-01'
+    const queryString = `ALTER TABLE ${athenaDB}.${athenaTable}
+        ADD IF NOT EXISTS
+        PARTITION(
+            created_at = '${year.toString()}-${month.toString() < 10 ? "0" : ""}${month.toString()}-${day.toString() < 10 ? "0" : ""}${day.toString()}'
+        )`;
+        
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildAddAthenaPartitionQuery] END");
 
     return queryString;
 };
@@ -49,31 +45,29 @@ let BuildAddAthenaPartitionQuery = (athenaDB, athenaTable) => {
  * Build an athena query to create a view for code change activities
  */
 let BuildCodeChangeActivityQuery = (athenaDB, athenaTable, includedRepositoryList, dataDuration) => {
-    LOGGER.log('INFO', '[BuildCodeChangeActivityQuery] Start');
-
-    let queryString =
-        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_change_activity_view AS ' + '\n' +
-        'SELECT account, time, region, ' + '\n' +
-        'detail.eventName as event_name, ' + '\n' +
-        'detail.repositoryName as repository_name, ' + '\n' +
-        'detail.branchName as branch_name, ' + '\n' +
-        'detail.authorName as author_name, ' + '\n' +
-        'detail.commitId as commit_id, ' + '\n' +
-        'created_at' + '\n' +
-        'FROM' + '\n' +
-        athenaDB + '.' + athenaTable + '\n' +
-        "WHERE source = 'aws.codecommit'"
+    LOGGER.log("INFO", "[BuildCodeChangeActivityQuery] Start");
 
     const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
-    queryString = queryString + '\nAND ' + dataDurationQueryString
 
-    // add filter by customer selected repos if configured
-    if (includedRepositoryList.length > 0 && includedRepositoryList !== "'ALL'")
-        queryString = queryString + '\nAND detail.repositoryName in (' + includedRepositoryList + ');'
-    else queryString = queryString + ';';
+    // Filter by customer entered repository list if configured
+    const repoFilterString =
+        includedRepositoryList.length > 0 && includedRepositoryList !== "'ALL'" ? `AND detail.repositoryName in (${includedRepositoryList});` : ";";
 
-    LOGGER.log('INFO', 'Query string: \n'+ queryString);
-    LOGGER.log('INFO', '[BuildCodeChangeActivityQuery] END');
+    const queryString = `CREATE OR REPLACE VIEW ${athenaDB}.code_change_activity_view AS
+        SELECT account, time, region,
+        detail.eventName as event_name,
+        detail.repositoryName as repository_name,
+        detail.branchName as branch_name, 
+        detail.authorName as author_name,
+        detail.commitId as commit_id,
+        created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.codecommit'
+            AND ${dataDurationQueryString}
+            ${repoFilterString}`;
+
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildCodeChangeActivityQuery] END");
 
     return queryString;
 };
@@ -82,119 +76,123 @@ let BuildCodeChangeActivityQuery = (athenaDB, athenaTable, includedRepositoryLis
  * Build an athena query to create a view for recovery time
  */
 let BuildRecoveryTimeQuery = (athenaDB, athenaTable, dataDuration) => {
-        LOGGER.log('INFO', '[BuildRecoveryTimeQuery] Start');
+    LOGGER.log("INFO", "[BuildRecoveryTimeQuery] Start");
 
-        let queryString =
-            'CREATE OR REPLACE VIEW ' + athenaDB + '.recovery_time_detail_view AS ' + '\n' +
-            'SELECT account, time, region, ' + '\n' +
-            'detail.canaryAlarmName as alarm_name, ' + '\n' +
-            'detail.canaryAlarmAppName as application_name, ' + '\n' +
-            'detail.canaryAlarmRepoName as repository_name, ' + '\n' +
-            'detail.canaryAlarmCurrState as current_state, ' + '\n' +
-            'detail.canaryAlarmPrevState as previous_state, ' + '\n' +
-            'detail.canaryAlarmCurrStateTimeStamp as current_state_timestamp, ' + '\n' +
-            'detail.canaryAlarmPrevStateTimeStamp as previous_state_timestamp, ' + '\n' +
-            'detail.recoveryDurationMinutes as duration_minutes,' + '\n' +
-            'created_at' + '\n' +
-            'FROM' + '\n' +
-            athenaDB + '.' + athenaTable + '\n' +
-            "WHERE source = 'aws.cloudwatch'"
+    const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
 
-        const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
-        queryString = queryString + '\nAND ' + dataDurationQueryString + ';';
+    const queryString = `CREATE OR REPLACE VIEW ${athenaDB}.recovery_time_detail_view AS
+        SELECT account, time, region,
+        detail.canaryAlarmName as alarm_name,
+        detail.alarmType as alarm_type,
+        detail.canaryAlarmAppName as application_name,
+        detail.canaryAlarmRepoName as repository_name,
+        detail.canaryAlarmCurrState as current_state,
+        detail.canaryAlarmPrevState as previous_state,
+        detail.canaryAlarmCurrStateTimeStamp as current_state_timestamp,
+        detail.canaryAlarmPrevStateTimeStamp as previous_state_timestamp,
+        detail.recoveryDurationMinutes as duration_minutes, created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.cloudwatch' 
+            AND ${dataDurationQueryString};`;
 
-        LOGGER.log('INFO', 'Query string: \n'+ queryString);
-        LOGGER.log('INFO', '[BuildRecoveryTimeQuery] END');
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildRecoveryTimeQuery] END");
 
-        return queryString;
+    return queryString;
 };
 
 /**
  * Build an athena query to create a view for application deployments
  */
 let BuildDeploymentQuery = (athenaDB, athenaTable, dataDuration) => {
-    LOGGER.log('INFO', '[BuildDeploymentQuery] Start');
-
-    let queryString =
-        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_deployment_detail_view AS ' + '\n' +
-        'SELECT account, time, region, ' + '\n' +
-        'detail.deploymentId as deployment_id, ' + '\n' +
-        'detail.deploymentApplication as application, ' + '\n' +
-        'detail.deploymentState as state,' + '\n' +
-        'created_at' + '\n' +
-        'FROM' + '\n' +
-        athenaDB + '.' + athenaTable + '\n' +
-        "WHERE source = 'aws.codedeploy'"
+    LOGGER.log("INFO", "[BuildDeploymentQuery] Start");
 
     const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
-    queryString = queryString + '\nAND ' + dataDurationQueryString + ';';
 
-    LOGGER.log('INFO', 'Query string: \n'+ queryString);
-    LOGGER.log('INFO', '[BuildDeploymentQuery] END');
+    const queryString = `CREATE OR REPLACE VIEW ${athenaDB}.code_deployment_detail_view AS
+        SELECT account, time, region,
+        detail.deploymentId as deployment_id,
+        detail.deploymentApplication as application,
+        detail.deploymentState as state,
+        created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.codedeploy' 
+            AND ${dataDurationQueryString};`;
+
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildDeploymentQuery] END");
 
     return queryString;
 };
 
 /*
-* Build an athena query to create a view for code pipeline executions.
-*/
+ * Build an athena query to create a view for code pipeline executions.
+ */
 let BuildCodePipelineQuery = (athenaDB, athenaTable, dataDuration) => {
-    LOGGER.log('INFO', '[BuildCodePipelineQuery] Start');
-
-    let queryString =
-        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_pipeline_detail_view AS ' + '\n' +
-        'SELECT account, time, region, ' + '\n' +
-        'detail.pipelineName as pipeline_name, \n' +
-        'detail.executionId as execution_id, \n' +
-        'detail.stage as stage, ' + '\n' +
-        'detail.action as action, ' + '\n' +
-        'detail.state as state,' + '\n' +
-        'detail.externalExecutionId as external_execution_id,' + '\n' +
-        'detail.actionCategory as action_category,' + '\n' +
-        'detail.actionOwner as action_owner,' + '\n' +
-        'detail.actionProvider as action_provider,' + '\n' +
-        'created_at' + '\n' +
-        'FROM' + '\n' +
-        athenaDB + '.' + athenaTable + '\n' +
-        "WHERE source = 'aws.codepipeline'"
+    LOGGER.log("INFO", "[BuildCodePipelineQuery] Start");
 
     const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
-    queryString = queryString + '\nAND ' + dataDurationQueryString + ';';
 
-    LOGGER.log('INFO', 'Query string: \n'+ queryString);
-    LOGGER.log('INFO', '[BuildCodePipelineQuery] END');
+    const queryString = `CREATE OR REPLACE VIEW ${athenaDB}.code_pipeline_detail_view AS
+        SELECT account, time, region,
+        detail.pipelineName as pipeline_name,
+        detail.executionId as execution_id,
+        detail.stage as stage,
+        detail.action as action, 
+        detail.state as state,
+        detail.externalExecutionId as external_execution_id,
+        detail.actionCategory as action_category,
+        detail.actionOwner as action_owner,
+        detail.actionProvider as action_provider,
+        created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE source = 'aws.codepipeline' 
+            AND ${dataDurationQueryString};`;
+
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildCodePipelineQuery] END");
 
     return queryString;
-}
+};
 
 /**
  * Build an athena query to create a view for code build metrics
  */
- let BuildCodeBuildQuery = (athenaDB, athenaTable, dataDuration) => {
-    LOGGER.log('INFO', '[BuildCodeBuildQuery] Start');
-
-    let queryString =
-        'CREATE OR REPLACE VIEW ' + athenaDB + '.code_build_detail_view AS ' + '\n' +
-        'SELECT account_id as account,' + '\n' +
-        'region, namespace, metric_name, timestamp,' + '\n' +
-        'dimensions.ProjectName as project_name,' + '\n' +
-        'dimensions.BuildId as build_id,' + '\n' +
-        'dimensions.BuildNumber as build_number,' + '\n' +
-        'value.count as count,' + '\n' +
-        'value.sum as sum,' + '\n' +
-        'value.max as max,' + '\n' +
-        'value.min as min,' + '\n' +
-        'unit,' + '\n' +
-        'created_at' + '\n' +
-        'FROM' + '\n' +
-        athenaDB + '.' + athenaTable + '\n' +
-        "WHERE namespace = 'AWS/CodeBuild'"
+let BuildCodeBuildQuery = (athenaDB, athenaTable, dataDuration) => {
+    LOGGER.log("INFO", "[BuildCodeBuildQuery] Start");
 
     const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
-    queryString = queryString + '\nAND ' + dataDurationQueryString + ';';
 
-    LOGGER.log('INFO', 'Query string: \n'+ queryString);
-    LOGGER.log('INFO', '[BuildCodeBuildQuery] END');
+    const queryString = `CREATE OR REPLACE VIEW ${athenaDB}.code_build_detail_view AS
+        SELECT account_id as account, region, namespace, metric_name, timestamp,
+        dimensions.ProjectName as project_name, dimensions.BuildId as build_id,
+        dimensions.BuildNumber as build_number, value.count as count, value.sum as sum, 
+        value.max as max, value.min as min, unit, created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE namespace = 'AWS/CodeBuild' 
+            AND ${dataDurationQueryString};`;
+
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildCodeBuildQuery] END");
+
+    return queryString;
+};
+
+/**
+ * Build an athena query to create a view for github metrics
+ */
+let BuildGitHubQuery = (athenaDB, athenaTable, dataDuration) => {
+    LOGGER.log("INFO", "[BuildGitHubQuery] Start");
+
+    const dataDurationQueryString = BuildDataDurationQuery(dataDuration);
+
+    const queryString = `CREATE OR REPLACE VIEW ${athenaDB}.github_change_activity_view AS
+        SELECT repository_name, branch_name, author_name, event_name, cast(cardinality(commit_id) as int) as commit_count, time, created_at
+        FROM ${athenaDB}.${athenaTable}
+        WHERE ${dataDurationQueryString};`;
+
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildGitHubQuery] END");
 
     return queryString;
 };
@@ -203,13 +201,12 @@ let BuildCodePipelineQuery = (athenaDB, athenaTable, dataDuration) => {
  * Build a query string for data duration
  */
 let BuildDataDurationQuery = (dataDuration) => {
-    LOGGER.log('INFO', '[BuildDataDurationString] Start');
+    LOGGER.log("INFO", "[BuildDataDurationString] Start");
 
-    let queryString =
-        "created_at between date_add('day', -" + dataDuration + ", current_date) and current_date"
+    let queryString = `created_at between date_add('day', -${dataDuration}, current_date) and current_date`;
 
-    LOGGER.log('INFO', 'Query string: \n'+ queryString);
-    LOGGER.log('INFO', '[BuildDataDurationString] END');
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildDataDurationString] END");
 
     return queryString;
 };
@@ -218,13 +215,12 @@ let BuildDataDurationQuery = (dataDuration) => {
  * Build athena query to drop a view
  */
 let BuildDropViewQuery = (athenaDB, athenaView) => {
-    LOGGER.log('INFO', '[BuildDropViewQuery] Start');
+    LOGGER.log("INFO", "[BuildDropViewQuery] Start");
 
-    let queryString =
-        'DROP VIEW IF EXISTS '+ athenaDB + '.' + athenaView + ';'
+    let queryString = `DROP VIEW IF EXISTS ${athenaDB}.${athenaView};`;
 
-    LOGGER.log('INFO', 'Query string: \n'+ queryString);
-    LOGGER.log('INFO', '[BuildDropViewQuery] END');
+    LOGGER.log("INFO", "Query string: \n" + queryString);
+    LOGGER.log("INFO", "[BuildDropViewQuery] END");
 
     return queryString;
 };
@@ -237,5 +233,6 @@ module.exports = {
     buildDropViewQuery: BuildDropViewQuery,
     buildDataDurationQuery: BuildDataDurationQuery,
     buildCodePipelineQuery: BuildCodePipelineQuery,
-    buildCodeBuildQuery: BuildCodeBuildQuery
+    buildCodeBuildQuery: BuildCodeBuildQuery,
+    buildGitHubQuery: BuildGitHubQuery,
 };

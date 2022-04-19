@@ -11,38 +11,35 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
+
+'use strict';
+
+
+const LOGGER = new (require('./lib/logger'))();
+
+
 /**
- * @author Solution Builders
- */
-
- 'use strict';
-
-
- const LOGGER = new (require('./lib/logger'))();
-
-
- /**
- * Transform AWS CloudWath metrics for CodeBuild
- */
+* Transform AWS CloudWatch metrics for CodeBuild
+*/
 let TransformCodeBuildCWMetrics = (data, recordNumber) => {
-    try{
-            // Split JSON objects in source data by newline and store them in an array
-            const arrayOfObjectsFromData =  data.split("\n");
+    try {
+        // Split JSON objects in source data by newline and store them in an array
+        const arrayOfObjectsFromData = data.split("\n");
 
-            // Filter out duplicated JSON objects that have no projects in dimensions
-            const ObjectsWithDimensionsValue = arrayOfObjectsFromData.filter(obj => {
-                try {
-                        const jsonData = JSON.parse(obj)
-                        return jsonData["dimensions"]["ProjectName"] != undefined
-                } catch(err) {
-                  return false;
-                }
-            })
+        // Filter out duplicated JSON objects that have no projects in dimensions
+        const ObjectsWithDimensionsValue = arrayOfObjectsFromData.filter(obj => {
+            try {
+                const jsonData = JSON.parse(obj)
+                return jsonData["dimensions"]["ProjectName"] != undefined
+            } catch (err) {
+                return false;
+            }
+        })
 
-            LOGGER.log('INFO', 'JSON objects after filtering empty dimensions for source event ' +  recordNumber.toString() + ': ' + ObjectsWithDimensionsValue);
+        LOGGER.log('INFO', 'JSON objects after filtering empty dimensions for source event ' + recordNumber.toString() + ': ' + ObjectsWithDimensionsValue);
 
-            // Put JSON objects back to a string, separated by a newline
-            return ObjectsWithDimensionsValue.join("\n")
+        // Put JSON objects back to a string, separated by a newline
+        return ObjectsWithDimensionsValue.join("\n")
     }
     catch (error) {
         LOGGER.log('ERROR', "Error transforming codebuild metrics failed. Error: " + error.message);

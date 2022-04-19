@@ -1,4 +1,4 @@
-**[🚀 Solution Landing Page](<https://aws.amazon.com/solutions/implementations/aws-devops-monitoring-dashboard/>)** | **[🚧 Feature request](https://github.com/awslabs/aws-devops-monitoring-dashboard/issues/new?assignees=&labels=feature-request%2C+enhancement&template=feature_request.md&title=)** | **[🐛 Bug Report](https://github.com/awslabs/aws-devops-monitoring-dashboard/issues/new?assignees=&labels=bug%2C+triage&template=bug_report.md&title=)**
+**[🚀 Solution Landing Page](<https://aws.amazon.com/solutions/implementations/aws-devops-monitoring-dashboard/>)** | **[🚧 Feature request](https://github.com/aws-solutions/aws-devops-monitoring-dashboard/issues/new?assignees=&labels=feature-request%2C+enhancement&template=feature_request.md&title=)** | **[🐛 Bug Report](https://github.com/aws-solutions/aws-devops-monitoring-dashboard/issues/new?assignees=&labels=bug%2C+triage&template=bug_report.md&title=)**
 
 Note: If you want to use the solution without building from source, navigate to Solution Landing Page
 
@@ -34,8 +34,8 @@ For a detailed solution implementation guide, refer to Solution Landing Page [AW
   <br/>
 </p>
 
-1.	A developer initiates an activity in an AWS CI/CD pipeline, such as pushing a code change to AWS CodeCommit or deploying an application using AWS CodeDeploy. These activities create events. In addition, activities in AWS CodeBuild generates CloudWatch metrics.
-2.	An Amazon EventBridge events rule detects the events based on predefined event patterns and then sends the event data to an Amazon Kinesis Data Firehose delivery stream. One event rule is created per event source. For AWS CodeBuild, a CloudWatch metric stream is setup to capture its CloudWatch metrics and deliver it to a Kinese Data Firehose delivery stream.
+1.	A developer initiates an activity in an AWS CI/CD pipeline, such as pushing a code change to AWS CodeCommit or deploying an application using AWS CodeDeploy. These activities create events. For development using GitHub repository, git push events are generated.
+2.	An Amazon EventBridge events rule detects the events based on predefined event patterns and then sends the event data to an Amazon Kinesis Data Firehose delivery stream. One event rule is created per event source. For activities in AWS CodeBuild, a CloudWatch metric stream is set up to capture CloudWatch metrics and deliver them to a Kinesis Data Firehose delivery stream. For GitHub push events, an Amazon API endpoint is created to post these events and deliver them to a Kinesis Data Firehose delivery stream.
 3.	An Amazon EventBridge events rule is also created to capture events from an Amazon CloudWatch alarm that monitors the status of an Amazon CloudWatch synthetics canary, if you have set up the canary and alarm in your account. This alarm is needed to gather data for calculating Mean Time to Recover (MTTR) metrics.
 4.	Amazon Kinesis Data Firehose uses an AWS Lambda function for data transformation. The Lambda function extracts relevant data to each metric and sends it to an Amazon S3 bucket for downstream processing.
 5.	An Amazon Athena database queries the Amazon S3 bucket data and returns query results to Amazon QuickSight.
@@ -46,7 +46,11 @@ For a detailed solution implementation guide, refer to Solution Landing Page [AW
 # AWS Solutions Constructs
 [AWS CDK Solutions Constructs](https://aws.amazon.com/solutions/constructs/) make it easier to consistently create well-architected applications. All AWS Solutions Constructs are reviewed by AWS and use best practices established by the AWS Well-Architected Framework. This solution uses the following AWS CDK Constructs:
 
--   aws-events-rule-kinesisfirehose-s3
+-   aws-eventbridge-kinesisfirehose-s3
+-   aws-eventbridge-lambda
+-   aws-kinesisfirehose-s3
+
+
 
 <a name="aws-solutions-constructs"></a><a name="customizing-the-solution"></a>
 # Customizing the Solution
@@ -69,12 +73,12 @@ Clone or download the repository to a local directory on your linux client. Note
 **Git Clone example:**
 
 ```
-git clone https://github.com/awslabs/aws-devops-monitoring-dashboard.git
+git clone https://github.com/aws-solutions/aws-devops-monitoring-dashboard.git
 ```
 
 **Download Zip example:**
 ```
-wget https://github.com/awslabs/aws-devops-monitoring-dashboard/archive/master.zip
+wget https://github.com/aws-solutions/aws-devops-monitoring-dashboard/archive/master.zip
 ```
 
 #### 2. Unit test
@@ -90,8 +94,9 @@ chmod +x ./run-unit-tests.sh
 
 AWS Solutions use two buckets:
 
-* One global bucket that is access via the http end point. AWS CloudFormation templates are stored here. Ex. "mybucket"
+* One global bucket that is accessed via the http end point. AWS CloudFormation templates are stored here. Ex. "mybucket"
 * One regional bucket for each region where you plan to deploy the solution. Use the name of the global bucket as the prefix of the bucket name, and suffixed with the region name. Regional assets such as Lambda code are stored here. Ex. "mybucket-us-east-1"
+  * Inside this bucket, create a folder named with the same solution name specified below in the environment variables section; and inside that, create another folder named with the same version number specified below. Here is how a sample folder/prefix would look like: "aws-devops-monitoring-dashboard/V1.0.0". 
 * The assets in buckets must be accessible by your account
 
 #### 4. Declare environment variables
@@ -103,7 +108,7 @@ export AWS_REGION=<AWS_REGION> # region where the solution is deployed
 export CF_TEMPLATE_BUCKET_NAME=<YOUR_CF_TEMPLATE_BUCKET_NAME> # Name of the global bucket where CloudFormation templates are stored
 export QUICKSIGHT_TEMPLATE_ACCOUNT = <YOUR_QUICKSIGHT_TEMPLATE_ACCOUNT> # The AWS account from which the Amazon QuickSight templates should be sourced for Amazon QuickSight Analysis and Dashboard creation
 export DIST_QUICKSIGHT_NAMESPACE = <YOUR_DIST_QUICKSIGHT_NAMESPACE >
-# The namesapce in QuickSight account ARN. Ex. "default"
+# The namespace in QuickSight account ARN. Ex. "default"
 ```
 #### 5. Build the solution
 ```
@@ -114,9 +119,8 @@ chmod +x build-s3-dist.sh
 
 <a name="Upload-deployment-assets-to-your-S3-buckets"></a>
 ## Upload Deployment Assets
-* Copy the files `aws-devops-monitoring-dashboard.template` and `canary-alarm.template` in the directory `./deployment/global-s3-assets`, to the bucket with the name referenced to `$DIST_OUTPUT_BUCKET`
-* Copy the file with the name format `awsdevopsmonitoringdashboardQSDashboard*.nested.template` in the directory `./deployment/global-s3-assets`, to the bucket with the name referenced to `$CF_TEMPLATE_BUCKET_NAME`
-* Copy the lambda distribution files from the folder `./deployment/regional-s3-assets` in to the S3 bucket with the name as `$DIST_OUTPUT_BUCKET-[REGION]`, `[REGION]` is the specific region where the solution is being deployed.
+* Copy the cloudformation templates (.template files) from the directory `./deployment/global-s3-assets` into the global S3 bucket with the name referenced to `$CF_TEMPLATE_BUCKET_NAME`.
+* Copy the lambda distribution files (.zip files) from the directory `./deployment/regional-s3-assets` into the folder/prefix `$SOLUTION_NAME/$VERSION` in the regional S3 bucket with the name referenced to `$DIST_OUTPUT_BUCKET-[REGION]`. `[REGION]` is the specific region where the solution is being deployed.
 
 <a name="create-quicksight-template"></a>
 ## Create QuickSight Template
@@ -152,11 +156,14 @@ aws quicksight list-data-sets --aws-account-id your-aws-account-id
                 {
                     "DataSetPlaceholder": "code-pipeline-detail",
                     "DataSetArn": "your-quicksight-code-pipeline-detail-dataset-arn"
-                }
-                ,
+                },
                 {
                     "DataSetPlaceholder": "code-build-detail",
                     "DataSetArn": "your-quicksight-code-build-detail-dataset-arn"
+                },
+                {
+                    "DataSetPlaceholder": "github-change-activity",
+                    "DataSetArn": "your-quicksight-github-change-activity-dataset-arn"
                 }
             ]
         }
@@ -232,4 +239,4 @@ This solution collects anonymous operational metrics to help AWS improve the qua
 <a name="license"></a>
 # License
 
-See license [here](https://github.com/awslabs/aws-devops-monitoring-dashboard/blob/master/LICENSE.txt)
+See license [here](https://github.com/aws-solutions/aws-devops-monitoring-dashboard/blob/master/LICENSE.txt)

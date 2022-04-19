@@ -1,0 +1,106 @@
+{
+    "PhysicalTableMap": {
+        "cd2fd368-a250-46d5-995f-d3395ffc5ac5": {
+            "RelationalTable": {
+                "DataSourceArn": "{self.data_source.arn}",
+                "Schema": "aws_devops_metrics_db_so0143",
+                "Name": "github_change_activity_view",
+                "InputColumns": [
+                    {
+                        "Name": "repository_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "branch_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "author_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "event_name",
+                        "Type": "STRING"
+                    },
+                    {
+                        "Name": "commit_count",
+                        "Type": "INTEGER"
+                    },
+                    {
+                        "Name": "time",
+                        "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "created_at",
+                        "Type": "DATETIME"
+                    }
+                ]
+            }
+        }
+    },
+    "LogicalTableMap": {
+        "cd2fd368-a250-46d5-995f-d3395ffc5ac5": {
+            "Alias": "github_change_activity_view",
+            "DataTransforms": [
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "repository_name",
+                        "NewColumnName": "Repository"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "branch_name",
+                        "NewColumnName": "Branch"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "author_name",
+                        "NewColumnName": "Author"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "event_name",
+                        "NewColumnName": "Event Name"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "commit_count",
+                        "NewColumnName": "Commit Count"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "time",
+                        "NewColumnName": "Time"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "created_at",
+                        "NewColumnName": "Created At"
+                    }
+                },
+                {
+                    "ProjectOperation": {
+                        "ProjectedColumns": [
+                            "Repository",
+                            "Branch",
+                            "Author",
+                            "Event Name",
+                            "Commit Count",
+                            "Time",
+                            "Created At"
+                        ]
+                    }
+                }
+            ],
+            "Source": {
+                "PhysicalTableId": "cd2fd368-a250-46d5-995f-d3395ffc5ac5"
+            }
+        }
+    }
+}

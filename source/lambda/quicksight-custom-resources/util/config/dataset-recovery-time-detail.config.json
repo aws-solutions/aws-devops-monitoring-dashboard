@@ -23,6 +23,10 @@
                         "Type": "STRING"
                     },
                     {
+                        "Name": "alarm_type",
+                        "Type": "STRING"
+                    },
+                    {
                         "Name": "application_name",
                         "Type": "STRING"
                     },
@@ -106,6 +110,12 @@
                 },
                 {
                     "RenameColumnOperation": {
+                        "ColumnName": "alarm_type",
+                        "NewColumnName": "Alarm Type"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
                         "ColumnName": "alarm_name",
                         "NewColumnName": "Alarm Name"
                     }
@@ -141,6 +151,7 @@
                             "Time",
                             "Region",
                             "Alarm Name",
+                            "Alarm Type",
                             "Application",
                             "Repository",
                             "Recovery Time",

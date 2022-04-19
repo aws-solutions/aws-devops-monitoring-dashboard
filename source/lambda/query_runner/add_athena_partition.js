@@ -11,9 +11,6 @@
  *  and limitations under the License.                                                                                *
  *********************************************************************************************************************/
 
-/**
- * @author Solution Builders
- */
 
 'use strict';
 const aws = require('aws-sdk');
@@ -22,7 +19,7 @@ let userAgentExtra = process.env["UserAgentExtra"]
 let options = {}
 if (userAgentExtra) {
     options = { customUserAgent: userAgentExtra }
-} 
+}
 
 const cloudwatch = new aws.CloudWatch(options);
 
@@ -34,6 +31,7 @@ const metricsHelper = require('./lib/metrics_helper');
 const athenaDB = process.env.MetricsDBName
 const athenaTable = process.env.MetricsTableName
 const athenaCodeBuildTable = process.env.CodeBuildMetricsTableName
+const athenaGitHubTable = process.env.GitHubMetricsTableName
 const athenaWorkGroup = process.env.AthenaWorkGroup
 const sendAnonymousUsageData = process.env.SendAnonymousUsageData;
 const solutionId = process.env.SolutionId;
@@ -48,33 +46,37 @@ const metricsURL = process.env.MetricsURL;
  */
 exports.handler = async (event) => {
     LOGGER.log(`Event received is ${JSON.stringify(event)}`);
-    try{
-         await AddPartition();
-         await SendAnonymousUsageData();
-     }
-     catch (err) {
+    try {
+        await AddPartition();
+        await SendAnonymousUsageData();
+    }
+    catch (err) {
         LOGGER.log('ERROR', err);
-     }
+    }
 };
 
 /**
  * Execute Athena query to add partitions
  */
 let AddPartition = async () => {
-    try{
-            LOGGER.log('INFO', 'Start adding athena partition lambda function');
+    try {
+        LOGGER.log('INFO', 'Start adding athena partition lambda function');
 
-            // Run query to add athena partitions to devops metrics table as needed
-            let queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB,athenaTable);
-            let queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
+        // Run query to add athena partitions to devops metrics table as needed
+        let queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB, athenaTable);
+        let queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
 
-            // Run query to add athena partitions to codebuild metrics table as needed
-            queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB,athenaCodeBuildTable);
-            queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
+        // Run query to add athena partitions to codebuild metrics table as needed
+        queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB, athenaCodeBuildTable);
+        queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
 
-            LOGGER.log('INFO', 'End adding athena partition lambda function');
+        // Run query to add athena partitions to github metrics table as needed
+        queryString = buildAthenaQuery.buildAddAthenaPartitionQuery(athenaDB, athenaGitHubTable);
+        queryExecutionId = await exeAthenaQuery.executeAthenaQuery(athenaDB, athenaWorkGroup, queryString);
 
-            return queryExecutionId;
+        LOGGER.log('INFO', 'End adding athena partition lambda function');
+
+        return queryExecutionId;
     }
     catch (err) {
         LOGGER.log('ERROR', err);
@@ -85,27 +87,27 @@ let AddPartition = async () => {
  * Send Anonymous Usage Metrics
  */
 let SendAnonymousUsageData = async () => {
-    try{
-        if (sendAnonymousUsageData.toLowerCase() == "yes"){
+    try {
+        if (sendAnonymousUsageData.toLowerCase() == "yes") {
             LOGGER.log('INFO', '[SendAnonymousUsageData] Start sending anonymous metrics');
 
             const queryCount = await GetAthenaQueryExecutionsCount();
 
             const data = {
-                    version: solutionVersion,
-                    data_type: 'add_athena_partition_lambda',
-                    region: solutionRegion,
-                    athena_query_executions_count: queryCount.toString()
-                };
+                version: solutionVersion,
+                data_type: 'add_athena_partition_lambda',
+                region: solutionRegion,
+                athena_query_executions_count: queryCount.toString()
+            };
 
-                LOGGER.log(`[SendAnonymousUsageData] data: ${JSON.stringify(data)}`);
+            LOGGER.log(`[SendAnonymousUsageData] data: ${JSON.stringify(data)}`);
 
-                const response = await metricsHelper.sendMetrics(solutionId, solutionUUID, data, metricsURL);
+            const response = await metricsHelper.sendMetrics(solutionId, solutionUUID, data, metricsURL);
 
-                LOGGER.log("INFO", `[SendAnonymousUsageData] response: ${JSON.stringify(response, null, 2)}`);
-                LOGGER.log('INFO', '[SendAnonymousUsageData] End sending anonymous metrics');
+            LOGGER.log("INFO", `[SendAnonymousUsageData] response: ${JSON.stringify(response, null, 2)}`);
+            LOGGER.log('INFO', '[SendAnonymousUsageData] End sending anonymous metrics');
 
-                return response;
+            return response;
         }
     }
     catch (err) {
@@ -118,7 +120,7 @@ let SendAnonymousUsageData = async () => {
  * that are triggered by QuickSight dashboard loading within a certain period of time (24 hours)
  */
 let GetAthenaQueryExecutionsCount = async () => {
-   LOGGER.log('INFO', '[GetAthenaQueryExecutionsCount] Start getting Athena query executions count');
+    LOGGER.log('INFO', '[GetAthenaQueryExecutionsCount] Start getting Athena query executions count');
 
     const end_time = new Date();
     let start_time = new Date();
@@ -137,7 +139,7 @@ let GetAthenaQueryExecutionsCount = async () => {
         }, {
             Name: "QueryType",
             Value: "DML"
-        },{
+        }, {
             Name: "WorkGroup",
             Value: athenaWorkGroup
         }]
@@ -145,30 +147,30 @@ let GetAthenaQueryExecutionsCount = async () => {
 
     let query_executions_count = 0;
 
-    try{
-         let response = await cloudwatch.getMetricStatistics(params, function(err, data) {
-         if (err) {
-            LOGGER.log("DEBUG", `[GetAthenaQueryExecutionsCount] Error: ${err}`);
-         } else {
-                  LOGGER.log("INFO", `[GetAthenaQueryExecutionsCount] data: ${JSON.stringify(data)}`);
-                  if (data.Datapoints && data.Datapoints.length > 0) {
-                     data.Datapoints.forEach(function(data_point, index) {
+    try {
+        let response = await cloudwatch.getMetricStatistics(params, function (err, data) {
+            if (err) {
+                LOGGER.log("DEBUG", `[GetAthenaQueryExecutionsCount] Error: ${err}`);
+            } else {
+                LOGGER.log("INFO", `[GetAthenaQueryExecutionsCount] data: ${JSON.stringify(data)}`);
+                if (data.Datapoints && data.Datapoints.length > 0) {
+                    data.Datapoints.forEach(function (data_point, index) {
                         query_executions_count += data_point.SampleCount;
-                     });
-                     // subtract 1 query execution used to add daily athena partition instead of loading QuickSight dashboard
-                     query_executions_count = (query_executions_count - 1 >= 0)?(query_executions_count - 1): 0;
-               }
-         }
+                    });
+                    // subtract 1 query execution used to add daily athena partition instead of loading QuickSight dashboard
+                    query_executions_count = (query_executions_count - 1 >= 0) ? (query_executions_count - 1) : 0;
+                }
+            }
         }).promise()
 
         LOGGER.log("INFO", `[GetAthenaQueryExecutionsCount] Response: ${JSON.stringify(response)}`);
         LOGGER.log("INFO", `[GetAthenaQueryExecutionsCount] Query Executions Count: ${query_executions_count.toString()}`);
     }
     catch (error) {
-      LOGGER.log('ERROR', error);
-   };
+        LOGGER.log('ERROR', error);
+    };
 
     LOGGER.log('INFO', '[GetAthenaQueryExecutionsCount] End getting Athena query executions count');
 
     return query_executions_count;
-};
+}
