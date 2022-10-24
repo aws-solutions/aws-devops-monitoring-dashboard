@@ -61,6 +61,10 @@
                     {
                         "Name": "created_at",
                         "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "tag",
+                        "Type": "STRING"
                     }
                 ]
             }
@@ -152,6 +156,12 @@
                     "RenameColumnOperation": {
                         "ColumnName": "created_at",
                         "NewColumnName": "Created At"
+                    }
+                },
+                {
+                    "RenameColumnOperation": {
+                        "ColumnName": "tag",
+                        "NewColumnName": "Tag"
                     }
                 }
             ],

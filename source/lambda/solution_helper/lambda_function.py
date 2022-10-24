@@ -33,4 +33,4 @@ def handler(event, context):
     try:
         helper(event, context)
     except Exception as error:
-        logger.exception("[handler] failed: {error}")
+        logger.exception(f"[handler] failed: {error}")

@@ -43,7 +43,7 @@ class Dashboard(QuickSightResource):
             SourceEntity=self._get_source_entity(),
             DashboardPublishOptions=self._get_dashboard_publish_options(),
         )
-        logger.info(f"finished quicksight create_dashboard for id:{self.id} " f"response: {response}")
+        logger.info(f"finished quicksight create_dashboard for id:{self.id}, response: {response}")
 
         self.arn = response["Arn"]
         return response
@@ -53,7 +53,7 @@ class Dashboard(QuickSightResource):
         quicksight_client = get_quicksight_client()
 
         response = quicksight_client.delete_dashboard(AwsAccountId=self.aws_account_id, DashboardId=self.id)
-        logger.info(f"finished quicksight delete_dashboard for id:{self.id} " f"response: {response}")
+        logger.info(f"finished quicksight delete_dashboard for id:{self.id}, response: {response}")
 
         return response
 

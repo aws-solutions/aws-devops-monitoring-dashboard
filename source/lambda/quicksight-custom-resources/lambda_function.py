@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 helper = CfnResource(json_logging=False, log_level="INFO")
 
 
-def get_resource_propertices(event, _):
+def get_resource_properties(event, _):
     logger.debug(f"servicing request event:{event}")
     request_type = event["RequestType"]
     resource_properties = event["ResourceProperties"]
@@ -24,7 +24,7 @@ def get_resource_propertices(event, _):
 
 def log_exception(error):
     """
-    Do logging in addition to crhelper exception handeling
+    Do logging in addition to crhelper exception handling
     """
     logger.error(f"quicksight-application resources action error: {error}")
     import sys
@@ -38,7 +38,7 @@ def log_exception(error):
 @helper.create
 def custom_resource_create(event, _):
     request_type = "Create"
-    resource_properties = get_resource_propertices(event, _)
+    resource_properties = get_resource_properties(event, _)
     resource = resource_properties["Resource"]
     qs_api = QuicksightApi(resource_properties)
 
@@ -61,7 +61,7 @@ def custom_resource_create(event, _):
             dashboard_url = qs_api.quicksight_application.get_dashboard().url
             helper.Data.update({"analysis_url": analysis_url, "dashboard_url": dashboard_url})
     except Exception as error:
-        # Do logging in addition to crhelper exception handeling
+        # Do logging in addition to crhelper exception handling
         log_exception(error)
         qs_api.delete_all_resources()
         raise (error)
@@ -73,7 +73,7 @@ def custom_resource_create(event, _):
 @helper.delete
 def custom_resource_delete(event, _):
     request_type = "Delete"
-    resource_properties = get_resource_propertices(event, _)
+    resource_properties = get_resource_properties(event, _)
     resource = resource_properties["Resource"]
     qs_api = QuicksightApi(resource_properties)
 
@@ -92,7 +92,7 @@ def custom_resource_delete(event, _):
             logger.error(f"Not handling request resource:{resource}, request_type:{request_type}")
             raise ValueError(f"Received unsupported request request_type:{request_type}, resource:{resource}")
     except Exception as error:
-        # Do logging in addition to crhelper exception handeling
+        # Do logging in addition to crhelper exception handling
         log_exception(error)
         raise (error)
 
@@ -104,7 +104,7 @@ def custom_resource_delete(event, _):
 def custom_resource_update(event, _):
     # For update we delete all the resources and re-create new ones. Any user customization on QuickSight may be lost
     request_type = "Update"
-    resource_properties = get_resource_propertices(event, _)
+    resource_properties = get_resource_properties(event, _)
     resource = resource_properties["Resource"]
     qs_api = QuicksightApi(resource_properties)
 
@@ -146,7 +146,7 @@ def custom_resource_update(event, _):
 
     except Exception as error:
         qs_api.delete_all_resources()
-        # Do logging in addition to crhelper exception handeling
+        # Do logging in addition to crhelper exception handling
         log_exception(error)
         raise (error)
 

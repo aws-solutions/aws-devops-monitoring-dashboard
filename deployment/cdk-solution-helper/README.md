@@ -15,85 +15,61 @@ used by the AWS Solutions publishing pipeline.
 These placeholders are then replaced with the appropriate values using the default find/replace operation run by the pipeline.
 
 Before:
+
 ```
 "examplefunction67F55935": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Ref": "AssetParametersd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7S3Bucket54E71A95"
-          },
-          "S3Key": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Fn::Select": [
-                    0,
-                    {
-                      "Fn::Split": [
-                        "||",
-                        {
-                          "Ref": "AssetParametersd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7S3VersionKeyC789D8B1"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "Fn::Select": [
-                    1,
-                    {
-                      "Fn::Split": [
-                        "||",
-                        {
-                          "Ref": "AssetParametersd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7S3VersionKeyC789D8B1"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            ]
-          }
-        }, ...
-        Handler: "index.handler", ...
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+  "Code": {
+    "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+    },
+    "S3Key": "5efbeaf6fad70c6f155399d9bb43debfa8efd4a4c9b5e055a103fe7b12754e76.zip"
+  },
+  "Handler": "index.handler",
+  "Runtime": "nodejs16.x"
+  },
+  ...
+}
 ```
 
 After helper function run:
+
 ```
 "examplefunction67F55935": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "S3Bucket": "%%BUCKET_NAME%%",
-          "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/assetd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7.zip"
-        }, ...
-        "Handler": "assetd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7/index.handler"
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "Code": {
+      "S3Bucket": "%%BUCKET_NAME%%",
+      "S3Key": "%%SOLUTION_NAME%%/%%VERSION%%/assetd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7.zip"
+    }, ...
+    "Handler": "index.handler"
 ```
 
 After build script run:
+
 ```
 "examplefunction67F55935": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "S3Bucket": "solutions",
-          "S3Key": "trademarked-solution-name/v1.0.0/asset.d513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7.zip"
-        }, ...
-        "Handler": "assetd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7/index.handler"
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "Code": {
+      "S3Bucket": "solutions",
+      "S3Key": "trademarked-solution-name/v1.0.0/assetd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7.zip"
+    }, ...
+    "Handler": "index.handler"
 ```
 
 After CloudFormation deployment:
+
 ```
 "examplefunction67F55935": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "S3Bucket": "solutions-us-east-1",
-          "S3Key": "trademarked-solution-name/v1.0.0/asset.d513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7.zip"
-        }, ...
-        "Handler": "assetd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7/index.handler"
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "Code": {
+      "S3Bucket": "solutions-us-east-1",
+      "S3Key": "trademarked-solution-name/v1.0.0/assetd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7.zip"
+    }, ...
+    "Handler": "index.handler"
 ```
 
 #### Template cleanup
@@ -103,6 +79,7 @@ been used to specify Lambda source code properties. This allows solution-specifi
 removes unnecessary clutter.
 
 Before:
+
 ```
 "Parameters": {
     "AssetParametersd513e93e266931de36e1c7e79c27b196f84ab928fce63d364d9152ca501551f7S3Bucket54E71A95": {
@@ -129,9 +106,10 @@ Before:
         "Type" : "String"
     }
   }
-  ```
+```
 
 After:
+
 ```
 "Parameters": {
     "CorsEnabled" : {
@@ -146,7 +124,8 @@ After:
         "Type" : "String"
     }
   }
-  ```
+```
 
-***
+---
+
 &copy; Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.

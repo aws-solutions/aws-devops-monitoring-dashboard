@@ -1,12 +1,22 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { CfnCondition, Construct, CfnResource, Stack, Duration, ArnFormat, RemovalPolicy, Fn} from '@aws-cdk/core';
-import { ServicePrincipal, Role, PolicyDocument, PolicyStatement, Effect, Policy, CfnPolicy} from '@aws-cdk/aws-iam';
-import { Runtime, Function as LambdaFunction, Code, CfnFunction } from '@aws-cdk/aws-lambda';
-import { Secret, SecretStringValueBeta1 } from '@aws-cdk/aws-secretsmanager';
-import { Bucket } from '@aws-cdk/aws-s3';
-import { CfnLogGroup, LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
+import { Construct } from 'constructs';
+import { CfnCondition, CfnResource, Stack, Duration, ArnFormat, RemovalPolicy, Fn, SecretValue } from 'aws-cdk-lib';
+import {
+  ServicePrincipal,
+  Role,
+  PolicyDocument,
+  PolicyStatement,
+  Effect,
+  Policy,
+  CfnPolicy,
+  CfnRole
+} from 'aws-cdk-lib/aws-iam';
+import { Runtime, Function as LambdaFunction, Code, CfnFunction } from 'aws-cdk-lib/aws-lambda';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { CfnLogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import {
   AccessLogFormat,
   AwsIntegration,
@@ -16,11 +26,10 @@ import {
   PassthroughBehavior,
   RequestValidator,
   RestApi
-}
-  from '@aws-cdk/aws-apigateway';
+} from 'aws-cdk-lib/aws-apigateway';
 import { KinesisFirehoseToS3 } from '@aws-solutions-constructs/aws-kinesisfirehose-s3';
-import {addCfnSuppressRules} from "@aws-solutions-constructs/core";
-
+import { addCfnSuppressRules } from '@aws-solutions-constructs/core';
+import { NagSuppressions } from 'cdk-nag';
 
 export interface GitHubEventsProps {
   readonly solutionId: string;
@@ -40,33 +49,32 @@ export interface GitHubEventsProps {
 }
 
 export class GitHubEvents extends Construct {
-
   public readonly apiEndpoint: string;
 
   constructor(scope: Construct, id: string, props: GitHubEventsProps) {
     super(scope, id);
 
-    const parentStack = props.callingStack
+    const parentStack = props.callingStack;
 
     //=========================================================================
     // RESOURCES
     //=========================================================================
 
     /**
-    * Create webhook secret token using AWS Secret Manager
-    */
-    const webhookSecretTokenCond = new CfnCondition(this, "WebhookSecretTokenCondition", {
-      expression: Fn.conditionNot(Fn.conditionEquals(props.webhookSecretToken, ""))
+     * Create webhook secret token using AWS Secret Manager
+     */
+    const webhookSecretTokenCond = new CfnCondition(this, 'WebhookSecretTokenCondition', {
+      expression: Fn.conditionNot(Fn.conditionEquals(props.webhookSecretToken, ''))
     });
 
-    const secretValue = SecretStringValueBeta1.fromToken(props.webhookSecretToken);
-    let webhookSecretToken = new Secret(this, 'WebhookSecretToken', {
+    const secretValue = SecretValue.unsafePlainText(props.webhookSecretToken);
+    const webhookSecretToken = new Secret(this, 'WebhookSecretToken', {
       secretName: `${props.solutionId}/GitHubWebhookSecretToken`,
-      secretStringBeta1: secretValue
+      secretStringValue: secretValue
     });
 
-    const webhookSecretTokenCfnRef = webhookSecretToken.node.defaultChild as CfnResource
-    webhookSecretTokenCfnRef.addOverride('Condition', webhookSecretTokenCond.logicalId)
+    const webhookSecretTokenCfnRef = webhookSecretToken.node.defaultChild as CfnResource;
+    webhookSecretTokenCfnRef.addOverride('Condition', webhookSecretTokenCond.logicalId);
     addCfnSuppressRules(webhookSecretTokenCfnRef, [
       {
         id: 'W77',
@@ -74,52 +82,75 @@ export class GitHubEvents extends Construct {
       }
     ]);
 
+    // Add cdk-nag suppression
+    NagSuppressions.addResourceSuppressions(webhookSecretTokenCfnRef, [
+      {
+        id: 'AwsSolutions-SMG4',
+        reason:
+          'Automatic rotation does not apply to this use case because the secret is created by user to secure GitHub webhook connection and it is fully controlled by the user.'
+      }
+    ]);
+
     /**
      * Create GitHub Event Parser Lambda: Transform GitHub events within Kinesis Firehose
      */
     const cwLogsPS = new PolicyStatement({
-      actions: ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
+      actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
       effect: Effect.ALLOW,
-      resources: [parentStack.formatArn({ service: 'logs', resource: 'log-group', arnFormat: ArnFormat.COLON_RESOURCE_NAME, resourceName: '/aws/lambda/*' })],
+      resources: [
+        parentStack.formatArn({
+          service: 'logs',
+          resource: 'log-group',
+          arnFormat: ArnFormat.COLON_RESOURCE_NAME,
+          resourceName: '/aws/lambda/*'
+        })
+      ],
       sid: 'CreateCWLogs'
-    })
+    });
 
     const secretsManagerPS = new PolicyStatement({
-      actions: ["secretsmanager:GetSecretValue"],
+      actions: ['secretsmanager:GetSecretValue'],
       effect: Effect.ALLOW,
       resources: [webhookSecretToken.secretArn],
       sid: 'GetSecretFromSecretsManager'
-    })
-
-    const secretsManagerPolicy = new Policy(this, 'SecretsManagerPolicy', {
-        statements: [secretsManagerPS]
     });
 
-    (secretsManagerPolicy.node.defaultChild as CfnPolicy).cfnOptions.condition =  webhookSecretTokenCond
+    const secretsManagerPolicy = new Policy(this, 'SecretsManagerPolicy', {
+      statements: [secretsManagerPS]
+    });
 
-    const eventParserLambdaPolicyNameGitHub = 'eventParserLambdaCWLogPolicy-' + props.uuid
+    (secretsManagerPolicy.node.defaultChild as CfnPolicy).cfnOptions.condition = webhookSecretTokenCond;
+
+    const eventParserLambdaPolicyNameGitHub = 'eventParserLambdaCWLogPolicy-' + props.uuid;
 
     const eventParserLambdaRoleGitHub = new Role(this, 'LambdaParserRole', {
       assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
       path: '/',
       inlinePolicies: {
         [eventParserLambdaPolicyNameGitHub]: new PolicyDocument({
-          statements: [
-            cwLogsPS
-          ]
+          statements: [cwLogsPS]
         })
       }
     });
 
+    // Add cdk-nag suppression
+    NagSuppressions.addResourceSuppressions(eventParserLambdaRoleGitHub, [
+      {
+        id: 'AwsSolutions-IAM5',
+        reason: 'The policy is restricted to region, account and lambda resource.'
+      }
+    ]);
+
     secretsManagerPolicy.attachToRole(eventParserLambdaRoleGitHub);
 
     const eventParserLambdaGitHub = new LambdaFunction(this, 'LambdaParser', {
-      description: 'AWS DevOps Monitoring Dashboard Solution - This function performs lambda transformation on GitHub events within kinesis firehose. It parses GitHub events and sends relevant data to S3 via firehose for downstream operation',
+      description:
+        'DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation on GitHub events within kinesis firehose. It parses GitHub events and sends relevant data to S3 via firehose for downstream operation',
       environment: {
         LOG_LEVEL: 'INFO',
         UserAgentExtra: props.userAgentExtra,
         SolutionID: props.solutionId,
-        UseSecret: Fn.conditionIf(webhookSecretTokenCond.logicalId, 'yes','no').toString()
+        UseSecret: Fn.conditionIf(webhookSecretTokenCond.logicalId, 'yes', 'no').toString()
       },
       runtime: props.lambdaRuntimeNode,
       code: Code.fromAsset(`${__dirname}/../../lambda/event_parser`),
@@ -127,7 +158,7 @@ export class GitHubEvents extends Construct {
       role: eventParserLambdaRoleGitHub,
       timeout: Duration.seconds(900),
       logRetention: RetentionDays.THREE_MONTHS
-    })
+    });
 
     const eventParserLambdaGitHubCfnRef = eventParserLambdaGitHub.node.findChild('Resource') as CfnFunction;
     addCfnSuppressRules(eventParserLambdaGitHubCfnRef, [
@@ -141,14 +172,25 @@ export class GitHubEvents extends Construct {
       }
     ]);
 
+    // Add cdk-nag suppression
+    NagSuppressions.addResourceSuppressions(eventParserLambdaGitHubCfnRef, [
+      {
+        id: 'AwsSolutions-L1',
+        reason:
+          'The latest Node.js 16 lambda runtime version is not yet supported by AWS solutions construct and CodeBuild docker images.'
+      }
+    ]);
+
     /**
-    * Create Kinesis Data Firehose using KinesisFirehoseToS3 construct to deliver GitHub events
-    */
+     * Create Kinesis Data Firehose using KinesisFirehoseToS3 construct to deliver GitHub events
+     */
     const firehoseToS3ConstructGitHub = new KinesisFirehoseToS3(this, 'GitHub', {
       existingBucketObj: props.metricsBucket
     });
 
-    const firehoseLogGroupGitHubCfnRef = firehoseToS3ConstructGitHub.kinesisFirehoseLogGroup.node.findChild('Resource') as CfnLogGroup
+    const firehoseLogGroupGitHubCfnRef = firehoseToS3ConstructGitHub.kinesisFirehoseLogGroup.node.findChild(
+      'Resource'
+    ) as CfnLogGroup;
     addCfnSuppressRules(firehoseLogGroupGitHubCfnRef, [
       {
         id: 'W84',
@@ -161,21 +203,26 @@ export class GitHubEvents extends Construct {
     ]);
 
     /* Add more configurations to property ExtendedS3DestinationConfiguration */
-    const firehoseObjGitHub = firehoseToS3ConstructGitHub.kinesisFirehose
-    const firehoseRoleGitHub = firehoseToS3ConstructGitHub.kinesisFirehoseRole
+    const firehoseObjGitHub = firehoseToS3ConstructGitHub.kinesisFirehose;
+    const firehoseRoleGitHub = firehoseToS3ConstructGitHub.kinesisFirehoseRole;
     firehoseObjGitHub.addPropertyOverride('ExtendedS3DestinationConfiguration', {
       CompressionFormat: 'UNCOMPRESSED',
       Prefix: 'GitHubEvents/created_at=!{timestamp:yyyy-MM-dd}/',
-      ErrorOutputPrefix: 'GitHubEventsProcessingErrorlogs/result=!{firehose:error-output-type}/created_at=!{timestamp:yyyy-MM-dd}/',
+      ErrorOutputPrefix:
+        'GitHubEventsProcessingErrorlogs/result=!{firehose:error-output-type}/created_at=!{timestamp:yyyy-MM-dd}/',
       ProcessingConfiguration: {
         Enabled: true,
-        Processors: [{
-          Type: 'Lambda',
-          Parameters: [{
-            ParameterName: 'LambdaArn',
-            ParameterValue: eventParserLambdaGitHub.functionArn
-          }]
-        }]
+        Processors: [
+          {
+            Type: 'Lambda',
+            Parameters: [
+              {
+                ParameterName: 'LambdaArn',
+                ParameterValue: eventParserLambdaGitHub.functionArn
+              }
+            ]
+          }
+        ]
       },
       BufferingHints: {
         IntervalInSeconds: 300,
@@ -203,12 +250,12 @@ export class GitHubEvents extends Construct {
           RoleARN: firehoseRoleGitHub.roleArn
         }
       }
-    })
+    });
 
     /* Add more configurations to property DeliveryStreamEncryptionConfigurationInput */
     firehoseObjGitHub.addPropertyOverride('DeliveryStreamEncryptionConfigurationInput', {
       KeyType: 'AWS_OWNED_CMK'
-    })
+    });
 
     /* Add necessary permissions to firehose role */
     const invokeLambdaPS = new PolicyStatement({
@@ -216,36 +263,59 @@ export class GitHubEvents extends Construct {
       effect: Effect.ALLOW,
       resources: [eventParserLambdaGitHub.functionArn, eventParserLambdaGitHub.functionArn + ':$LATEST'],
       sid: 'InvokeLambda'
-    })
+    });
 
     const glueAccessPSForFirehose = new PolicyStatement({
       actions: ['glue:GetTable', 'glue:GetTableVersion', 'glue:GetTableVersions'],
       effect: Effect.ALLOW,
-      resources: [parentStack.formatArn({ service: 'glue', resource: 'catalog', arnFormat: ArnFormat.NO_RESOURCE_NAME }),
-      parentStack.formatArn({ service: 'glue', resource: 'database', arnFormat: ArnFormat.SLASH_RESOURCE_NAME, resourceName: props.metricsGlueDBName }),
-      parentStack.formatArn({ service: 'glue', resource: 'table', arnFormat: ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${props.metricsGlueDBName}/${props.gitHubMetricsGlueTableName}` }),
-      parentStack.formatArn({ service: 'glue', resource: 'table', arnFormat: ArnFormat.SLASH_RESOURCE_NAME, resourceName: `${props.metricsGlueDBName}/*` })],
+      resources: [
+        parentStack.formatArn({ service: 'glue', resource: 'catalog', arnFormat: ArnFormat.NO_RESOURCE_NAME }),
+        parentStack.formatArn({
+          service: 'glue',
+          resource: 'database',
+          arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+          resourceName: props.metricsGlueDBName
+        }),
+        parentStack.formatArn({
+          service: 'glue',
+          resource: 'table',
+          arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+          resourceName: `${props.metricsGlueDBName}/${props.gitHubMetricsGlueTableName}`
+        }),
+        parentStack.formatArn({
+          service: 'glue',
+          resource: 'table',
+          arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+          resourceName: `${props.metricsGlueDBName}/*`
+        })
+      ],
       sid: 'glueAccessPSForGitHubEventsFirehose'
-    })
+    });
 
-    let firehoseRolePolicyGitHub = firehoseToS3ConstructGitHub.node.findChild('KinesisFirehosePolicy') as Policy;
+    const firehoseRolePolicyGitHub = firehoseToS3ConstructGitHub.node.findChild('KinesisFirehosePolicy') as Policy;
     if (firehoseRolePolicyGitHub !== undefined) {
-      firehoseRolePolicyGitHub.addStatements(invokeLambdaPS)
-      firehoseRolePolicyGitHub.addStatements(glueAccessPSForFirehose)
+      firehoseRolePolicyGitHub.addStatements(invokeLambdaPS);
+      firehoseRolePolicyGitHub.addStatements(glueAccessPSForFirehose);
+      // Add cdk-nag suppression
+      NagSuppressions.addResourceSuppressions(firehoseRolePolicyGitHub, [
+        {
+          id: 'AwsSolutions-IAM5',
+          reason: 'The policy is restricted to S3 bucket or region, account and glue resource'
+        }
+      ]);
     }
 
-    firehoseObjGitHub.node.addDependency(firehoseRolePolicyGitHub)
-
+    firehoseObjGitHub.node.addDependency(firehoseRolePolicyGitHub);
 
     /**
      * Create API to receive GitHub events using API Gateway
-    */
+     */
     const apiLogGroup = new LogGroup(this, 'APILogGroup', {
       removalPolicy: RemovalPolicy.DESTROY,
       retention: RetentionDays.THREE_MONTHS
     });
 
-    const apiLogGroupCfnRef = apiLogGroup.node.findChild('Resource') as CfnLogGroup
+    const apiLogGroupCfnRef = apiLogGroup.node.findChild('Resource') as CfnLogGroup;
     addCfnSuppressRules(apiLogGroupCfnRef, [
       {
         id: 'W84',
@@ -254,18 +324,18 @@ export class GitHubEvents extends Construct {
     ]);
 
     const api = new RestApi(this, 'DevOpsDashboardAPI', {
-      description: 'AWS DevOps Monitoring Dashboard Solution - API for receiving GitHub events',
+      description: 'DevOps Monitoring Dashboard on AWS solution - API for receiving GitHub events',
       deployOptions: {
         accessLogDestination: new LogGroupLogDestination(apiLogGroup),
         accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
         loggingLevel: MethodLoggingLevel.ERROR,
         stageName: 'prod',
         tracingEnabled: true,
-        variables: { ["allowedips"]: props.allowedIPs }
+        variables: { ['allowedips']: props.allowedIPs }
       }
-    })
+    });
 
-    this.apiEndpoint = `${api.url}git`
+    this.apiEndpoint = `${api.url}git`;
 
     const gitResource = api.root.addResource('git');
 
@@ -275,81 +345,95 @@ export class GitHubEvents extends Construct {
       validateRequestParameters: true
     });
 
-    const deploymentCfnRef = api.node.findChild('Deployment').node.defaultChild as CfnResource
+    const deploymentCfnRef = api.node.findChild('Deployment').node.defaultChild as CfnResource;
     addCfnSuppressRules(deploymentCfnRef, [
       {
         id: 'W68',
-        reason: 'The solution does not require the usage plan.'
+        reason: 'The API does not require the usage plan.'
       }
     ]);
 
-    const prodStageCfnRef = api.node.findChild('DeploymentStage.prod').node.defaultChild as CfnResource
+    const prodStageCfnRef = api.node.findChild('DeploymentStage.prod').node.defaultChild as CfnResource;
     addCfnSuppressRules(prodStageCfnRef, [
       {
         id: 'W64',
-        reason: 'The solution does not require the usage plan.'
+        reason: 'The API does not require the usage plan.'
+      }
+    ]);
+    // Add cdk-nag suppression
+    NagSuppressions.addResourceSuppressions(prodStageCfnRef, [
+      {
+        id: 'AwsSolutions-APIG3',
+        reason: 'The API does not require enabling WAF.'
+      }
+    ]);
+
+    const cloudWatchRoleRef = api.node.findChild('CloudWatchRole').node.defaultChild as CfnRole;
+    NagSuppressions.addResourceSuppressions(cloudWatchRoleRef, [
+      {
+        id: 'AwsSolutions-IAM4',
+        reason:
+          'The managed policy is automatically generated by CDK itself to allow APIGateway to push CloudWatch logs.'
       }
     ]);
 
     const firehosePutRecordPS = new PolicyStatement({
-      actions: ["firehose:PutRecord", "firehose:PutRecordBatch"],
+      actions: ['firehose:PutRecord', 'firehose:PutRecordBatch'],
       effect: Effect.ALLOW,
       resources: [firehoseObjGitHub.attrArn],
       sid: 'FirehosePutRecordPS'
-    })
+    });
 
-    const apiPolicyName = 'DevOpsDashboardAPIPolicy-' + props.uuid
+    const apiPolicyName = 'DevOpsDashboardAPIPolicy-' + props.uuid;
 
     const apiRole = new Role(this, 'APIExecutionRole', {
       assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
       path: '/',
       inlinePolicies: {
         [apiPolicyName]: new PolicyDocument({
-          statements: [
-            firehosePutRecordPS
-          ]
+          statements: [firehosePutRecordPS]
         })
       }
     });
 
     const mappingTemplate = [
-      '#set($inputRoot = $input.path(\'$\'))',
+      "#set($inputRoot = $input.path('$'))",
       '#set($inputParams = $input.params())',
       '#set($data = "{',
-        '#foreach($key in $inputRoot.keySet())',
-          '""$key"": $input.json($key),',
-        '#end',
-        '""additional-data"":',
-        '{',
-          '""api-id"": ""$context.apiId"",',
-          '""stage"": ""$context.stage"",',
-          '""http-method"": ""$context.httpMethod"",',
-          '""request-id"": ""$context.requestId"",',
-          '""resource-id"": ""$context.resourceId"",',
-          '""resource-path"": ""$context.resourcePath"",',
-          '""source-ip"": ""$context.identity.sourceIp"",',
-          '""allowed-ips"": ""$util.escapeJavaScript($stageVariables.get(\'allowedips\'))"",',
-          '""input-parameters"": {',
-              '#foreach($type in $inputParams.keySet())',
-                  '#set($params = $inputParams.get($type))',
-              '""$type"": {',
-                  '#foreach($paramName in $params.keySet())',
-                      '""$paramName"": ""$util.escapeJavaScript($params.get($paramName))""',
-                  '#if($foreach.hasNext),#end',
-                  '#end',
-              '}',
-              '#if($foreach.hasNext),#end',
-              '#end',
-          '}',
-        '}',
+      '#foreach($key in $inputRoot.keySet())',
+      '""$key"": $input.json($key),',
+      '#end',
+      '""additional-data"":',
+      '{',
+      '""api-id"": ""$context.apiId"",',
+      '""stage"": ""$context.stage"",',
+      '""http-method"": ""$context.httpMethod"",',
+      '""request-id"": ""$context.requestId"",',
+      '""resource-id"": ""$context.resourceId"",',
+      '""resource-path"": ""$context.resourcePath"",',
+      '""source-ip"": ""$context.identity.sourceIp"",',
+      '""allowed-ips"": ""$util.escapeJavaScript($stageVariables.get(\'allowedips\'))"",',
+      '""input-parameters"": {',
+      '#foreach($type in $inputParams.keySet())',
+      '#set($params = $inputParams.get($type))',
+      '""$type"": {',
+      '#foreach($paramName in $params.keySet())',
+      '""$paramName"": ""$util.escapeJavaScript($params.get($paramName))""',
+      '#if($foreach.hasNext),#end',
+      '#end',
+      '}',
+      '#if($foreach.hasNext),#end',
+      '#end',
+      '}',
+      '}',
       '}")',
       '{',
-          '"DeliveryStreamName": "' + firehoseObjGitHub.ref + '",',
-          '"Record": {',
-              '"Data": "$util.base64Encode($data)"',
-          '}',
+      '"DeliveryStreamName": "' + firehoseObjGitHub.ref + '",',
+      '"Record": {',
+      '"Data": "$util.base64Encode($data)"',
+      '}',
       '}'
-    ]
+    ];
 
     const awsIntegration = new AwsIntegration({
       service: 'firehose',
@@ -358,24 +442,26 @@ export class GitHubEvents extends Construct {
         credentialsRole: apiRole,
         integrationResponses: [{ statusCode: '200' }],
         passthroughBehavior: PassthroughBehavior.WHEN_NO_TEMPLATES,
-        requestTemplates: {'application/json': mappingTemplate.join("\n")}
+        requestTemplates: { 'application/json': mappingTemplate.join('\n') }
       }
-    })
+    });
 
     const methodOptions: MethodOptions = {
-      methodResponses: [{
-        statusCode: '200',
-        responseModels: {
-          'application/json': { modelId: 'Empty' }
+      methodResponses: [
+        {
+          statusCode: '200',
+          responseModels: {
+            'application/json': { modelId: 'Empty' }
+          }
         }
-      }],
-      requestParameters:{'method.request.header.X-GitHub-Event': true},
+      ],
+      requestParameters: { 'method.request.header.X-GitHub-Event': true },
       requestValidator: requestValidator
     };
 
-    gitResource.addMethod('POST', awsIntegration, methodOptions)
+    gitResource.addMethod('POST', awsIntegration, methodOptions);
 
-    const postMethodCfnRef = gitResource.node.findChild('POST').node.defaultChild as CfnResource
+    const postMethodCfnRef = gitResource.node.findChild('POST').node.defaultChild as CfnResource;
     addCfnSuppressRules(postMethodCfnRef, [
       {
         id: 'W59',
@@ -383,6 +469,16 @@ export class GitHubEvents extends Construct {
       }
     ]);
 
+    // Add cdk-nag suppression
+    NagSuppressions.addResourceSuppressions(postMethodCfnRef, [
+      {
+        id: 'AwsSolutions-APIG4',
+        reason: 'Authorization is done by github webhook secret token or allowed ips.'
+      },
+      {
+        id: 'AwsSolutions-COG4',
+        reason: 'Authorization is done by github webhook secret token or allowed ips.'
+      }
+    ]);
   }
-
 }

@@ -1,0 +1,26 @@
+{
+    "name": "tag-query-js",
+    "description": "Lambda function for querying tag information for CodeCommit, CodeBuild, and CodePipeline resources",
+    "main": "index.js",
+    "author": {
+        "name": "aws-solutions-builder"
+    },
+    "dependencies": {
+        "axios": "0.27.2"
+    },
+    "devDependencies": {
+        "aws-sdk": "2.1055.0",
+        "jest": "28.1.3",
+        "chai": "4.2.0",
+        "axios-mock-adapter": "1.19.0"
+    },
+    "scripts": {
+        "pretest": "npm install",
+        "test": "jest --coverage",
+        "build:init": "rm -rf package-lock.json && rm -rf dist && rm -rf node_modules && mkdir dist",
+        "build:zip": "rm -rf package-lock.json && zip -rq --exclude=*tests* --exclude=*template.yml --exclude=*dist/* dist/event-parser-js.zip .",
+        "build": "npm run build:init && npm install --production && npm run build:zip",
+        "clean": "rm -rf node_modules"
+    },
+    "bundledDependencies": []
+}

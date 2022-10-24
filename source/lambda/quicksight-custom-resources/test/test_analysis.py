@@ -14,13 +14,13 @@ from util.analysis import Analysis
 from test.fixtures.quicksight_analysis_fixtures import AnalysisStubber
 from test.fixtures.quicksight_dataset_fixtures import (
     data_set_type,
-    mininmal_data_sets_stub,
+    minimal_data_sets_stub,
     quicksight_data_set_stubber,
     quicksight_create_data_set_stubber,
     quicksight_delete_data_set_stubber
 )
 from test.fixtures.quicksight_template_fixtures import template_arn
-from test.fixtures.quicksight_datasource_fixtures import mininmal_data_source_stub
+from test.fixtures.quicksight_datasource_fixtures import minimal_data_source_stub
 from test.fixtures.quicksight_test_fixture import quicksight_application_stub
 
 
@@ -29,8 +29,8 @@ from test.logger_test_helper import dump_state
 logger = logging.getLogger(__name__)
 
 @ mock_sts
-def test_analysis_init(quicksight_application_stub, mininmal_data_sets_stub):
-    stub = mininmal_data_sets_stub
+def test_analysis_init(quicksight_application_stub, minimal_data_sets_stub):
+    stub = minimal_data_sets_stub
     template_arn_param = template_arn
 
     obj = Analysis(
@@ -42,10 +42,10 @@ def test_analysis_init(quicksight_application_stub, mininmal_data_sets_stub):
     dump_state(obj, 'Dump analysis')
 
 @ mock_sts
-def test_analysis_update_source_entity(quicksight_application_stub, mininmal_data_sets_stub, template_arn):
+def test_analysis_update_source_entity(quicksight_application_stub, minimal_data_sets_stub, template_arn):
     obj = Analysis(
         quicksight_application=quicksight_application_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         quicksight_template_arn=template_arn,
         props=None
     )
@@ -70,14 +70,14 @@ def test_analysis_update_source_entity(quicksight_application_stub, mininmal_dat
 @ mock_sts
 def test_analysis_create(
     quicksight_application_stub,
-    mininmal_data_source_stub,
-    mininmal_data_sets_stub,
+    minimal_data_source_stub,
+    minimal_data_sets_stub,
     template_arn,
 ):
     obj = Analysis(
         quicksight_application=quicksight_application_stub,
-        data_source=mininmal_data_source_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_source=minimal_data_source_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         quicksight_template_arn=template_arn,
         props=None,
     )
@@ -90,10 +90,10 @@ def test_analysis_create(
     dump_state(obj, 'After create')
 
 @ mock_sts
-def test_analysis_delete(quicksight_application_stub, mininmal_data_sets_stub, template_arn):
+def test_analysis_delete(quicksight_application_stub, minimal_data_sets_stub, template_arn):
     obj = Analysis(
         quicksight_application=quicksight_application_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         quicksight_template_arn=template_arn,
         props=None
     )
@@ -109,14 +109,14 @@ def test_analysis_delete(quicksight_application_stub, mininmal_data_sets_stub, t
 @ mock_sts
 def test_analysis_create_exist(
     quicksight_application_stub,
-    mininmal_data_source_stub,
-    mininmal_data_sets_stub,
+    minimal_data_source_stub,
+    minimal_data_sets_stub,
     template_arn,
 ):
     obj = Analysis(
         quicksight_application=quicksight_application_stub,
-        data_source=mininmal_data_source_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_source=minimal_data_source_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         quicksight_template_arn=template_arn,
         props=None,
     )
@@ -137,14 +137,14 @@ def test_analysis_create_exist(
 @ mock_sts
 def test_analysis_create_invalid_parameter(
     quicksight_application_stub,
-    mininmal_data_source_stub,
-    mininmal_data_sets_stub,
+    minimal_data_source_stub,
+    minimal_data_sets_stub,
     template_arn,
 ):
     obj = Analysis(
         quicksight_application=quicksight_application_stub,
-        data_source=mininmal_data_source_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_source=minimal_data_source_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         quicksight_template_arn=template_arn,
         props=None,
     )

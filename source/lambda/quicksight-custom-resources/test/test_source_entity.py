@@ -7,7 +7,7 @@ import test.logger_test_helper
 from test.fixtures.quicksight_dashboard_fixtures import DashboardStubber
 from test.fixtures.quicksight_dataset_fixtures import (
     data_set_type,
-    mininmal_data_sets_stub,
+    minimal_data_sets_stub,
     quicksight_create_data_set_stubber,
     quicksight_data_set_stubber,
     quicksight_delete_data_set_stubber,
@@ -24,14 +24,14 @@ from util.source_entity import SourceEntity
 logger = logging.getLogger(__name__)
 
 
-def test_source_entity_init_invalid(quicksight_application_stub, mininmal_data_sets_stub):
+def test_source_entity_init_invalid(quicksight_application_stub, minimal_data_sets_stub):
     template_arn_param = template_arn
 
     obj = None
     with pytest.raises(ValueError):
         # Function under test
         obj = SourceEntity(
-            data_sets=mininmal_data_sets_stub.data_sets_stub,
+            data_sets=minimal_data_sets_stub.data_sets_stub,
             source_obj_arn=template_arn_param,
             config_data=None,
             source_entity_type="InjectErrorInvalidSource",
@@ -40,7 +40,7 @@ def test_source_entity_init_invalid(quicksight_application_stub, mininmal_data_s
     assert not obj
 
 
-def test_source_entity_get_map_invalid_sub_type(quicksight_application_stub, mininmal_data_sets_stub):
+def test_source_entity_get_map_invalid_sub_type(quicksight_application_stub, minimal_data_sets_stub):
     template_arn_param = template_arn
     mock_data_set_references = {
         "MainInjectError": {
@@ -74,7 +74,7 @@ def test_source_entity_get_map_invalid_sub_type(quicksight_application_stub, min
         }
     }
     obj = SourceEntity(
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         source_obj_arn=template_arn_param,
         config_data=mock_data_set_references,
         source_entity_type="SourceTemplate",
@@ -88,7 +88,7 @@ def test_source_entity_get_map_invalid_sub_type(quicksight_application_stub, min
     assert not source_entity
 
 
-def test_source_entity_get_map_missing_source_entity(quicksight_application_stub, mininmal_data_sets_stub):
+def test_source_entity_get_map_missing_source_entity(quicksight_application_stub, minimal_data_sets_stub):
     template_arn_param = template_arn
     mock_data_set_references = {
         "main": {
@@ -122,7 +122,7 @@ def test_source_entity_get_map_missing_source_entity(quicksight_application_stub
         }
     }
     obj = SourceEntity(
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         source_obj_arn=template_arn_param,
         config_data=mock_data_set_references,
         source_entity_type="SourceTemplate",

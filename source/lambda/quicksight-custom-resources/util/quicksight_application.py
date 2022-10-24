@@ -39,7 +39,7 @@ def read_config(file_name):
 
 class QuicksightApplication:
     def __init__(self, resource_properties):
-        # TODO: use the config data / file to figure out the supported_data_set_types
+
         supported_data_set_types = ["code-change-activity", "code-deployment-detail", "recovery-time-detail", "code-pipeline-detail", "code-build-detail", "github-change-activity"]
 
         self.resource_properties = resource_properties
@@ -53,7 +53,6 @@ class QuicksightApplication:
 
         self.prefix = resource_properties.get("StackName", "Sample_Sol")
 
-        # TODO:RENAME: quicksight_template_arn -> quicksight_source_template_arn
         self.quicksight_template_arn = resource_properties.get(
             "QuickSightSourceTemplateArn", "Uninitialized QuickSightSourceTemplateArn"
         )

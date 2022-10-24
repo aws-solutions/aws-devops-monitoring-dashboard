@@ -12,7 +12,7 @@ from moto import mock_sts
 from util.quicksight_application import QuicksightApplication
 from util.datasource import DataSource
 
-# import other fixutres
+# import other fixtures
 from test.fixtures.quicksight_test_fixture import get_quicksight_api_stubber, TestHelper
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ MOCK_DATE = "Wed, 30 Sep 2020 02:28:21 GMT"
 
 @pytest.fixture()
 @mock_sts
-def mininmal_data_source_stub(request):
+def minimal_data_source_stub(request):
     class GenericTestStub:
         pass
 
@@ -97,7 +97,7 @@ class DataSourceStubber():
     def add_create_response(stubber, name):
         operation = 'create_data_source'
         resource_type = 'datasource'
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": {
                 "RequestId": "6c97c6d8-bdac-43b5-bf0a-a1bee3dbacb5",
                 "HTTPStatusCode": 202,
@@ -116,8 +116,8 @@ class DataSourceStubber():
             "CreationStatus": "CREATION_IN_PROGRESS",
             "RequestId": "6c97c6d8-bdac-43b5-bf0a-a1bee3dbacb5"
         }
-        minimal_mock_reponse.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        minimal_mock_reponse.update({"DataSourceId": f"{name}"})
+        minimal_mock_response.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        minimal_mock_response.update({"DataSourceId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
@@ -128,14 +128,14 @@ class DataSourceStubber():
             'Permissions': ANY,
             'SslProperties': ANY
         }
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
     def add_delete_response(stubber, name):
         operation = 'delete_data_source'
         resource_type = 'datasource'
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": {
                 "RequestId": "7123a45b-0b1f-40e5-832a-dd3b0157cbfa",
                 "HTTPStatusCode": 200,
@@ -153,14 +153,14 @@ class DataSourceStubber():
             "DataSourceId": f"{MOCK_VALUE}",
             "RequestId": "7123a45b-0b1f-40e5-832a-dd3b0157cbfa"
         }
-        minimal_mock_reponse.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        minimal_mock_reponse.update({"DataSourceId": f"{name}"})
+        minimal_mock_response.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        minimal_mock_response.update({"DataSourceId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
             'DataSourceId': ANY
         }
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
@@ -182,7 +182,7 @@ class DataSourceStubber():
             operation,
             "ResourceExistsException",
             f"An error occurred (ResourceExistsException) when calling the {operation_name} operation: DataSource {resource_type}/{name} already exists",
-            404,  # TODO check acutal service return
+            404,
             expected_params=api_params,
         )
 
@@ -235,7 +235,7 @@ class DataSourceStubber():
     def update_response(stubber, name):
         operation = "update_data_source"
         resource_type = "datasource"
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": {
                 "RequestId": "6c97c6d8-bdac-43b5-bf0a-a1bee3dbacb5",
                 "HTTPStatusCode": 202,
@@ -254,8 +254,8 @@ class DataSourceStubber():
             "UpdateStatus": "UPDATE_IN_PROGRESS",
             "RequestId": "6c97c6d8-bdac-43b5-bf0a-a1bee3dbacb5",
         }
-        minimal_mock_reponse.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        minimal_mock_reponse.update({"DataSourceId": f"{name}"})
+        minimal_mock_response.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        minimal_mock_response.update({"DataSourceId": f"{name}"})
 
         # We are not using these parameters in the update
         #    "Type": "ATHENA",
@@ -268,5 +268,5 @@ class DataSourceStubber():
             "DataSourceParameters": ANY,
             "SslProperties": ANY,
         }
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")

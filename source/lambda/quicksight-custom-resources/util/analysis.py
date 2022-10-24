@@ -41,7 +41,7 @@ class Analysis(QuickSightResource):
                 Permissions=self._get_permissions(),
                 SourceEntity=self._get_source_entity(),
             )
-            logger.info(f"finished quicksight create_analysis for id:{self.id} " f"response: {response}")
+            logger.info(f"finished quicksight create_analysis for id:{self.id}, response: {response}")
         except quicksight_client.exceptions.ResourceExistsException:
             response = quicksight_client.describe_analysis(AwsAccountId=self.aws_account_id, AnalysisId=self.id)
             response = response["Analysis"]
@@ -57,7 +57,7 @@ class Analysis(QuickSightResource):
         quicksight_client = get_quicksight_client()
 
         response = quicksight_client.delete_analysis(AwsAccountId=self.aws_account_id, AnalysisId=self.id)
-        logger.info(f"finished quicksight delete_analysis for id:{self.id} " f"response: {response}")
+        logger.info(f"finished quicksight delete_analysis for id:{self.id}, response: {response}")
         return response
 
     def _get_permissions(self):

@@ -11,7 +11,7 @@ from test.fixtures.quicksight_dataset_fixtures import (
     quicksight_data_set_stubber,
     quicksight_delete_data_set_stubber,
 )
-from test.fixtures.quicksight_datasource_fixtures import mininmal_data_source_stub
+from test.fixtures.quicksight_datasource_fixtures import minimal_data_source_stub
 from test.fixtures.quicksight_test_fixture import quicksight_application_stub
 from test.logger_test_helper import dump_state
 
@@ -148,7 +148,7 @@ def test_data_set_create_exist(data_set_type, quicksight_application_stub):
 
     # This response is the response to describe_data_source as the code is remaps the response
     assert response
-    # The describe_data_set reponse does not provide a status at the DataSet level, such
+    # The describe_data_set response does not provide a status at the DataSet level, such
     # as "Status": "CREATION_SUCCESSFUL"
     # Therefore, we verify CreatedTime not being None
     assert response["CreatedTime"]

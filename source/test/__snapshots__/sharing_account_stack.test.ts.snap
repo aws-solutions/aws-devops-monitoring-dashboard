@@ -1,0 +1,1556 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot test for primary SharingAccountStack 1`] = `
+Object {
+  "Conditions": Object {
+    "TagQueryAnyTagConfigsCond060F5869": Object {
+      "Fn::Not": Array [
+        Object {
+          "Fn::And": Array [
+            Object {
+              "Fn::Equals": Array [
+                Object {
+                  "Ref": "TagsConfigCodeCommit",
+                },
+                "",
+              ],
+            },
+            Object {
+              "Fn::Equals": Array [
+                Object {
+                  "Ref": "TagsConfigCodeBuild",
+                },
+                "",
+              ],
+            },
+            Object {
+              "Fn::Equals": Array [
+                Object {
+                  "Ref": "TagsConfigCodePipeline",
+                },
+                "",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  "Description": "(SO0143)DevOps Monitoring Dashboard on AWS  - Sharing Account Template. Version: v1.0.0",
+  "Mappings": Object {
+    "AnonymousData": Object {
+      "SendAnonymousUsageData": Object {
+        "Data": "Yes",
+        "MetricsURL": "https://metrics.awssolutionsbuilder.com/generic",
+      },
+    },
+    "UserAgentExtra": Object {
+      "UserAgentExtra": Object {
+        "Key": "AwsSolution/SO0143/v1.0.0",
+      },
+    },
+  },
+  "Metadata": Object {
+    "AWS::CloudFormation::Interface": Object {
+      "ParameterGroups": Array [
+        Object {
+          "Label": Object {
+            "default": "Monitoring Account Configuration",
+          },
+          "Parameters": Array [
+            "MonitorAcctCustomEventBusARN",
+            "MonitorAcctMetricsBucketARN",
+            "MonitorAcctNumber",
+            "MonitorAcctRegion",
+            "SolutionUUID",
+          ],
+        },
+        Object {
+          "Label": Object {
+            "default": "Tag Configuration",
+          },
+          "Parameters": Array [
+            "TagsConfigCodeCommit",
+            "TagsConfigCodeBuild",
+            "TagsConfigCodePipeline",
+          ],
+        },
+      ],
+      "ParameterLabels": Object {
+        "MonitorAcctCustomEventBusARN": Object {
+          "default": "ARN of the custom event bus in the monitoring account",
+        },
+        "MonitorAcctMetricsBucketARN": Object {
+          "default": "ARN of the DevOps metrics S3 bucket in the monitoring account",
+        },
+        "MonitorAcctNumber": Object {
+          "default": "AWS account number of the monitoring account",
+        },
+        "MonitorAcctRegion": Object {
+          "default": "AWS region of the monitoring account where the solution's main template is deployed",
+        },
+        "SolutionUUID": Object {
+          "default": "Solution UUID",
+        },
+        "TagsConfigCodeBuild": Object {
+          "default": "Tag Configuration for filtering on CodeBuild Projects",
+        },
+        "TagsConfigCodeCommit": Object {
+          "default": "Tag Configuration for filtering on CodeCommit Repositories",
+        },
+        "TagsConfigCodePipeline": Object {
+          "default": "Tag Configuration for filtering on CodePipeline Pipelines",
+        },
+      },
+    },
+  },
+  "Outputs": Object {
+    "SolutionVersion": Object {
+      "Description": "Version for DevOps Monitoring Dashboard on AWS solution",
+      "Value": "v1.0.0",
+    },
+  },
+  "Parameters": Object {
+    "MonitorAcctCustomEventBusARN": Object {
+      "Default": "",
+      "Description": "ARN of the custom Amazon EventBridge Event Bus in the monitoring account where the events are sent. To find the ARN, sign in the AWS CloudFormation console in the monitoring account, select the solution's main CloudFormation stack you deployed, open Outputs tab, then copy the value for CustomEventBusArn. E.g., arn:aws:events:Region:Account:event-bus/EventBusName",
+      "Type": "String",
+    },
+    "MonitorAcctMetricsBucketARN": Object {
+      "Default": "",
+      "Description": "Enter the ARN of the S3 bucket in the monitoring account where DevOps metrics are stored. To find the ARN, sign in the AWS CloudFormation console in the monitoring account, select the solution's main CloudFormation stack you deployed, open Outputs tab, then copy the value for DevOpsMetricsS3Bucket. E.g., arn:aws:s3:::aws-devops-metrics-xxxxxx.",
+      "Type": "String",
+    },
+    "MonitorAcctNumber": Object {
+      "Default": "",
+      "Description": "Enter the AWS account number of the monitoring account where the solution's main template is deployed to receive data from other accounts.",
+      "Type": "String",
+    },
+    "MonitorAcctRegion": Object {
+      "Default": "",
+      "Description": "Enter the AWS region of the monitoring account where the solution's main template is deployed to receive data from other accounts. E.g., us-east-1.",
+      "Type": "String",
+    },
+    "SolutionUUID": Object {
+      "AllowedPattern": "^[a-fA-F0-9]{8}-(?:[a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}$",
+      "Description": "The generated solution UUID from the monitoring stack. Used for anonymous usage metrics. To find the ARN, sign in the AWS CloudFormation console in the monitoring account, select the solution's main CloudFormation stack you deployed, open Outputs tab, then copy the value for SolutionUUID. E.g., 3089cafd-60ee-4b65-b368-1cb38060f3b1",
+      "Type": "String",
+    },
+    "TagsConfigCodeBuild": Object {
+      "Description": "Enter a semicolon-separated list of tags, using a comma as a separator between the tag key and value (e.g. \\"env,prod;anotherKey,anotherValue\\"). Omitting a value will result in a filter that captures all values for that tag.",
+      "Type": "String",
+    },
+    "TagsConfigCodeCommit": Object {
+      "Description": "Enter a semicolon-separated list of tags, using a comma as a separator between the tag key and value (e.g. \\"env,prod;anotherKey,anotherValue\\"). Omitting a value will result in a filter that captures all values for that tag.",
+      "Type": "String",
+    },
+    "TagsConfigCodePipeline": Object {
+      "Description": "Enter a semicolon-separated list of tags, using a comma as a separator between the tag key and value (e.g. \\"env,prod;anotherKey,anotherValue\\"). Omitting a value will result in a filter that captures all values for that tag.",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "CanaryEventsCanaryEventsRule115776A2": Object {
+      "Properties": Object {
+        "Description": "DevOps Monitoring Dashboard on AWS solution - Event rule for Amazon CloudWatch Synthetics Canary Alarm",
+        "EventPattern": Object {
+          "detail": Object {
+            "configuration": Object {
+              "metrics": Object {
+                "metricStat": Object {
+                  "metric": Object {
+                    "namespace": Array [
+                      "CloudWatchSynthetics",
+                    ],
+                  },
+                },
+              },
+            },
+            "previousState": Object {
+              "value": Array [
+                "ALARM",
+              ],
+            },
+            "state": Object {
+              "value": Array [
+                "OK",
+              ],
+            },
+          },
+          "detail-type": Array [
+            "CloudWatch Alarm State Change",
+          ],
+          "source": Array [
+            "aws.cloudwatch",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Ref": "MonitorAcctCustomEventBusARN",
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "InvokeEventBusRole5C586143",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodeBuildEventsCloudWatchMetricStreamB26149A1": Object {
+      "Properties": Object {
+        "FirehoseArn": Object {
+          "Fn::GetAtt": Array [
+            "CodeBuildEventsCodeBuildKinesisFirehose48AE2746",
+            "Arn",
+          ],
+        },
+        "IncludeFilters": Array [
+          Object {
+            "Namespace": "AWS/CodeBuild",
+          },
+        ],
+        "OutputFormat": "json",
+        "RoleArn": Object {
+          "Fn::GetAtt": Array [
+            "CodeBuildEventsCloudWatchMetricStreamRole047DA47A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::CloudWatch::MetricStream",
+    },
+    "CodeBuildEventsCloudWatchMetricStreamRole047DA47A": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "streams.metrics.cloudwatch.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "firehose:PutRecord",
+                    "firehose:PutRecordBatch",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::GetAtt": Array [
+                      "CodeBuildEventsCodeBuildKinesisFirehose48AE2746",
+                      "Arn",
+                    ],
+                  },
+                  "Sid": "FirehosePutRecordPS",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "FirehosePutRecord-SO0143",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeBuildEventsCodeBuildEventParserBA00AD10": Object {
+      "DependsOn": Array [
+        "CodeBuildEventsCodeBuildEventParserLambdaRole6077AACD",
+      ],
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-L1",
+              "reason": "The latest Node.js 16 lambda runtime version is not yet supported by AWS solutions construct and CodeBuild docker images.",
+            },
+          ],
+        },
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W89",
+              "reason": "There is no need to run this lambda in a VPC",
+            },
+            Object {
+              "id": "W92",
+              "reason": "There is no need for Reserved Concurrency",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "2f5bfc37c3ee22408f3320a16c41efabaeff6861ec1722ec85c8718392eb1e07.zip",
+        },
+        "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
+        "Environment": Object {
+          "Variables": Object {
+            "LOG_LEVEL": "INFO",
+            "UserAgentExtra": Object {
+              "Fn::FindInMap": Array [
+                "UserAgentExtra",
+                "UserAgentExtra",
+                "Key",
+              ],
+            },
+          },
+        },
+        "Handler": "codebuild_index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "CodeBuildEventsCodeBuildEventParserLambdaRole6077AACD",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CodeBuildEventsCodeBuildEventParserLambdaRole6077AACD": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "The policy is restricted to region, account and lambda resource.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": Array [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":logs:",
+                        Object {
+                          "Ref": "AWS::Region",
+                        },
+                        ":",
+                        Object {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":log-group:/aws/lambda/*",
+                      ],
+                    ],
+                  },
+                  "Sid": "CreateCWLogs",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "CodeBuildEventParserLambdaPolicy-SO0143",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeBuildEventsCodeBuildEventParserLogRetention28A35144": Object {
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "/aws/lambda/",
+              Object {
+                "Ref": "CodeBuildEventsCodeBuildEventParserBA00AD10",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 90,
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "CodeBuildEventsCodeBuildKinesisFirehose48AE2746": Object {
+      "DependsOn": Array [
+        "CodeBuildEventsCodeBuildKinesisFirehosePolicy928AD09F",
+      ],
+      "Properties": Object {
+        "DeliveryStreamEncryptionConfigurationInput": Object {
+          "KeyType": "AWS_OWNED_CMK",
+        },
+        "ExtendedS3DestinationConfiguration": Object {
+          "BucketARN": Object {
+            "Ref": "MonitorAcctMetricsBucketARN",
+          },
+          "BufferingHints": Object {
+            "IntervalInSeconds": 300,
+            "SizeInMBs": 128,
+          },
+          "CloudWatchLoggingOptions": Object {
+            "Enabled": true,
+            "LogGroupName": Object {
+              "Ref": "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5",
+            },
+            "LogStreamName": Object {
+              "Ref": "CodeBuildEventsCodeBuildfirehoseloggroupfirehoselogstreamEEA2FA4F",
+            },
+          },
+          "CompressionFormat": "UNCOMPRESSED",
+          "DataFormatConversionConfiguration": Object {
+            "Enabled": true,
+            "InputFormatConfiguration": Object {
+              "Deserializer": Object {
+                "OpenXJsonSerDe": Object {
+                  "CaseInsensitive": true,
+                },
+              },
+            },
+            "OutputFormatConfiguration": Object {
+              "Serializer": Object {
+                "ParquetSerDe": Object {
+                  "Compression": "SNAPPY",
+                },
+              },
+            },
+            "SchemaConfiguration": Object {
+              "DatabaseName": "aws_devops_metrics_db_so0143",
+              "RoleARN": Object {
+                "Fn::GetAtt": Array [
+                  "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC",
+                  "Arn",
+                ],
+              },
+              "TableName": "aws_codebuild_metrics_table",
+            },
+          },
+          "ErrorOutputPrefix": "CodeBuildEventsProcessingErrorlogs/result=!{firehose:error-output-type}/created_at=!{timestamp:yyyy-MM-dd}/",
+          "Prefix": "CodeBuildEvents/created_at=!{timestamp:yyyy-MM-dd}/",
+          "ProcessingConfiguration": Object {
+            "Enabled": true,
+            "Processors": Array [
+              Object {
+                "Parameters": Array [
+                  Object {
+                    "ParameterName": "LambdaArn",
+                    "ParameterValue": Object {
+                      "Fn::GetAtt": Array [
+                        "CodeBuildEventsCodeBuildEventParserBA00AD10",
+                        "Arn",
+                      ],
+                    },
+                  },
+                ],
+                "Type": "Lambda",
+              },
+            ],
+          },
+          "RoleARN": Object {
+            "Fn::GetAtt": Array [
+              "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC",
+              "Arn",
+            ],
+          },
+        },
+      },
+      "Type": "AWS::KinesisFirehose::DeliveryStream",
+    },
+    "CodeBuildEventsCodeBuildKinesisFirehosePolicy928AD09F": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "The policy is restricted to S3 bucket or region, account and glue resource",
+            },
+          ],
+        },
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W76",
+              "reason": "This role needs all required permissions",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:AbortMultipartUpload",
+                "s3:GetBucketLocation",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:ListBucketMultipartUploads",
+                "s3:PutObject",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Ref": "MonitorAcctMetricsBucketARN",
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Ref": "MonitorAcctMetricsBucketARN",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
+              "Action": "logs:PutLogEvents",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:",
+                    Object {
+                      "Ref": "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5",
+                    },
+                    ":log-stream:",
+                    Object {
+                      "Ref": "CodeBuildEventsCodeBuildfirehoseloggroupfirehoselogstreamEEA2FA4F",
+                    },
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "lambda:InvokeFunction",
+                "lambda:GetFunctionConfiguration",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "CodeBuildEventsCodeBuildEventParserBA00AD10",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "CodeBuildEventsCodeBuildEventParserBA00AD10",
+                          "Arn",
+                        ],
+                      },
+                      ":$LATEST",
+                    ],
+                  ],
+                },
+              ],
+              "Sid": "InvokeLambda",
+            },
+            Object {
+              "Action": Array [
+                "glue:GetTable",
+                "glue:GetTableVersion",
+                "glue:GetTableVersions",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":catalog",
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":database/aws_devops_metrics_db_so0143",
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":table/aws_devops_metrics_db_so0143/aws_codebuild_metrics_table",
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":glue:",
+                      Object {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      Object {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":table/aws_devops_metrics_db_so0143/*",
+                    ],
+                  ],
+                },
+              ],
+              "Sid": "glueAccessPSForCodeBuildEventsFirehose",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CodeBuildEventsCodeBuildKinesisFirehosePolicy928AD09F",
+        "Roles": Array [
+          Object {
+            "Ref": "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CodeBuildEventsCodeBuildKinesisFirehoseRole28E73FBC": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "firehose.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5": Object {
+      "DeletionPolicy": "Retain",
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W86",
+              "reason": "Retention period for CloudWatchLogs LogGroups are set to 'Never Expire' to preserve customer data indefinitely",
+            },
+            Object {
+              "id": "W84",
+              "reason": "By default CloudWatchLogs LogGroups data is encrypted using the CloudWatch server-side encryption keys (AWS Managed Keys)",
+            },
+          ],
+        },
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodeBuildEventsCodeBuildfirehoseloggroupfirehoselogstreamEEA2FA4F": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Ref": "CodeBuildEventsCodeBuildfirehoseloggroup37533DE5",
+        },
+      },
+      "Type": "AWS::Logs::LogStream",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "CodeCommitEventsCodeCommitEventsRule16A31B6E": Object {
+      "Properties": Object {
+        "Description": "DevOps Monitoring Dashboard on AWS solution - Event rule for AWS CodeCommit",
+        "EventPattern": Object {
+          "detail": Object {
+            "eventName": Array [
+              "PutFile",
+              "DeleteFile",
+              "UpdateFile",
+              "GitPush",
+            ],
+          },
+          "detail-type": Array [
+            "AWS API Call via CloudTrail",
+          ],
+          "source": Array [
+            "aws.codecommit",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Ref": "MonitorAcctCustomEventBusARN",
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "InvokeEventBusRole5C586143",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodeDeployEventsCodeDeployEventsRule9A7B5DEA": Object {
+      "Properties": Object {
+        "Description": "DevOps Monitoring Dashboard on AWS solution - Event rule for AWS CodeDeploy",
+        "EventPattern": Object {
+          "detail-type": Array [
+            "CodeDeploy Deployment State-change Notification",
+          ],
+          "source": Array [
+            "aws.codedeploy",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Ref": "MonitorAcctCustomEventBusARN",
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "InvokeEventBusRole5C586143",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodePipelineAlarmEventsCodePipelineAlarmEventsRule89554585": Object {
+      "Properties": Object {
+        "Description": "DevOps Monitoring Dashboard on AWS solution - Event rule for AWS CodePipeline Alarm",
+        "EventPattern": Object {
+          "detail": Object {
+            "configuration": Object {
+              "metrics": Object {
+                "metricStat": Object {
+                  "metric": Object {
+                    "namespace": Array [
+                      "CodePipeline/SO0143/Pipelines",
+                    ],
+                  },
+                },
+              },
+            },
+            "previousState": Object {
+              "value": Array [
+                "ALARM",
+              ],
+            },
+            "state": Object {
+              "value": Array [
+                "OK",
+              ],
+            },
+          },
+          "detail-type": Array [
+            "CloudWatch Alarm State Change",
+          ],
+          "source": Array [
+            "aws.cloudwatch",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Ref": "MonitorAcctCustomEventBusARN",
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "InvokeEventBusRole5C586143",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "CodePipelineEventsCodePipelineEventsRuleB5CD4C2A": Object {
+      "Properties": Object {
+        "Description": "DevOps Monitoring Dashboard on AWS solution - Event rule for AWS CodePipeline",
+        "EventPattern": Object {
+          "detail-type": Array [
+            "CodePipeline Action Execution State Change",
+          ],
+          "source": Array [
+            "aws.codepipeline",
+          ],
+        },
+        "State": "ENABLED",
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Ref": "MonitorAcctCustomEventBusARN",
+            },
+            "Id": "Target0",
+            "RoleArn": Object {
+              "Fn::GetAtt": Array [
+                "InvokeEventBusRole5C586143",
+                "Arn",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF": Object {
+      "Properties": Object {
+        "CatalogId": Object {
+          "Ref": "AWS::AccountId",
+        },
+        "DatabaseInput": Object {
+          "Name": "aws_devops_metrics_db_so0143",
+        },
+      },
+      "Type": "AWS::Glue::Database",
+    },
+    "GlueAthenaDatabaseCodeBuildMetricsGlueTableE0ED7BB0": Object {
+      "Properties": Object {
+        "CatalogId": Object {
+          "Ref": "AWS::AccountId",
+        },
+        "DatabaseName": Object {
+          "Ref": "GlueAthenaDatabaseAWSDevopsMetricsGlueDatabaseB82980FF",
+        },
+        "TableInput": Object {
+          "Description": "DevOps Monitoring Dashboard on AWS solution - AWS CodeBuild Metrics Glue table",
+          "Name": "aws_codebuild_metrics_table",
+          "Parameters": Object {
+            "classification": "parquet",
+            "has_encrypted_data": false,
+          },
+          "PartitionKeys": Array [
+            Object {
+              "Name": "created_at",
+              "Type": "timestamp",
+            },
+          ],
+          "StorageDescriptor": Object {
+            "Columns": Array [
+              Object {
+                "Name": "metric_stream_name",
+                "Type": "string",
+              },
+              Object {
+                "Name": "account_id",
+                "Type": "string",
+              },
+              Object {
+                "Name": "region",
+                "Type": "string",
+              },
+              Object {
+                "Name": "namespace",
+                "Type": "string",
+              },
+              Object {
+                "Name": "metric_name",
+                "Type": "string",
+              },
+              Object {
+                "Name": "dimensions",
+                "Type": "struct<ProjectName:string,BuildId:string,BuildNumber:int>",
+              },
+              Object {
+                "Name": "timestamp",
+                "Type": "bigint",
+              },
+              Object {
+                "Comment": "struct<nested_column:datatype>",
+                "Name": "value",
+                "Type": "struct<count:double,sum:double,max:double,min:double>",
+              },
+              Object {
+                "Name": "unit",
+                "Type": "string",
+              },
+            ],
+            "Compressed": false,
+            "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+            "Location": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "s3://",
+                  Object {
+                    "Fn::Select": Array [
+                      0,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Fn::Select": Array [
+                              5,
+                              Object {
+                                "Fn::Split": Array [
+                                  ":",
+                                  Object {
+                                    "Ref": "MonitorAcctMetricsBucketARN",
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/CodeBuildEvents/",
+                ],
+              ],
+            },
+            "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+            "SerdeInfo": Object {
+              "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+            },
+            "StoredAsSubDirectories": true,
+          },
+          "TableType": "EXTERNAL_TABLE",
+        },
+      },
+      "Type": "AWS::Glue::Table",
+    },
+    "InvokeEventBusRole5C586143": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "events.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": "events:PutEvents",
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Ref": "MonitorAcctCustomEventBusARN",
+                  },
+                  "Sid": "putEventsPS",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "InvokeEventBusPolicy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": Object {
+      "DependsOn": Array [
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      ],
+      "Metadata": Object {
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W58",
+              "reason": "Lambda has the required permission to write CloudWatch Logs through a custom policy.",
+            },
+            Object {
+              "id": "W89",
+              "reason": "There is no need to deploy this Lambda to a VPC.",
+            },
+            Object {
+              "id": "W92",
+              "reason": "There is no need for Reserved Concurrency.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "eb5b005c858404ea0c8f68098ed5dcdf5340e02461f149751d10f59c210d5ef8.zip",
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM4",
+              "reason": "The managed policy is automatically generated by CDK itself to enable log retention.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Resource * is required by the Lambda Execution role, so that the Lambda can add ResourcePolicies to all required resources.",
+            },
+          ],
+        },
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W12",
+              "reason": "Resource * is required by the Lambda Execution role, so that the Lambda can add ResourcePolicies to all required resources.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:PutRetentionPolicy",
+                "logs:DeleteRetentionPolicy",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+        "Roles": Array [
+          Object {
+            "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "TagQueryE8AE49BA": Object {
+      "DependsOn": Array [
+        "TagQueryRoleDefaultPolicy7379AC5B",
+        "TagQueryRoleA60A4D7B",
+      ],
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-L1",
+              "reason": "The latest Node.js 16 lambda runtime version is not yet supported by AWS solutions construct and CodeBuild docker images.",
+            },
+          ],
+        },
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W58",
+              "reason": "Lambda has the required permission to write CloudWatch Logs through a custom policy.",
+            },
+            Object {
+              "id": "W89",
+              "reason": "This lambda does not need to be deployed inside a VPC",
+            },
+            Object {
+              "id": "W92",
+              "reason": "This lambda does not need reserved concurrent executions",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "d8b828ad33e75f4e0bebc3fb7988a89295acf934a40896d1cb22cdd10bbfdf10.zip",
+        },
+        "Description": "DevOps Monitoring Dashboard on AWS solution - This function queries CodeCommit, CodeBuild, and CodePipeline resources for tag information.",
+        "Environment": Object {
+          "Variables": Object {
+            "LOG_LEVEL": "INFO",
+            "METRICS_URL": Object {
+              "Fn::FindInMap": Array [
+                "AnonymousData",
+                "SendAnonymousUsageData",
+                "MetricsURL",
+              ],
+            },
+            "SEND_ANONYMOUS_USAGE_METRICS": Object {
+              "Fn::FindInMap": Array [
+                "AnonymousData",
+                "SendAnonymousUsageData",
+                "Data",
+              ],
+            },
+            "SOLUTION_ID": "SO0143",
+            "SOLUTION_UUID": Object {
+              "Ref": "SolutionUUID",
+            },
+            "SOLUTION_VERSION": "v1.0.0",
+            "STACK_TYPE": "sharing",
+            "USER_AGENT_EXTRA": Object {
+              "Fn::FindInMap": Array [
+                "UserAgentExtra",
+                "UserAgentExtra",
+                "Key",
+              ],
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "TagQueryRoleA60A4D7B",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+        "Timeout": 900,
+        "TracingConfig": Object {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "TagQueryInvokeTagQuery42CA6DAC": Object {
+      "DeletionPolicy": "Delete",
+      "DependsOn": Array [
+        "TagQueryPolicyDFB4C0BD",
+      ],
+      "Properties": Object {
+        "CodeBuildTagConfig": Object {
+          "Ref": "TagsConfigCodeBuild",
+        },
+        "CodeCommitTagConfig": Object {
+          "Ref": "TagsConfigCodeCommit",
+        },
+        "CodePipelineTagConfig": Object {
+          "Ref": "TagsConfigCodePipeline",
+        },
+        "ReportBucket": Object {
+          "Fn::Select": Array [
+            0,
+            Object {
+              "Fn::Split": Array [
+                "/",
+                Object {
+                  "Fn::Select": Array [
+                    5,
+                    Object {
+                      "Fn::Split": Array [
+                        ":",
+                        Object {
+                          "Ref": "MonitorAcctMetricsBucketARN",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "TagQueryE8AE49BA",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::InvokeTagQuery",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "TagQueryPolicyDFB4C0BD": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for logging, GetResources, and uploading to S3.",
+            },
+          ],
+        },
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W12",
+              "reason": "This lambda requires wildcard permissions to write logs, query tag information, and upload reports",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    Object {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    Object {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":log-group:/aws/lambda/*",
+                  ],
+                ],
+              },
+              "Sid": "LogsStatement",
+            },
+            Object {
+              "Action": "tag:GetResources",
+              "Effect": "Allow",
+              "Resource": "*",
+              "Sid": "TagStatement",
+            },
+            Object {
+              "Action": Array [
+                "s3:PutObject",
+                "s3:DeleteObject",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Ref": "MonitorAcctMetricsBucketARN",
+                    },
+                    "/TaggedResources/*",
+                  ],
+                ],
+              },
+              "Sid": "ReportStatement",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "TagQueryPolicyDFB4C0BD",
+        "Roles": Array [
+          Object {
+            "Ref": "TagQueryRoleA60A4D7B",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "TagQueryRoleA60A4D7B": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "TagQueryRoleDefaultPolicy7379AC5B": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcard permissions required for xray.",
+            },
+          ],
+        },
+        "cfn_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "W12",
+              "reason": "Wildcard permissions required for xray.",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "TagQueryRoleDefaultPolicy7379AC5B",
+        "Roles": Array [
+          Object {
+            "Ref": "TagQueryRoleA60A4D7B",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "TagQueryRule26FBA3FD": Object {
+      "Properties": Object {
+        "Description": "DevOps Monitoring Dashboard on AWS solution - Event rule for querying tag information",
+        "ScheduleExpression": "rate(15 minutes)",
+        "State": Object {
+          "Fn::If": Array [
+            "TagQueryAnyTagConfigsCond060F5869",
+            "ENABLED",
+            "DISABLED",
+          ],
+        },
+        "Targets": Array [
+          Object {
+            "Arn": Object {
+              "Fn::GetAtt": Array [
+                "TagQueryE8AE49BA",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "Input": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "{\\"ReportBucket\\":\\"",
+                  Object {
+                    "Fn::Select": Array [
+                      0,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Fn::Select": Array [
+                              5,
+                              Object {
+                                "Fn::Split": Array [
+                                  ":",
+                                  Object {
+                                    "Ref": "MonitorAcctMetricsBucketARN",
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "\\",\\"CodeCommitTagConfig\\":\\"",
+                  Object {
+                    "Ref": "TagsConfigCodeCommit",
+                  },
+                  "\\",\\"CodeBuildTagConfig\\":\\"",
+                  Object {
+                    "Ref": "TagsConfigCodeBuild",
+                  },
+                  "\\",\\"CodePipelineTagConfig\\":\\"",
+                  Object {
+                    "Ref": "TagsConfigCodePipeline",
+                  },
+                  "\\"}",
+                ],
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "TagQueryRuleAllowEventRuleSharingAccountStackTagQuery521F1956A34B4495": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "TagQueryE8AE49BA",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::GetAtt": Array [
+            "TagQueryRule26FBA3FD",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+  },
+}
+`;

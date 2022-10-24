@@ -4,7 +4,7 @@
 
 import logging
 
-# import other fixutres
+# import other fixtures
 from test.fixtures.quicksight_test_fixture import TestHelper, get_quicksight_api_stubber
 
 import boto3
@@ -24,14 +24,14 @@ MOCK_DATE = "Wed, 30 Sep 2020 02:28:21 GMT"
 
 
 @pytest.fixture()
-def mininmal_data_sets_stub(request):
+def minimal_data_sets_stub(request):
     class GenericTestStub:
         pass
 
     # stubs
-    quicksight_applictation_stub = GenericTestStub()
-    quicksight_applictation_stub.prefix = "SOLUTION_UT"
-    quicksight_applictation_stub.quicksight_principal_arn = "arn:MOCK_ARN"
+    quicksight_application_stub = GenericTestStub()
+    quicksight_application_stub.prefix = "SOLUTION_UT"
+    quicksight_application_stub.quicksight_principal_arn = "arn:MOCK_ARN"
 
     # stub datasets
     data_sets_stub = dict()
@@ -41,14 +41,14 @@ def mininmal_data_sets_stub(request):
         data_set.name = f"Stub_{data_set_type}-name"
         data_sets_stub[data_set_type] = data_set
 
-    quicksight_applictation_stub.data_sets = data_sets_stub
+    quicksight_application_stub.data_sets = data_sets_stub
 
     class MinimalDataSetsStub:
-        def __init__(self, quicksight_applictation_stub, data_sets_stub):
-            self.quicksight_applictation_stub = quicksight_applictation_stub
+        def __init__(self, quicksight_application_stub, data_sets_stub):
+            self.quicksight_application_stub = quicksight_application_stub
             self.data_sets_stub = data_sets_stub
 
-    stub = MinimalDataSetsStub(quicksight_applictation_stub, data_sets_stub)
+    stub = MinimalDataSetsStub(quicksight_application_stub, data_sets_stub)
     return stub
 
 
@@ -110,7 +110,7 @@ class DataSetStubber:
     def add_create_data_set_response(stubber, name):
         operation = "create_data_set"
         resource_type = "dataset"
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": {
                 "RequestId": "04ebc665-35ce-4dab-b678-24a0eb782d86",
                 "HTTPStatusCode": 201,
@@ -137,7 +137,7 @@ class DataSetStubber:
             "PhysicalTableMap": ANY,
             "Permissions": ANY,
         }
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
@@ -145,7 +145,7 @@ class DataSetStubber:
         operation = "delete_data_set"
         resource_type = "dataset"
 
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": {
                 "RequestId": "7123a45b-0b1f-40e5-832a-dd3b0157cbfa",
                 "HTTPStatusCode": 200,
@@ -164,14 +164,14 @@ class DataSetStubber:
             "RequestId": "7123a45b-0b1f-40e5-832a-dd3b0157cbfa",
         }
         api_params = {"AwsAccountId": ANY, "DataSetId": ANY}
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
     def add_describe_response(stubber, name):
         operation = "describe_data_set"
         resource_type = "dataset"
-        # The describe_data_set reponse does not provide a status at the DataSet level, such
+        # The describe_data_set response does not provide a status at the DataSet level, such
         # as "Status": "CREATION_SUCCESSFUL"
         mock_response = {
             "ResponseMetadata": {
@@ -210,7 +210,7 @@ class DataSetStubber:
 
         service_message = {
             "ResourceExistsException": f"An error occurred ({service_error_code}) when calling the {operation_name} operation: DataSet {resource_type}/{name} already exists",
-            "InvalidParameterValueException": f"An error occurred ({service_error_code}) when calling the {operation_name} operation: DataSet {resource_type}/{name} validtion error",
+            "InvalidParameterValueException": f"An error occurred ({service_error_code}) when calling the {operation_name} operation: DataSet {resource_type}/{name} validation error",
         }
 
         api_params = {

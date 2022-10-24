@@ -41,6 +41,10 @@
                     {
                         "Name": "created_at",
                         "Type": "DATETIME"
+                    },
+                    {
+                        "Name": "tag",
+                        "Type": "STRING"
                     }
                 ]
             }
@@ -105,6 +109,12 @@
                     }
                 },
                 {
+                    "RenameColumnOperation": {
+                        "ColumnName": "tag",
+                        "NewColumnName": "Tag"
+                    }
+                },
+                {
                     "ProjectOperation": {
                         "ProjectedColumns": [
                             "Account",
@@ -115,7 +125,8 @@
                             "Branch",
                             "Author",
                             "Change Id",
-                            "Created At"
+                            "Created At",
+                            "Tag"
                         ]
                     }
                 }

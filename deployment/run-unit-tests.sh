@@ -166,7 +166,7 @@ CLEAN="${CLEAN:-true}"
 # echo "------------------------------------------------------------------------------"
 # echo "[Test] CDK Unit Tests"
 # echo "------------------------------------------------------------------------------"
-run_cdk_project_test "CDK - AWS DevOps Monitoring Dashboard"
+run_cdk_project_test "CDK - DevOps Monitoring Dashboard on AWS"
 
 # echo "------------------------------------------------------------------------------"
 # echo "[Test] Lambda Tests"
@@ -174,6 +174,8 @@ run_cdk_project_test "CDK - AWS DevOps Monitoring Dashboard"
 run_python_lambda_test quicksight-custom-resources "Quicksight - Custom Resources"
 run_javascript_lambda_test event_parser "Lambda transformation of Source Data"
 run_javascript_lambda_test query_runner "Build Athena Queries"
+run_javascript_lambda_test multi_account_custom_resources "Multiple Account Custom Resources"
+run_javascript_lambda_test tag_query "Tag Query Lambda"
 
 # Return to the directory where we started
 cd $template_dir

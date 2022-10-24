@@ -93,7 +93,7 @@ class QuickSightResource:
             # there is sub-type in props, e.g. in data-set case, so we go one level deeper in the
             # dictionary to get the props of the sub-type
             obj_props = obj_props.get(self.sub_type, None)
-        # if we found obj properties, use any provied to override the object properties
+        # if we found obj properties, use provided properties to override the object properties
         if obj_props:
             self.id = obj_props.get("id", self.id)
             self.name = obj_props.get("name", self.name)
