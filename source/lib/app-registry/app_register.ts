@@ -86,20 +86,6 @@ export class AppRegister {
 
     application.associateAttributeGroup(attributeGroup);
 
-    const appInsights = new CfnApplication(stack, 'ApplicationInsightsConfiguration', {
-      resourceGroupName: Fn.join('-', [
-        'AWS_AppRegistry_Application',
-        map.findInMap('Data', 'AppRegistryApplicationName'),
-        Aws.REGION,
-        Aws.ACCOUNT_ID
-      ]),
-      autoConfigurationEnabled: true,
-      cweMonitorEnabled: true,
-      opsCenterEnabled: true
-    });
-
-    applyDependsOn(appInsights, application);
-
     this.applyTagsToApplication(application, map);
 
     return application;
