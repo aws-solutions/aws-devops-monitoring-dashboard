@@ -298,7 +298,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2f5bfc37c3ee22408f3320a16c41efabaeff6861ec1722ec85c8718392eb1e07.zip",
+          "S3Key": "38c0533e37832878745368ec029be10f0f399237973c73866141e457538e03c9.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
         "Environment": Object {
@@ -1218,7 +1218,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "d8b828ad33e75f4e0bebc3fb7988a89295acf934a40896d1cb22cdd10bbfdf10.zip",
+          "S3Key": "4545a612aadb4c6f19992890be4a594dfd9c8f66f629b43f29b7cf06311aa9f8.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function queries CodeCommit, CodeBuild, and CodePipeline resources for tag information.",
         "Environment": Object {

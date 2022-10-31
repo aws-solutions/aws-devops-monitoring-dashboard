@@ -252,7 +252,6 @@ DevOps Monitoring Dashboard on AWS solution consists of:
     │   ├── solution_helper             [lambda code for performing helper tasks]
     │   └── tag_query                   [lambda code for getting tagged resources]
     ├── lib                             [folder containing CDK constructs]
-    │   ├── app-registry                [CDK constructs for creating app registry resources]
     │   ├── database                    [CDK constructs for creating database resources]
     │   ├── deployment-helper           [CDK constructs for creating optional CloudFormation templates that help with solution deployment]
     │   ├── events                      [CDK constructs for creating events/metrics resources]

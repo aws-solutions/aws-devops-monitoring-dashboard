@@ -44,7 +44,7 @@
     "@aws-solutions-constructs/aws-eventbridge-lambda": "2.9.0",
     "@aws-solutions-constructs/aws-kinesisfirehose-s3": "2.9.0",
     "@aws-solutions-constructs/core": "2.9.0",
-    "cdk-nag": "^2.14.34",
+    "cdk-nag": "2.19.2",
     "source-map-support": "^0.5.19"
   }
 }
