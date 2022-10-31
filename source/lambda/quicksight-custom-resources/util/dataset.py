@@ -40,7 +40,7 @@ class DataSet(QuickSightResource):
         quicksight_client = get_quicksight_client()
 
         response = quicksight_client.delete_data_set(AwsAccountId=self.aws_account_id, DataSetId=self.id)
-        logger.info(f"finished deleting quicksight dataset for id:{self.id}, " f"response:{response}")
+        logger.info(f"finished deleting quicksight dataset for id:{self.id}, response:{response}")
 
         self.arn = response["Arn"]
         return response
@@ -62,7 +62,7 @@ class DataSet(QuickSightResource):
                 LogicalTableMap=logical_table_map,
                 ImportMode="DIRECT_QUERY",
             )
-            logger.info(f"finished creating quicksight create_data_set id:{self.id}, " f"response:{response}")
+            logger.info(f"finished creating quicksight create_data_set id:{self.id}, response:{response}")
         except quicksight_client.exceptions.ResourceExistsException:
             logger.info(f"dataset for id:{self.id} already exists")
             response = quicksight_client.describe_data_set(AwsAccountId=self.aws_account_id, DataSetId=self.id)

@@ -10,11 +10,13 @@
  * @author @aws-solutions
  */
 
-import * as cdk from '@aws-cdk/core';
-import {PipelineAlarmConstruct} from './codepipeline_alarm_construct';
-import * as lambda from "@aws-cdk/aws-lambda";
-import {addCfnSuppressRules} from "@aws-solutions-constructs/core";
-import * as iam from "@aws-cdk/aws-iam";
+import * as cdk from 'aws-cdk-lib';
+import { Construct, IConstruct } from 'constructs';
+import { PipelineAlarmConstruct } from './codepipeline_alarm_construct';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { addCfnSuppressRules } from '@aws-solutions-constructs/core';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import { NagSuppressions } from 'cdk-nag';
 
 export interface PipelineAlarmProps extends cdk.StackProps {
   readonly solutionId: string;
@@ -22,13 +24,13 @@ export interface PipelineAlarmProps extends cdk.StackProps {
 }
 
 export class PipelineAlarmStack extends cdk.Stack {
-
   /**
-   * @constructor
-   * @param {cdk.Construct} scope - parent of the construct
+   * @function Object() { [native code] }
+   * @param {Construct} scope - parent of the construct
    * @param {string} id - identifier for the object
+   * @param props - properties for the construct
    */
-  constructor(scope: cdk.Construct, id: string, props: PipelineAlarmProps) {
+  constructor(scope: Construct, id: string, props: PipelineAlarmProps) {
     super(scope, id, props);
 
     //=========================================================================
@@ -39,9 +41,9 @@ export class PipelineAlarmStack extends cdk.Stack {
      * @description name of the CodePipeline
      * @type {cdk.CfnParameter}
      */
-     const paramCodePipelineName = new cdk.CfnParameter(this, 'CodePipelineName', {
-      description: "Name of the CodePipeline. Change the default value as needed.",
-      type: "String"
+    const paramCodePipelineName = new cdk.CfnParameter(this, 'CodePipelineName', {
+      description: 'Name of the CodePipeline. Change the default value as needed.',
+      type: 'String'
     });
 
     /**
@@ -49,14 +51,12 @@ export class PipelineAlarmStack extends cdk.Stack {
      * For subsequent stack updates, recommend to select NO to reuse the existing log group.
      * @type {cdk.CfnParameter}
      */
-    const paramCreateLogGroup= new cdk.CfnParameter(this, 'CreateLogGroup', {
-      description: 'Create a new log group? Select YES to create a new log group if this is the first time you deploy the stack. For subsequent stack update, recommend to select NO to reuse the existing log group. Specify the Log group name below.',
-      type: "String",
-      default: "YES",
-      allowedValues: [
-        "YES",
-        "NO",
-      ]
+    const paramCreateLogGroup = new cdk.CfnParameter(this, 'CreateLogGroup', {
+      description:
+        'Create a new log group? Select YES to create a new log group if this is the first time you deploy the stack. For subsequent stack update, recommend to select NO to reuse the existing log group. Specify the Log group name below.',
+      type: 'String',
+      default: 'YES',
+      allowedValues: ['YES', 'NO']
     });
 
     /**
@@ -64,9 +64,10 @@ export class PipelineAlarmStack extends cdk.Stack {
      * @type {cdk.CfnParameter}
      */
     const paramLogGroupName = new cdk.CfnParameter(this, 'LogGroupName', {
-      description: "Name of the CodePipeline log group to which the pipeline events are sent. Change the default value as needed.",
-      type: "String",
-      default: "my-codepipeline-log-group"
+      description:
+        'Name of the CodePipeline log group to which the pipeline events are sent. Change the default value as needed.',
+      type: 'String',
+      default: 'my-codepipeline-log-group'
     });
 
     /**
@@ -75,70 +76,66 @@ export class PipelineAlarmStack extends cdk.Stack {
      * @type {cdk.CfnParameter}
      */
     const paramRepoName = new cdk.CfnParameter(this, 'RepoName', {
-      description: "Name of source repository for the code pipeline. It will be part of the alarm name. Change the default value as needed.",
-      type: "String"
+      description:
+        'Name of source repository for the code pipeline. It will be part of the alarm name. Change the default value as needed.',
+      type: 'String'
     });
 
     const parameterMetaData = {
-      "AWS::CloudFormation::Interface": {
-        "ParameterGroups": [
+      'AWS::CloudFormation::Interface': {
+        ParameterGroups: [
           {
-            "Label": {
-              "default": "Events Rule Configuration"
+            Label: {
+              default: 'Events Rule Configuration'
             },
-            "Parameters": [
-              "CodePipelineName",
-              "CreateLogGroup",
-              "LogGroupName"
-            ]
+            Parameters: ['CodePipelineName', 'CreateLogGroup', 'LogGroupName']
           },
           {
-            "Label": {
-              "default": "Alarm Configuration"
+            Label: {
+              default: 'Alarm Configuration'
             },
-            "Parameters": [
-              "RepoName",
-            ]
+            Parameters: ['RepoName']
           }
         ],
-        "ParameterLabels": {
-          "CodePipelineName": {
-            "default": "CodePipeline Name"
+        ParameterLabels: {
+          CodePipelineName: {
+            default: 'CodePipeline Name'
           },
-          "CreateLogGroup": {
-            "default": "Create a new log Group?"
+          CreateLogGroup: {
+            default: 'Create a new log Group?'
           },
-          "LogGroupName": {
-            "default": "Log Group Name"
+          LogGroupName: {
+            default: 'Log Group Name'
           },
-          "RepoName": {
-            "default": "Repository Name"
+          RepoName: {
+            default: 'Repository Name'
           }
         }
       }
     };
     this.templateOptions.metadata = parameterMetaData;
 
-    const alarmName = props.solutionId + '-[' + paramCodePipelineName.valueAsString + ']-[' + paramRepoName.valueAsString + ']-MTTR'
+    const alarmName =
+      props.solutionId + '-[' + paramCodePipelineName.valueAsString + ']-[' + paramRepoName.valueAsString + ']-MTTR';
 
     const metricNameSpaceMapping = new cdk.CfnMapping(this, 'CodePipelineMetrics', {
       mapping: {
-        'CodePipelineMetrics': {
-          'NameSpace': `CodePipeline/${props.solutionId}/Pipelines`,
+        CodePipelineMetrics: {
+          NameSpace: `CodePipeline/${props.solutionId}/Pipelines`
         }
       }
     });
 
-    new PipelineAlarmConstruct(this, "CodePipelineAlarm", {
+    new PipelineAlarmConstruct(this, 'CodePipelineAlarm', {
       pipelineName: paramCodePipelineName.valueAsString,
       paramCreateLogGroup: paramCreateLogGroup,
       logGroupName: paramLogGroupName.valueAsString,
       metricNameSpace: metricNameSpaceMapping.findInMap('CodePipelineMetrics', 'NameSpace'),
-      alarmName: alarmName,
+      alarmName: alarmName
     });
 
     class AddCfnSuppressRules implements cdk.IAspect {
-      public visit(node: cdk.IConstruct): void {
+      public visit(node: IConstruct): void {
         if (node instanceof lambda.CfnFunction) {
           addCfnSuppressRules(node, [
             {
@@ -154,13 +151,13 @@ export class PipelineAlarmStack extends cdk.Stack {
               reason: 'No need for simultaneous executions.'
             }
           ]);
-
         } else if (node instanceof iam.CfnPolicy) {
           addCfnSuppressRules(node, [
             {
               id: 'W12',
-              reason: 'Resource * is required by the Lambda Execution role, so that the Lambda can add ResourcePolicies to all required resources.'
-            },
+              reason:
+                'Resource * is required by the Lambda Execution role, so that the Lambda can add ResourcePolicies to all required resources.'
+            }
           ]);
         }
       }
@@ -168,22 +165,39 @@ export class PipelineAlarmStack extends cdk.Stack {
 
     cdk.Aspects.of(this).add(new AddCfnSuppressRules());
 
+    // Add cdk-nag suppression
+    NagSuppressions.addStackSuppressions(this, [
+      {
+        id: 'AwsSolutions-IAM5',
+        reason:
+          'Resource * is required by the Lambda Execution role, so that the Lambda can add ResourcePolicies to all required resources.'
+      },
+      {
+        id: 'AwsSolutions-IAM4',
+        reason: 'The managed policy is automatically generated by CDK to be used by lambda service role.'
+      },
+      {
+        id: 'AwsSolutions-L1',
+        reason: 'The lambda function and its runtime are automatically generated by CDK.'
+      }
+    ]);
+
     //=========================================================================
     // OUTPUTS
     //=========================================================================
     new cdk.CfnOutput(this, 'SolutionVersion', {
       value: props.solutionVersion,
-      description: 'Version for AWS DevOps Monitoring Dashboard Solution'
-    })
+      description: 'Version for DevOps Monitoring Dashboard on AWS solution'
+    });
 
     new cdk.CfnOutput(this, 'Log Group Name', {
       value: paramLogGroupName.valueAsString,
       description: 'Name of the log group'
-    })
+    });
 
     new cdk.CfnOutput(this, 'Alarm Name', {
       value: alarmName,
       description: 'Name of the CodePipeline alarm'
-    })
+    });
   }
 }

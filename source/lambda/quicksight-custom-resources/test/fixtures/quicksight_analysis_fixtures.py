@@ -8,7 +8,7 @@ import pytest
 import boto3
 from botocore.stub import ANY
 
-# import other fixutres
+# import other fixtures
 from botocore.stub import Stubber, ANY
 from moto import mock_sts
 
@@ -84,7 +84,7 @@ class AnalysisStubber():
     @staticmethod
     def add_create_response(stubber, name):
         operation = 'create_analysis'
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": {
                 "RequestId": "c723a6b6-64dc-49ad-a7f5-39e2723305e1",
                 "HTTPStatusCode": 202,
@@ -103,8 +103,8 @@ class AnalysisStubber():
             "CreationStatus": "CREATION_IN_PROGRESS",
             "RequestId": "c723a6b6-64dc-49ad-a7f5-39e2723305e1"
         }
-        minimal_mock_reponse.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        minimal_mock_reponse.update({"AnalysisId": f"{name}"})
+        minimal_mock_response.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        minimal_mock_response.update({"AnalysisId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
@@ -113,13 +113,13 @@ class AnalysisStubber():
             'Permissions': ANY,
             'SourceEntity': ANY
         }
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
     def add_delete_response(stubber, name):
         operation = 'delete_analysis'
-        mock_reponse = {
+        mock_response = {
             "ResponseMetadata": {
                 "RequestId": "05021dd3-cb91-4390-b6d4-a72200417c9c",
                 "HTTPStatusCode": 200,
@@ -139,14 +139,14 @@ class AnalysisStubber():
             "RequestId": "05021dd3-cb91-4390-b6d4-a72200417c9c"
         }
 
-        mock_reponse.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        mock_reponse.update({"AnalysisId": f"{name}"})
+        mock_response.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        mock_response.update({"AnalysisId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
             'AnalysisId': ANY
         }
-        stubber.add_response(operation, mock_reponse, api_params)
+        stubber.add_response(operation, mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
@@ -158,7 +158,7 @@ class AnalysisStubber():
 
         service_message = {
             "ResourceExistsException": f"An error occurred ({service_error_code}) when calling the {operation_name} operation: Analysis {resource_type}/{name} already exists",
-            "InvalidParameterValueException": f"An error occurred ({service_error_code}) when calling the {operation_name} operation: Analysis {resource_type}/{name} validtion error",
+            "InvalidParameterValueException": f"An error occurred ({service_error_code}) when calling the {operation_name} operation: Analysis {resource_type}/{name} validation error",
         }
 
         api_params = {

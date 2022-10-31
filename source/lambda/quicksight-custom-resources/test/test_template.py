@@ -10,7 +10,7 @@ from moto import mock_sts
 from util.quicksight_application import QuicksightApplication
 from util.template import Template, TemplatePermissionType
 
-from test.fixtures.quicksight_dataset_fixtures import mininmal_data_sets_stub
+from test.fixtures.quicksight_dataset_fixtures import minimal_data_sets_stub
 from test.fixtures.quicksight_template_fixtures import (TemplateStubber, template_arn)
 from test.fixtures.quicksight_test_fixture import quicksight_application_stub
 from test.logger_test_helper import dump_state
@@ -34,8 +34,8 @@ def test_template_init(quicksight_application_stub):
     dump_state(obj)
 
 @ mock_sts
-def test_template_init_minimal_data_sets(quicksight_application_stub, mininmal_data_sets_stub):
-    stub = mininmal_data_sets_stub
+def test_template_init_minimal_data_sets(quicksight_application_stub, minimal_data_sets_stub):
+    stub = minimal_data_sets_stub
 
     obj = Template(
         quicksight_application=quicksight_application_stub,
@@ -46,10 +46,10 @@ def test_template_init_minimal_data_sets(quicksight_application_stub, mininmal_d
     dump_state(obj)
 
 @ mock_sts
-def test_template_create_from_analysis(quicksight_application_stub, mininmal_data_sets_stub):
+def test_template_create_from_analysis(quicksight_application_stub, minimal_data_sets_stub):
     obj = Template(
         quicksight_application=quicksight_application_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         props=None
     )
 
@@ -82,10 +82,10 @@ def test_template_create_from_template(quicksight_application_stub, template_arn
     dump_state(obj, 'After template create_from_template obj')
 
 @ mock_sts
-def test_template_delete(quicksight_application_stub, mininmal_data_sets_stub):
+def test_template_delete(quicksight_application_stub, minimal_data_sets_stub):
     obj = Template(
         quicksight_application=quicksight_application_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         props=None
     )
 
@@ -97,10 +97,10 @@ def test_template_delete(quicksight_application_stub, mininmal_data_sets_stub):
     dump_state(obj, 'After template delete obj')
 
 @ mock_sts
-def test_template_update_template_permissions(quicksight_application_stub, mininmal_data_sets_stub):
+def test_template_update_template_permissions(quicksight_application_stub, minimal_data_sets_stub):
     obj = Template(
         quicksight_application=quicksight_application_stub,
-        data_sets=mininmal_data_sets_stub.data_sets_stub,
+        data_sets=minimal_data_sets_stub.data_sets_stub,
         props=None
     )
 

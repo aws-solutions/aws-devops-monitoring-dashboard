@@ -69,7 +69,7 @@ do_replace() {
 # Ex:
 # #!/bin/bash
 # SOLUTION_ID='SO0134'
-# SOLUTION_NAME='AWS DevOps Monitoring Dashboard'
+# SOLUTION_NAME='DevOps Monitoring Dashboard on AWS'
 # SOLUTION_TRADEMARKEDNAME='aws-devops-monitoring-dashboard'
 if [[ -e './solution_env.sh' ]]; then
     chmod +x ./solution_env.sh
@@ -158,9 +158,19 @@ for folder in */ ; do
     done
 
     if [ -e "requirements.txt" ]; then
-        pip3 install -q -r requirements.txt --upgrade --target ./
+        echo "Installing python lambda using virtual environment"
+        python3 -m venv .venv-test
+        echo "Activating virtual environment"
+        source .venv-test/bin/activate
+        echo "Executing pip3 install -q -r requirements.txt --upgrade --target ./"
+        python3 -m pip install -q -r requirements.txt --upgrade --target ./
+        echo "Deactivating virtual environment"
+        deactivate
+        echo "Deleting python virtual environment"
+        rm -fr .venv-test
     elif [ -e "package.json" ]; then
-        # do_cmd npm ci --only=prod
+        echo "Installing node dependencies"
+        echo "Executing do_cmd npm install --production"
         do_cmd npm install --production
     fi
 

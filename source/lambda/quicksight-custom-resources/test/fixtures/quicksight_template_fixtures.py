@@ -12,7 +12,7 @@ from moto import mock_sts
 from util.quicksight import QuicksightApi
 from util.quicksight_application import QuicksightApplication
 
-# import other fixutres
+# import other fixtures
 from test.fixtures.quicksight_test_fixture import get_quicksight_api_stubber
 from test.fixtures.quicksight_test_fixture import TestHelper
 
@@ -110,7 +110,7 @@ class TemplateStubber():
         name = SOLUTION_NAME
         response_meta_data = TemplateStubber.get_response_template('ResponseMetadata')
         response_meta_data.update({"Status": 202})
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": response_meta_data,
             "Status": 202,
             "Arn": f"{MOCK_VALUE}",
@@ -119,8 +119,8 @@ class TemplateStubber():
             "CreationStatus": "CREATION_IN_PROGRESS",
             "RequestId": "c723a6b6-64dc-49ad-a7f5-39e2723305e1"
         }
-        minimal_mock_reponse.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        minimal_mock_reponse.update({"TemplateId": f"{name}"})
+        minimal_mock_response.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        minimal_mock_response.update({"TemplateId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
@@ -130,7 +130,7 @@ class TemplateStubber():
             'SourceEntity': ANY,
             'VersionDescription': ANY
         }
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
@@ -142,7 +142,7 @@ class TemplateStubber():
         operation = 'delete_template'
         resource_type = 'template'
         name = SOLUTION_NAME
-        mock_reponse = {
+        mock_response = {
             "ResponseMetadata": TemplateStubber.get_response_template('ResponseMetadata'),
             "Status": 200,
             "Arn": f"{MOCK_VALUE}",
@@ -150,14 +150,14 @@ class TemplateStubber():
             "RequestId": "05021dd3-cb91-4390-b6d4-a72200417c9c"
         }
 
-        mock_reponse.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        mock_reponse.update({"TemplateId": f"{name}"})
+        mock_response.update({"Arn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        mock_response.update({"TemplateId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
             'TemplateId': ANY
         }
-        stubber.add_response(operation, mock_reponse, api_params)
+        stubber.add_response(operation, mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
@@ -165,7 +165,7 @@ class TemplateStubber():
         operation = 'update_template_permissions'
         resource_type = 'template'
         name = SOLUTION_NAME
-        mock_reponse = {
+        mock_response = {
             "ResponseMetadata": TemplateStubber.get_response_template('ResponseMetadata'),
             "Status": 200,
             "TemplateArn": f"{MOCK_VALUE}",
@@ -173,15 +173,15 @@ class TemplateStubber():
             "RequestId": "05021dd3-cb91-4390-b6d4-a72200417c9c"
         }
 
-        mock_reponse.update({"TemplateArn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        mock_reponse.update({"TemplateId": f"{name}"})
+        mock_response.update({"TemplateArn": f"arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        mock_response.update({"TemplateId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
             'TemplateId': ANY,
             'GrantPermissions': ANY
         }
-        stubber.add_response(operation, mock_reponse, api_params)
+        stubber.add_response(operation, mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod

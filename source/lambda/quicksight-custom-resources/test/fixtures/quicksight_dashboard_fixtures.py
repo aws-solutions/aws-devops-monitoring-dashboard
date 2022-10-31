@@ -13,7 +13,7 @@ from util.quicksight import QuicksightApi
 from util.quicksight_application import QuicksightApplication
 from util.dataset import DataSet
 
-# import other fixutres
+# import other fixtures
 from test.fixtures.quicksight_test_fixture import get_quicksight_api_stubber
 from test.fixtures.quicksight_test_fixture import TestHelper
 
@@ -72,7 +72,7 @@ class DashboardStubber():
     @staticmethod
     def add_create_response(stubber, name):
         operation = 'create_dashboard'
-        minimal_mock_reponse = {
+        minimal_mock_response = {
             "ResponseMetadata": {
                 "RequestId": "c723a6b6-64dc-49ad-a7f5-39e2723305e1",
                 "HTTPStatusCode": 202,
@@ -91,8 +91,8 @@ class DashboardStubber():
             "CreationStatus": "CREATION_IN_PROGRESS",
             "RequestId": "c723a6b6-64dc-49ad-a7f5-39e2723305e1"
         }
-        minimal_mock_reponse.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        minimal_mock_reponse.update({"DashboardId": f"{name}"})
+        minimal_mock_response.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        minimal_mock_response.update({"DashboardId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
@@ -102,13 +102,13 @@ class DashboardStubber():
             'SourceEntity': ANY,
             'DashboardPublishOptions': ANY
         }
-        stubber.add_response(operation, minimal_mock_reponse, api_params)
+        stubber.add_response(operation, minimal_mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")
 
     @staticmethod
     def add_delete_response(stubber, name):
         operation = 'delete_dashboard'
-        mock_reponse = {
+        mock_response = {
             "ResponseMetadata": {
                 "RequestId": "05021dd3-cb91-4390-b6d4-a72200417c9c",
                 "HTTPStatusCode": 200,
@@ -127,12 +127,12 @@ class DashboardStubber():
             "RequestId": "05021dd3-cb91-4390-b6d4-a72200417c9c"
         }
 
-        mock_reponse.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
-        mock_reponse.update({"DashboardId": f"{name}"})
+        mock_response.update({"Arn": "arn:aws:quicksight:us-east-1:{FAKE_ACCOUNT_ID}:{resource_type}/{name}"})
+        mock_response.update({"DashboardId": f"{name}"})
 
         api_params = {
             'AwsAccountId': ANY,
             'DashboardId': ANY
         }
-        stubber.add_response(operation, mock_reponse, api_params)
+        stubber.add_response(operation, mock_response, api_params)
         logger.debug(f"Stubber: added response for {operation} for name:{name}")

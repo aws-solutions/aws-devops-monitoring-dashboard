@@ -5,7 +5,9 @@ import os
 import requests
 from json import dumps
 from datetime import datetime
+import logging
 
+logger = logging.getLogger(__name__)
 
 def send_metrics(data,
                  uuid=os.getenv('UUID'),
@@ -34,5 +36,5 @@ def send_metrics(data,
         headers = {'content-type': 'application/json'}
         response = requests.post(url, data=json_data, headers=headers)
         return response
-    except:
-        pass
+    except Exception as error :
+        logger.exception(f"Error sending usage data: {error}")

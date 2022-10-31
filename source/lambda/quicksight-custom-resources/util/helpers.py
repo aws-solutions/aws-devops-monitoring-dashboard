@@ -11,7 +11,7 @@ from util.logging import get_logger
 
 logger = get_logger(__name__)
 
-# Glogbal boto3 clients to help with initializa_hion and performance
+# Global boto3 clients to help with initialization and performance
 _helpers_service_clients = dict()
 
 
@@ -19,7 +19,7 @@ class EnvironmentVariableError(Exception):
     pass
 
 
-def get_service_client(service_name, arguments):
+def get_service_client(service_name):
     """Get the global service boto3 client"""
     global _helpers_service_clients
     if service_name not in _helpers_service_clients:        
@@ -30,19 +30,19 @@ def get_service_client(service_name, arguments):
     return _helpers_service_clients[service_name]
 
 
-def get_quicksight_client(**kwargs):
+def get_quicksight_client():
     """Get the global quicksight boto3 client"""
-    return get_service_client("quicksight", kwargs)
+    return get_service_client("quicksight")
 
 
-def get_sts_client(**kwargs):
+def get_sts_client():
     """Get the global sts boto3 client"""
-    return get_service_client("sts", kwargs)
+    return get_service_client("sts")
 
 
 def get_aws_partition():
     """
-    Get the caller's AWS partion by driving it from AWS region
+    Get the caller's AWS partition by driving it from AWS region
     :return: partition name for the current AWS region (e.g. aws)
     """
     region_name = environ.get("AWS_REGION")

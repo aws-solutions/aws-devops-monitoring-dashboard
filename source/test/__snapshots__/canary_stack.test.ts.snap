@@ -142,7 +142,7 @@ Object {
       },
     },
     "SolutionVersion": Object {
-      "Description": "Version for AWS DevOps Monitoring Dashboard Solution",
+      "Description": "Version for DevOps Monitoring Dashboard on AWS Solution",
       "Value": "v1.0.0",
     },
   },
@@ -273,11 +273,19 @@ Object {
       "Condition": "CreateBucketCondition",
       "DeletionPolicy": "Retain",
       "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-S1",
+              "reason": "This bucket is used by canary to store artifacts and no access logging bucket is needed.",
+            },
+          ],
+        },
         "cfn_nag": Object {
           "rules_to_suppress": Array [
             Object {
               "id": "W35",
-              "reason": "This bucket is used by canary to store artifacts and no access loging bucket is needed.",
+              "reason": "This bucket is used by canary to store artifacts and no access logging bucket is needed.",
             },
           ],
         },
@@ -305,7 +313,7 @@ Object {
         "Tags": Array [
           Object {
             "Key": "Name",
-            "Value": "AWS DevOps Monitoring Dashboard Canary Artifacts",
+            "Value": "DevOps Monitoring Dashboard on AWS Canary Artifacts",
           },
         ],
       },
@@ -458,6 +466,14 @@ exports.handler = async () => {
     },
     "HttpCanaryServiceRoleF71089F4": Object {
       "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Resource * is required by the canary service role.",
+            },
+          ],
+        },
         "cfn_nag": Object {
           "rules_to_suppress": Array [
             Object {

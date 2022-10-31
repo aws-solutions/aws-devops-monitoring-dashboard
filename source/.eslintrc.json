@@ -1,0 +1,74 @@
+{
+    "env": {
+      "jest": true,
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended",
+      "plugin:react/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "project": "**/tsconfig.json",
+      "sourceType": "module"
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "header",
+      "import",
+      "react"
+    ],
+    "rules": {
+      "@typescript-eslint/no-inferrable-types": [
+        "off",
+        {
+          "ignoreParameters": true,
+          "ignoreProperties": true
+        }
+      ],
+      "@typescript-eslint/no-useless-constructor": [
+        "off"
+      ],
+      "arrow-body-style": [
+        "warn",
+        "as-needed"
+      ],
+      "prefer-arrow-callback": [
+        "warn"
+      ],
+      "no-inferrable-types": [
+        "off",
+        "ignore-params"
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          "args": "none",
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^[A-Z]"
+        }
+      ],
+      "header/header": [
+        "error",
+        "line",
+        [
+          " Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.",
+          " SPDX-License-Identifier: Apache-2.0"
+        ],
+        2
+      ],
+      "no-empty-function": "off",
+      "@typescript-eslint/no-empty-function": [
+        "off"
+      ],
+      "@typescript-eslint/no-var-requires": [
+        "off"
+      ],
+      "no-prototype-builtins": [
+        "off"
+      ]
+    }
+  }

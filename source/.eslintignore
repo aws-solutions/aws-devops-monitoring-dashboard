@@ -1,0 +1,11 @@
+node_modules
+coverage
+dist
+build
+cdk.out
+lib/**/*.js
+lib/**/*.d.ts
+bin/**/*.d.ts
+bin/**/*.js
+test/*.d.ts
+test/*.js
