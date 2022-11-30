@@ -36,7 +36,12 @@ let TransformCodeCommitEvents = (data, recordNumber) => {
       //process commits made from command line git commands
       if (detailData.hasOwnProperty('userIdentity') && detailData['userIdentity'] != null) {
         let userIdentity = detailData['userIdentity'];
-        if (userIdentity['userName'] != null) transformedDetail['authorName'] = userIdentity['userName'];
+        if (userIdentity['userName'] != null) 
+          transformedDetail['authorName'] = userIdentity['userName'];
+        else
+          //process author from codecommit with assumed role credentials
+          if (userIdentity['principalId'] != null) 
+            transformedDetail["authorName"] = userIdentity["principalId"].split(':')[1];
       }
 
       //process commits made from aws codecommit console
