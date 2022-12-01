@@ -457,8 +457,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
     NagSuppressions.addResourceSuppressions(refEventParserLambda, [
       {
         id: 'AwsSolutions-L1',
-        reason:
-          'The latest Node.js 16 lambda runtime version is not yet supported by AWS solutions construct and CodeBuild docker images.'
+        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
       }
     ]);
 
@@ -796,8 +795,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
     NagSuppressions.addResourceSuppressions(refQueryRunnerLambda, [
       {
         id: 'AwsSolutions-L1',
-        reason:
-          'The latest Node.js 16 lambda runtime version is not yet supported by AWS solutions construct and CodeBuild docker images.'
+        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
       }
     ]);
 
@@ -976,12 +974,10 @@ export class DevOpsDashboardStack extends cdk.Stack {
     ]);
 
     const refAthenaParLambda = ebToAthenaParLambda.lambdaFunction.node.defaultChild as lambda.CfnFunction;
-    // Add cdk-nag suppression
     NagSuppressions.addResourceSuppressions(refAthenaParLambda, [
       {
         id: 'AwsSolutions-L1',
-        reason:
-          'The latest Node.js 16 lambda runtime version is not yet supported by AWS solutions construct and CodeBuild docker images.'
+        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
       }
     ]);
 

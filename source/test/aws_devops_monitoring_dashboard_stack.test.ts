@@ -12,7 +12,7 @@ const SOLUTION_NAME = 'DevOps Monitoring Dashboard on AWS';
 const DIST_VERSION = 'v1.0.0';
 const DIST_OUTPUT_BUCKET = 'devops_dashboard_test_bucket';
 const DIST_SOLUTION_NAME = 'aws_devops_monitoring_dashboard';
-const LAMBDA_RUNTIME_NODEJS = lambda.Runtime.NODEJS_14_X;
+const LAMBDA_RUNTIME_NODEJS = lambda.Runtime.NODEJS_16_X;
 
 /*
  * Snapshot test for devopsDashboardStack
