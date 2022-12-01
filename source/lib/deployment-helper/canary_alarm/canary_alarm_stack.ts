@@ -375,7 +375,7 @@ export class CanaryStack extends Stack {
         bucket: artifactBucket,
         prefix: Aws.STACK_NAME
       },
-      runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_3_3
+      runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_3_8
     });
 
     const canaryServiceRoleResource = canary.node.findChild('ServiceRole').node.findChild('Resource') as CfnRole;

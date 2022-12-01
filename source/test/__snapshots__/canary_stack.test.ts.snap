@@ -1,51 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Snapshot test for canary alarm 1`] = `
-Object {
-  "Conditions": Object {
-    "CanaryBucketCondition": Object {
-      "Fn::Equals": Array [
-        Object {
+{
+  "Conditions": {
+    "CanaryBucketCondition": {
+      "Fn::Equals": [
+        {
           "Ref": "CreateBucket",
         },
         "Yes",
       ],
     },
-    "CreateBucketCondition": Object {
-      "Fn::And": Array [
-        Object {
+    "CreateBucketCondition": {
+      "Fn::And": [
+        {
           "Condition": "CanaryBucketCondition",
         },
-        Object {
+        {
           "Condition": "CreateCanaryCondition",
         },
       ],
     },
-    "CreateCanaryCondition": Object {
-      "Fn::Equals": Array [
-        Object {
+    "CreateCanaryCondition": {
+      "Fn::Equals": [
+        {
           "Ref": "CreateCanary",
         },
         "Yes",
       ],
     },
-    "IntervalEqualsOne": Object {
-      "Fn::Equals": Array [
-        Object {
+    "IntervalEqualsOne": {
+      "Fn::Equals": [
+        {
           "Ref": "Interval",
         },
         1,
       ],
     },
   },
-  "Metadata": Object {
-    "AWS::CloudFormation::Interface": Object {
-      "ParameterGroups": Array [
-        Object {
-          "Label": Object {
+  "Metadata": {
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Label": {
             "default": "Canary Configuration",
           },
-          "Parameters": Array [
+          "Parameters": [
             "CanaryName",
             "CreateCanary",
             "URL",
@@ -55,79 +55,79 @@ Object {
             "BucketName",
           ],
         },
-        Object {
-          "Label": Object {
+        {
+          "Label": {
             "default": "Application Monitoring",
           },
-          "Parameters": Array [
+          "Parameters": [
             "AppName",
             "RepoName",
           ],
         },
-        Object {
-          "Label": Object {
+        {
+          "Label": {
             "default": "Alarm Configuration",
           },
-          "Parameters": Array [
+          "Parameters": [
             "PercentThreshold",
             "EvalPeriods",
             "AlarmPeriods",
           ],
         },
       ],
-      "ParameterLabels": Object {
-        "AlarmPeriods": Object {
+      "ParameterLabels": {
+        "AlarmPeriods": {
           "default": "Alarm Periods",
         },
-        "AppName": Object {
+        "AppName": {
           "default": "Application Name",
         },
-        "BucketName": Object {
+        "BucketName": {
           "default": "Artifact Bucket Name",
         },
-        "CanaryInterval": Object {
+        "CanaryInterval": {
           "default": "Canary Interval",
         },
-        "CanaryName": Object {
+        "CanaryName": {
           "default": "Canary Name",
         },
-        "CreateBucket": Object {
+        "CreateBucket": {
           "default": "Create Artifact Bucket?",
         },
-        "CreateCanary": Object {
+        "CreateCanary": {
           "default": "Create New Canary?",
         },
-        "EvalPeriods": Object {
+        "EvalPeriods": {
           "default": "Evaluation Periods",
         },
-        "PercentThreshold": Object {
+        "PercentThreshold": {
           "default": "% Success Threshold (<)",
         },
-        "RepoName": Object {
+        "RepoName": {
           "default": "Repository Name",
         },
-        "ResponseThreshold": Object {
+        "ResponseThreshold": {
           "default": "Response Threshold (ms)",
         },
-        "URL": Object {
+        "URL": {
           "default": "URL",
         },
       },
     },
   },
-  "Outputs": Object {
-    "AlarmName": Object {
+  "Outputs": {
+    "AlarmName": {
       "Description": "Name of the Canary Alarm",
-      "Value": Object {
-        "Fn::Join": Array [
+      "Value": {
+        "Fn::Join": [
           "",
-          Array [
+          [
             "SO0143-[",
-            Object {
+            {
               "Ref": "AppName",
             },
             "]-[",
-            Object {
+            {
               "Ref": "RepoName",
             },
             "]-MTTR",
@@ -135,39 +135,39 @@ Object {
         ],
       },
     },
-    "CanaryName": Object {
+    "CanaryName": {
       "Description": "Name of the Canary",
-      "Value": Object {
+      "Value": {
         "Ref": "CanaryName",
       },
     },
-    "SolutionVersion": Object {
+    "SolutionVersion": {
       "Description": "Version for DevOps Monitoring Dashboard on AWS Solution",
       "Value": "v1.0.0",
     },
   },
-  "Parameters": Object {
-    "AlarmPeriods": Object {
+  "Parameters": {
+    "AlarmPeriods": {
       "Default": 1,
       "Description": "Number of collection periods over which the threshold is exceeded before alarming. This value must be less than or equal to Evaluation Periods",
       "Type": "Number",
     },
-    "AppName": Object {
+    "AppName": {
       "Description": "Name of the application that canary monitors.",
       "Type": "String",
     },
-    "BucketName": Object {
+    "BucketName": {
       "Description": "Name of the bucket (new or existing) for logging Canary artifacts. Each Canary will log to this bucket to a different prefix.",
       "Type": "String",
     },
-    "CanaryName": Object {
+    "CanaryName": {
       "AllowedPattern": "^[0-9a-z_-]+$",
       "Default": "mycanary",
       "Description": "Name of your Canary (new or existing) so users can easily understand what it is in the console.",
       "Type": "String",
     },
-    "CreateBucket": Object {
-      "AllowedValues": Array [
+    "CreateBucket": {
+      "AllowedValues": [
         "No",
         "Yes",
       ],
@@ -175,8 +175,8 @@ Object {
       "Description": "Canaries store artifacts in an S3 bucket. Should this canary create a new bucket? Enter the bucket name (new or existing) below.",
       "Type": "String",
     },
-    "CreateCanary": Object {
-      "AllowedValues": Array [
+    "CreateCanary": {
+      "AllowedValues": [
         "No",
         "Yes",
       ],
@@ -184,60 +184,60 @@ Object {
       "Description": "Should a new canary be created? If yes, a canary with the name specified above will be created. If no, just skip the rest of Canary Configuration and move on to Application Monitoring.",
       "Type": "String",
     },
-    "EvalPeriods": Object {
+    "EvalPeriods": {
       "Default": 1,
       "Description": "Number of periods to compare to the threshold.",
       "Type": "Number",
     },
-    "Interval": Object {
+    "Interval": {
       "Default": 5,
       "Description": "Interval, in minutes.",
       "Type": "Number",
     },
-    "PercentThreshold": Object {
+    "PercentThreshold": {
       "Default": 100,
       "Description": "Threshold for Success (percentage). Any value less than this value will result in an alarm being triggered.",
       "Type": "Number",
     },
-    "RepoName": Object {
+    "RepoName": {
       "Description": "Name of CodeCommit repository for the application.",
       "Type": "String",
     },
-    "ResponseThreshold": Object {
+    "ResponseThreshold": {
       "AllowedPattern": "^[0-9]+$",
       "Default": "15000",
       "Description": "Number of milliseconds to wait for a url response before considering the canary failed.",
       "Type": "String",
     },
-    "URL": Object {
+    "URL": {
       "Description": "Application or endpoint URL you want to monitor with the canary (for example, https://www.example.com). The canary will check the site every 5 minutes.",
       "Type": "String",
     },
   },
-  "Resources": Object {
-    "AlarmAppAlarm83138885": Object {
-      "Metadata": Object {
-        "cfn_nag": Object {
-          "rules_to_suppress": Array [
-            Object {
+  "Resources": {
+    "AlarmAppAlarm83138885": {
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
               "id": "W28",
               "reason": "Static names chosen intentionally to provide fixed name structure required in the solution",
             },
           ],
         },
       },
-      "Properties": Object {
+      "Properties": {
         "AlarmDescription": "Alarm when canary success is less than 100% on the most recent check.",
-        "AlarmName": Object {
-          "Fn::Join": Array [
+        "AlarmName": {
+          "Fn::Join": [
             "",
-            Array [
+            [
               "SO0143-[",
-              Object {
+              {
                 "Ref": "AppName",
               },
               "]-[",
-              Object {
+              {
                 "Ref": "RepoName",
               },
               "]-MTTR",
@@ -245,73 +245,73 @@ Object {
           ],
         },
         "ComparisonOperator": "LessThanThreshold",
-        "DatapointsToAlarm": Object {
+        "DatapointsToAlarm": {
           "Ref": "AlarmPeriods",
         },
-        "Dimensions": Array [
-          Object {
+        "Dimensions": [
+          {
             "Name": "CanaryName",
-            "Value": Object {
+            "Value": {
               "Ref": "CanaryName",
             },
           },
         ],
-        "EvaluationPeriods": Object {
+        "EvaluationPeriods": {
           "Ref": "EvalPeriods",
         },
         "MetricName": "SuccessPercent",
         "Namespace": "CloudWatchSynthetics",
         "Period": 300,
         "Statistic": "Average",
-        "Threshold": Object {
+        "Threshold": {
           "Ref": "PercentThreshold",
         },
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
-    "ArtifactBucket7410C9EF": Object {
+    "ArtifactBucket7410C9EF": {
       "Condition": "CreateBucketCondition",
       "DeletionPolicy": "Retain",
-      "Metadata": Object {
-        "cdk_nag": Object {
-          "rules_to_suppress": Array [
-            Object {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
               "id": "AwsSolutions-S1",
               "reason": "This bucket is used by canary to store artifacts and no access logging bucket is needed.",
             },
           ],
         },
-        "cfn_nag": Object {
-          "rules_to_suppress": Array [
-            Object {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
               "id": "W35",
               "reason": "This bucket is used by canary to store artifacts and no access logging bucket is needed.",
             },
           ],
         },
       },
-      "Properties": Object {
+      "Properties": {
         "AccessControl": "LogDeliveryWrite",
-        "BucketEncryption": Object {
-          "ServerSideEncryptionConfiguration": Array [
-            Object {
-              "ServerSideEncryptionByDefault": Object {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
                 "SSEAlgorithm": "AES256",
               },
             },
           ],
         },
-        "BucketName": Object {
+        "BucketName": {
           "Ref": "BucketName",
         },
-        "PublicAccessBlockConfiguration": Object {
+        "PublicAccessBlockConfiguration": {
           "BlockPublicAcls": true,
           "BlockPublicPolicy": true,
           "IgnorePublicAcls": true,
           "RestrictPublicBuckets": true,
         },
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "Name",
             "Value": "DevOps Monitoring Dashboard on AWS Canary Artifacts",
           },
@@ -320,38 +320,38 @@ Object {
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "ArtifactBucketPolicy4B4B7752": Object {
+    "ArtifactBucketPolicy4B4B7752": {
       "Condition": "CreateBucketCondition",
-      "Properties": Object {
-        "Bucket": Object {
+      "Properties": {
+        "Bucket": {
           "Ref": "ArtifactBucket7410C9EF",
         },
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
+        "PolicyDocument": {
+          "Statement": [
+            {
               "Action": "s3:*",
-              "Condition": Object {
-                "Bool": Object {
+              "Condition": {
+                "Bool": {
                   "aws:SecureTransport": "false",
                 },
               },
               "Effect": "Deny",
-              "Principal": Object {
+              "Principal": {
                 "AWS": "*",
               },
-              "Resource": Array [
-                Object {
-                  "Fn::GetAtt": Array [
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
                     "ArtifactBucket7410C9EF",
                     "Arn",
                   ],
                 },
-                Object {
-                  "Fn::Join": Array [
+                {
+                  "Fn::Join": [
                     "",
-                    Array [
-                      Object {
-                        "Fn::GetAtt": Array [
+                    [
+                      {
+                        "Fn::GetAtt": [
                           "ArtifactBucket7410C9EF",
                           "Arn",
                         ],
@@ -369,47 +369,47 @@ Object {
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "HttpCanaryE06DE534": Object {
+    "HttpCanaryE06DE534": {
       "Condition": "CreateCanaryCondition",
-      "Properties": Object {
-        "ArtifactS3Location": Object {
-          "Fn::Join": Array [
+      "Properties": {
+        "ArtifactS3Location": {
+          "Fn::Join": [
             "",
-            Array [
+            [
               "s3://",
-              Object {
+              {
                 "Ref": "BucketName",
               },
               "/",
-              Object {
+              {
                 "Ref": "AWS::StackName",
               },
             ],
           ],
         },
-        "Code": Object {
+        "Code": {
           "Handler": "index.handler",
-          "Script": Object {
-            "Fn::Join": Array [
+          "Script": {
+            "Fn::Join": [
               "",
-              Array [
+              [
                 "var synthetics = require('Synthetics');
 const log = require('SyntheticsLogger');
 
 const pageLoadBlueprint = async function () {
 
-  const URL = \\"",
-                Object {
+  const URL = "",
+                {
                   "Ref": "URL",
                 },
-                "\\";
+                "";
 
   let page = await synthetics.getPage();
   const response = await page.goto(URL, {waitUntil: 'domcontentloaded', timeout: 30000});
   //Wait for page to render.
   //Increase or decrease wait time based on endpoint being monitored.
   await page.waitFor(",
-                Object {
+                {
                   "Ref": "ResponseThreshold",
                 },
                 ");
@@ -418,7 +418,7 @@ const pageLoadBlueprint = async function () {
   let pageTitle = await page.title();
   log.info('Page title: ' + pageTitle);
   if (response.status() !== 200) {
-      throw \\"Failed to load page!\\";
+      throw "Failed to load page!";
   }
 };
 
@@ -429,28 +429,28 @@ exports.handler = async () => {
             ],
           },
         },
-        "ExecutionRoleArn": Object {
-          "Fn::GetAtt": Array [
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
             "HttpCanaryServiceRoleF71089F4",
             "Arn",
           ],
         },
-        "Name": Object {
+        "Name": {
           "Ref": "CanaryName",
         },
-        "RuntimeVersion": "syn-nodejs-puppeteer-3.3",
-        "Schedule": Object {
+        "RuntimeVersion": "syn-nodejs-puppeteer-3.8",
+        "Schedule": {
           "DurationInSeconds": "0",
-          "Expression": Object {
-            "Fn::If": Array [
+          "Expression": {
+            "Fn::If": [
               "IntervalEqualsOne",
               "rate(1 minute)",
-              Object {
-                "Fn::Join": Array [
+              {
+                "Fn::Join": [
                   "",
-                  Array [
+                  [
                     "rate(",
-                    Object {
+                    {
                       "Ref": "Interval",
                     },
                     " minutes)",
@@ -464,83 +464,83 @@ exports.handler = async () => {
       },
       "Type": "AWS::Synthetics::Canary",
     },
-    "HttpCanaryServiceRoleF71089F4": Object {
-      "Metadata": Object {
-        "cdk_nag": Object {
-          "rules_to_suppress": Array [
-            Object {
+    "HttpCanaryServiceRoleF71089F4": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
               "id": "AwsSolutions-IAM5",
               "reason": "Resource * is required by the canary service role.",
             },
           ],
         },
-        "cfn_nag": Object {
-          "rules_to_suppress": Array [
-            Object {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
               "id": "W11",
               "reason": "Resource * is required by the canary service role.",
             },
           ],
         },
       },
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
-              "Principal": Object {
+              "Principal": {
                 "Service": "lambda.amazonaws.com",
               },
             },
           ],
           "Version": "2012-10-17",
         },
-        "Policies": Array [
-          Object {
-            "PolicyDocument": Object {
-              "Statement": Array [
-                Object {
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
                   "Action": "s3:ListAllMyBuckets",
                   "Effect": "Allow",
                   "Resource": "*",
                 },
-                Object {
+                {
                   "Action": "s3:GetBucketLocation",
                   "Effect": "Allow",
-                  "Resource": Object {
-                    "Fn::Join": Array [
+                  "Resource": {
+                    "Fn::Join": [
                       "",
-                      Array [
+                      [
                         "arn:",
-                        Object {
+                        {
                           "Ref": "AWS::Partition",
                         },
                         ":s3:::",
-                        Object {
+                        {
                           "Ref": "BucketName",
                         },
                       ],
                     ],
                   },
                 },
-                Object {
+                {
                   "Action": "s3:PutObject",
                   "Effect": "Allow",
-                  "Resource": Object {
-                    "Fn::Join": Array [
+                  "Resource": {
+                    "Fn::Join": [
                       "",
-                      Array [
+                      [
                         "arn:",
-                        Object {
+                        {
                           "Ref": "AWS::Partition",
                         },
                         ":s3:::",
-                        Object {
+                        {
                           "Ref": "BucketName",
                         },
                         "/",
-                        Object {
+                        {
                           "Ref": "AWS::StackName",
                         },
                         "/*",
@@ -548,37 +548,37 @@ exports.handler = async () => {
                     ],
                   },
                 },
-                Object {
+                {
                   "Action": "cloudwatch:PutMetricData",
-                  "Condition": Object {
-                    "StringEquals": Object {
+                  "Condition": {
+                    "StringEquals": {
                       "cloudwatch:namespace": "CloudWatchSynthetics",
                     },
                   },
                   "Effect": "Allow",
                   "Resource": "*",
                 },
-                Object {
-                  "Action": Array [
+                {
+                  "Action": [
                     "logs:CreateLogStream",
                     "logs:CreateLogGroup",
                     "logs:PutLogEvents",
                   ],
                   "Effect": "Allow",
-                  "Resource": Object {
-                    "Fn::Join": Array [
+                  "Resource": {
+                    "Fn::Join": [
                       "",
-                      Array [
+                      [
                         "arn:",
-                        Object {
+                        {
                           "Ref": "AWS::Partition",
                         },
                         ":logs:",
-                        Object {
+                        {
                           "Ref": "AWS::Region",
                         },
                         ":",
-                        Object {
+                        {
                           "Ref": "AWS::AccountId",
                         },
                         ":log-group:/aws/lambda/cwsyn-*",

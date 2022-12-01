@@ -98,8 +98,7 @@ export class CodeBuildEvents extends Construct {
     NagSuppressions.addResourceSuppressions(refCodeBuildEventParserLambda, [
       {
         id: 'AwsSolutions-L1',
-        reason:
-          'The latest Node.js 16 lambda runtime version is not yet supported by AWS solutions construct and CodeBuild docker images.'
+        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
       }
     ]);
 
