@@ -42,7 +42,7 @@ test('adding cfn suppressing rules to lambda', () => {
 
   new lambda.Function(stack, 'testFunction', {
     code: lambda.Code.fromInline('exports.handler = (event, context, callback) => {}'),
-    runtime: lambda.Runtime.NODEJS_14_X,
+    runtime: lambda.Runtime.NODEJS_16_X,
     handler: 'index.handler',
     role: lambdaRole
   });

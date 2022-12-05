@@ -10,6 +10,7 @@ import { PipelineAlarmStack } from '../lib/deployment-helper/codepipeline_alarm/
 import { DevOpsDashboardStack } from '../lib/aws_devops_monitoring_dashboard_stack';
 import { SharingAccountStack } from '../lib/multi-account-resources/sharing_account/sharing_account_stack';
 import { AwsSolutionsChecks } from 'cdk-nag';
+import { AppRegister } from '../lib/app-registry/app_register';
 
 // SOLUTION_* - set by solution_env.sh
 const SOLUTION_ID = process.env['SOLUTION_ID'] || 'undefined';
@@ -18,7 +19,7 @@ const SOLUTION_NAME = process.env['SOLUTION_NAME'] || 'undefined';
 const DIST_VERSION = process.env['DIST_VERSION'] || '%%VERSION%%';
 const DIST_OUTPUT_BUCKET = process.env['DIST_OUTPUT_BUCKET'] || '%%BUCKET%%';
 const DIST_SOLUTION_NAME = process.env['DIST_SOLUTION_NAME'] || '%%SOLUTION%%';
-const LAMBDA_RUNTIME_NODEJS = lambda.Runtime.NODEJS_14_X;
+const LAMBDA_RUNTIME_NODEJS = lambda.Runtime.NODEJS_16_X;
 const TEMPLATE_FORMAT_VERSION = '2010-09-09';
 
 const app = new cdk.App();
@@ -73,6 +74,21 @@ const sharingAccountStack = new SharingAccountStack(app, 'sharing-account-stack'
   solutionDistName: DIST_SOLUTION_NAME,
   lambdaRuntimeNode: LAMBDA_RUNTIME_NODEJS
 });
+
+const appRegister = new AppRegister({
+  solutionId: SOLUTION_ID,
+  solutionName: SOLUTION_NAME,
+  solutionVersion: DIST_VERSION,
+  appRegistryApplicationName: 'devops-monitoring-dashboard-on-aws',
+  applicationType: 'AWS-Solutions',
+  attributeGroupName: 'Solution-Metadata'
+});
+
+appRegister.applyAppRegistryToStacks(
+  devopsDashboardStack as cdk.Stack,
+  [], // Do not associate spoke (sharing) stack because cross-region associations are not supported currently
+  devopsDashboardStack.getNestedStacks()
+);
 
 devopsDashboardStack.templateOptions.templateFormatVersion = TEMPLATE_FORMAT_VERSION;
 canaryStack.templateOptions.templateFormatVersion = TEMPLATE_FORMAT_VERSION;
