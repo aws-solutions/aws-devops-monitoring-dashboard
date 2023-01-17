@@ -27,8 +27,6 @@ ts-jest under the Massachusetts Institute of Technology (MIT) license
 typescript under the Apache License Version 2.0
 moto under the Apache License Version 2.0
 uuid under the Massachusetts Institute of Technology (MIT) license
-url under the Massachusetts Institute of Technology (MIT) license
-https under the Massachusetts Institute of Technology (MIT) license
 async under the Massachusetts Institute of Technology (MIT) license
 axios under the Massachusetts Institute of Technology (MIT) license
 axios-mock-adapter under the Massachusetts Institute of Technology (MIT) license
@@ -41,3 +39,37 @@ nyc under the Internet Systems Consortium (ISC) license
 source-map-support under the Massachusetts Institute of Technology (MIT) license
 boto3 under the Apache License Version 2.0
 botocore under the Apache License Version 2.0
+eslint under the Massachusetts Institute of Technology (MIT) license
+cdk-nag under the Apache License Version 2.0
+eslint-config-prettier under the Massachusetts Institute of Technology (MIT) license
+eslint-config-react-app under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-header under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-import under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-node under the Massachusetts Institute of Technology (MIT) license
+eslint-plugin-prettier under the Massachusetts Institute of Technology (MIT) license
+prettier under the Massachusetts Institute of Technology (MIT) license
+mock under the BSD 2-Clause "Simplified" License
+jmespath under the Massachusetts Institute of Technology (MIT) license
+python-dateutil under the Apache License Version 2.0 and the BSD 3-Clause "New" or "Revised" License
+s3transfer under the Apache License Version 2.0
+six under the Massachusetts Institute of Technology (MIT) license
+urllib3 under the Massachusetts Institute of Technology (MIT) license
+attrs under the Massachusetts Institute of Technology (MIT) license
+certifi under the Mozilla Public License 2.0
+cffi under the Massachusetts Institute of Technology (MIT) license
+charset-normalizer under the Massachusetts Institute of Technology (MIT) license
+cryptography under the Apache License Version 2.0
+exceptiongroup under the Massachusetts Institute of Technology (MIT) license
+idna under the BSD 3-Clause "New" or "Revised" License
+iniconfig under the Massachusetts Institute of Technology (MIT) license
+Jinja2 under the BSD 3-Clause "New" or "Revised" License
+MarkupSafe under the BSD 3-Clause "New" or "Revised" License
+packaging under the Apache License Version 2.0
+pluggy under the Massachusetts Institute of Technology (MIT) license
+pycparser under the BSD 3-Clause "New" or "Revised" License
+responses under the Apache License Version 2.0
+toml under the Massachusetts Institute of Technology (MIT) license
+tomli under the Massachusetts Institute of Technology (MIT) license
+types-toml under the Apache License Version 2.0
+Werkzeug under the BSD 3-Clause "New" or "Revised" License
+xmltodict under the Massachusetts Institute of Technology (MIT) license

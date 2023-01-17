@@ -162,16 +162,17 @@ for folder in */ ; do
         python3 -m venv .venv-test
         echo "Activating virtual environment"
         source .venv-test/bin/activate
-        echo "Executing pip3 install -q -r requirements.txt --upgrade --target ./"
-        python3 -m pip install -q -r requirements.txt --upgrade --target ./
+        python3 -m pip install -U pip setuptools
+        echo "Executing pip3 install -q -r requirements.txt --target ./"
+        python3 -m pip install -q -r requirements.txt --target ./
         echo "Deactivating virtual environment"
         deactivate
         echo "Deleting python virtual environment"
         rm -fr .venv-test
     elif [ -e "package.json" ]; then
         echo "Installing node dependencies"
-        echo "Executing do_cmd npm install --production"
-        do_cmd npm install --production
+        echo "Executing do_cmd npm install --omit=dev"
+        do_cmd npm install --omit=dev
     fi
 
     cd ..

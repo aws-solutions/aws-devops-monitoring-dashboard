@@ -156,7 +156,7 @@ exports[`Snapshot test for codepipeline alarm stack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "e845402ce43b66fc6f20df4a239f20f8662eb6c7f920b94cf6542dd0e64ce0f7.zip",
+          "S3Key": "6bbce4c77566d179835e0a6de3293a27d9021f2f49d0055bb8e465eb6e1d89b1.zip",
         },
         "Handler": "index.handler",
         "Role": {
