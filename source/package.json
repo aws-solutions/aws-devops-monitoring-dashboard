@@ -17,9 +17,9 @@
         "clean:lint": "npm run clean:install && npm run lint"
     },
     "devDependencies": {
-        "@aws-cdk/assert": "^2.59.0",
+        "@aws-cdk/assert": "^2.53.0",
         "@aws-cdk/aws-servicecatalogappregistry-alpha": "2.53.0-alpha.0",
-        "aws-cdk": "^2.59.0",
+        "aws-cdk": "^2.53.0",
         "@types/jest": "^29.2.5",
         "@types/node": "^18.11.18",
         "jest": "^29.3.1",
@@ -36,14 +36,14 @@
         "prettier": "^2.8.2"
     },
     "dependencies": {
-        "aws-cdk-lib": "^2.59.0",
+        "aws-cdk-lib": "^2.53.0",
         "constructs": "^10.1.216",
-        "@aws-cdk/aws-glue-alpha": "^2.59.0-alpha.0",
-        "@aws-cdk/aws-synthetics-alpha": "^2.59.0-alpha.0",
-        "@aws-solutions-constructs/aws-eventbridge-kinesisfirehose-s3": "^2.30.0",
-        "@aws-solutions-constructs/aws-eventbridge-lambda": "^2.30.0",
-        "@aws-solutions-constructs/aws-kinesisfirehose-s3": "^2.30.0",
-        "@aws-solutions-constructs/core": "^2.30.0",
+        "@aws-cdk/aws-glue-alpha": "^2.53.0-alpha.0",
+        "@aws-cdk/aws-synthetics-alpha": "^2.53.0-alpha.0",
+        "@aws-solutions-constructs/aws-eventbridge-kinesisfirehose-s3": "2.9.0",
+        "@aws-solutions-constructs/aws-eventbridge-lambda": "2.9.0",
+        "@aws-solutions-constructs/aws-kinesisfirehose-s3": "2.9.0",
+        "@aws-solutions-constructs/core": "2.9.0",
         "cdk-nag": "^2.21.58",
         "source-map-support": "^0.5.21"
     }

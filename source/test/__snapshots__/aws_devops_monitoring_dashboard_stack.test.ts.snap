@@ -1276,7 +1276,6 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
         "DeliveryStreamEncryptionConfigurationInput": {
           "KeyType": "AWS_OWNED_CMK",
         },
-        "DeliveryStreamName": "KinesisFirehoseDevopsDashboardStCodeBuildEventsCodeBuild82865FA4",
         "ExtendedS3DestinationConfiguration": {
           "BucketARN": {
             "Fn::GetAtt": [
@@ -1727,7 +1726,6 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
         "DeliveryStreamEncryptionConfigurationInput": {
           "KeyType": "AWS_OWNED_CMK",
         },
-        "DeliveryStreamName": "KinesisFirehoseDevopsDashboardStommitKinesisFirehoseToS3080A1A9B",
         "ExtendedS3DestinationConfiguration": {
           "BucketARN": {
             "Fn::GetAtt": [
@@ -2707,7 +2705,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
               {
                 "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
               },
-              "/f5c9d73a3bb7b6ab9e5ed72851cbce8a2d7f2bd3220c3ccb8142dec435ea007d.json",
+              "/7edf04fa4def4d8c6aca4f8afd40f203a7fcc21a56aa83b2a6d2ef37ceaabdc4.json",
             ],
           ],
         },

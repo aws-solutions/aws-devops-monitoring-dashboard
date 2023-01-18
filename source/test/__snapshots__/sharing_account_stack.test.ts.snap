@@ -423,7 +423,6 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
         "DeliveryStreamEncryptionConfigurationInput": {
           "KeyType": "AWS_OWNED_CMK",
         },
-        "DeliveryStreamName": "KinesisFirehoseSharingAccountStaCodeBuildEventsCodeBuildA18767EF",
         "ExtendedS3DestinationConfiguration": {
           "BucketARN": {
             "Ref": "MonitorAcctMetricsBucketARN",
