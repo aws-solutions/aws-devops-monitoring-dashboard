@@ -84,7 +84,7 @@ export class PipelineAlarmConstruct extends Construct {
     });
 
     const metricFilter_cfn_ref = metricFilter.node.defaultChild as logs.CfnMetricFilter;
-    metricFilter_cfn_ref.addDependsOn(pipelineLogGroupCfnRef);
+    metricFilter_cfn_ref.addDependency(pipelineLogGroupCfnRef);
 
     /**
      * Create CloudWatch alarm for AWS CodePipeline failed execution metric

@@ -1,2 +1,8 @@
-crhelper==2.0.6
-requests==2.28.0
+crhelper==2.0.11
+requests==2.28.1
+## urllib3 should match Lambda runtime
+urllib3==1.26.9
+## The following requirements were added by pip freeze:
+certifi==2022.12.7
+charset-normalizer==2.1.1
+idna==3.4

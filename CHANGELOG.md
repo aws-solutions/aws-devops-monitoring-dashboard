@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.8.2] - 2023-01-13
+### Security
+- Upgrade JSON5 to mitigate CVE-2022-46175
+- Upgrade certifi to mitigate CVE-2022-23491
+
 ## [1.8.1] - 2022-12-05
 ### Added
 - Added Application Regsitry

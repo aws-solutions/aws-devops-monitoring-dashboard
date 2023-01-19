@@ -455,7 +455,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "cb09161db469a53591cb949a204070768e499ed3754f804b05812e25f9400717.zip",
+          "S3Key": "330d54a7c241dbbbd3d5dc7dc671eecded8baf7fe35541dd8d25e52e1f85904b.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function runs on a daily schedule and adds a new partition to Amazon Athena table",
         "Environment": {
@@ -1138,7 +1138,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "d9672ae9291a998ce77b753315ebd6f239807aea0449aefac0469bdb5cb4a1e2.zip",
+          "S3Key": "c84340be658fa0b4aba030e932ff0f4ecdb2c3c521780160e5f472bac476bc0f.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
         "Environment": {
@@ -2532,7 +2532,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "d9672ae9291a998ce77b753315ebd6f239807aea0449aefac0469bdb5cb4a1e2.zip",
+          "S3Key": "c84340be658fa0b4aba030e932ff0f4ecdb2c3c521780160e5f472bac476bc0f.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses raw cloudwatch events, sends relevant data to S3 for downstream operation",
         "Environment": {
@@ -2705,7 +2705,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
               {
                 "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
               },
-              "/ee1cdc3df91d8667bb6f1f7c2879a0635ae22c25c7575fc24d80dd8e668b7a33.json",
+              "/7edf04fa4def4d8c6aca4f8afd40f203a7fcc21a56aa83b2a6d2ef37ceaabdc4.json",
             ],
           ],
         },
@@ -3400,7 +3400,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
               {
                 "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
               },
-              "/7c08fd56ee39afdb8558661cd70ef74f3f984b79381e4478f9c137db59391352.json",
+              "/0eac479a3e9370cb2e0a65a6f8ee7af51c380a070e8ff3f7eb8d616094cd09d4.json",
             ],
           ],
         },
@@ -3439,7 +3439,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "cb09161db469a53591cb949a204070768e499ed3754f804b05812e25f9400717.zip",
+          "S3Key": "330d54a7c241dbbbd3d5dc7dc671eecded8baf7fe35541dd8d25e52e1f85904b.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function runs Amazon Athena queries and creates views.",
         "Environment": {
@@ -3581,7 +3581,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2e44e53d3a24a9ca1d5325bb0617865066cd73086570e45994518cc65435f2ff.zip",
+          "S3Key": "1bc90dd7152882885080ae1f0cc0303766e0b1200571b1f8362c56d832a4c654.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function generates UUID for each deployment.",
         "Environment": {
@@ -3739,7 +3739,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "4545a612aadb4c6f19992890be4a594dfd9c8f66f629b43f29b7cf06311aa9f8.zip",
+          "S3Key": "cf193ef1c25bd1b5697a3a741c4916d109577846dd69f1ccac4c5d47333782db.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function queries CodeCommit, CodeBuild, and CodePipeline resources for tag information.",
         "Environment": {
@@ -4364,7 +4364,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "188061b3de3f8fbb846988ce072c5217fefa0567a075bb85ec2d37ef6ca3b498.zip",
+          "S3Key": "0c4f276e438cd237e0bc1772040bbd9b142f5caee89ac9c3aa1c6001a8484ef1.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function manages permissions in the central monitoring account that are required for processing metrics sent by other accounts.",
         "Environment": {
