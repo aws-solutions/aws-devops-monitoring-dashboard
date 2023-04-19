@@ -17,7 +17,6 @@ import { Canary, Code, Runtime, Schedule, Test } from '@aws-cdk/aws-synthetics-a
 import {
   BlockPublicAccess,
   Bucket,
-  BucketAccessControl,
   BucketEncryption,
   BucketProps,
   CfnBucket,
@@ -276,7 +275,6 @@ export class CanaryStack extends Stack {
       versioned: false,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.RETAIN,
-      accessControl: BucketAccessControl.LOG_DELIVERY_WRITE,
       bucketName: paramBucketName.valueAsString
     };
 

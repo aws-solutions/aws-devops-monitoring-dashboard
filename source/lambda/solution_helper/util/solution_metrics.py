@@ -34,7 +34,7 @@ def send_metrics(data,
         json_data = dumps(metrics_data)
         print('metrics data:' + json_data)
         headers = {'content-type': 'application/json'}
-        response = requests.post(url, data=json_data, headers=headers)
+        response = requests.post(url, data=json_data, headers=headers, timeout=10)
         return response
     except Exception as error :
         logger.exception(f"Error sending usage data: {error}")

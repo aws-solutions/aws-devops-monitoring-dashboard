@@ -486,7 +486,7 @@ export class GlueDatabase extends Construct {
             }
           },
           engineVersion: {
-            selectedEngineVersion: 'Athena engine version 2'
+            selectedEngineVersion: 'Athena engine version 3'
           }
         }
       });
