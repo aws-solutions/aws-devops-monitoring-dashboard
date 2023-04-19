@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.8.3] - 2023-04-18
+### Changed
+- Fixed S3 logging bucket setting
+- Fixed missing userName in codecommit event when pushes are made by assumed role credentials
+- Upgraded Werkzeug to mitigate CVE-2023-25577
+- Upgraded cryptography to mitigate CVE-2023-23931
+- upgraded tenacity
+- Added timeout to requests call
+- Upgraded Athena engine version 3
+
 ## [1.8.2] - 2023-01-13
 ### Security
 - Upgrade JSON5 to mitigate CVE-2022-46175
@@ -10,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.8.1] - 2022-12-05
 ### Added
-- Added Application Regsitry
+- Added Application Registry
 ### Changed
 - Upgraded node 14 to 16
 

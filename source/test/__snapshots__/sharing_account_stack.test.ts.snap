@@ -298,7 +298,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "c84340be658fa0b4aba030e932ff0f4ecdb2c3c521780160e5f472bac476bc0f.zip",
+          "S3Key": "b636deff91d9ee146f8394bf130e97730cc1bc6ee8169ec7b5a0d232f265a06c.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
         "Environment": {

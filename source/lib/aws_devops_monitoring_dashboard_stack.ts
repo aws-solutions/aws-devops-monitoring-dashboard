@@ -323,6 +323,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
     refMetricsBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-' + uuid);
     refMetricsBucket.addPropertyOverride('OwnershipControls.Rules', [{ ObjectOwnership: 'BucketOwnerEnforced' }]);
     refLoggingBucket.addPropertyOverride('BucketName', 'aws-devops-metrics-logging-' + uuid);
+    refLoggingBucket.addPropertyDeletionOverride('AccessControl');
 
     // Add cdk-nag suppression
     NagSuppressions.addResourceSuppressions(refLoggingBucket, [

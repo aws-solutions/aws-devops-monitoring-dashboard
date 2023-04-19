@@ -37,6 +37,11 @@ let TransformCodeCommitEvents = (data, recordNumber) => {
       if (detailData.hasOwnProperty('userIdentity') && detailData['userIdentity'] != null) {
         let userIdentity = detailData['userIdentity'];
         if (userIdentity['userName'] != null) transformedDetail['authorName'] = userIdentity['userName'];
+        //Fix missing userName in codecommit event when pushes are made by assumed role credentials
+        else if (userIdentity['sessionContext']['sessionIssuer']['userName'] != null)
+          transformedDetail['authorName'] = userIdentity['sessionContext']['sessionIssuer']['userName'];
+        else if (userIdentity['principalId'] != null)
+          transformedDetail['authorName'] = userIdentity['principalId'].split(':')[1];
       }
 
       //process commits made from aws codecommit console
