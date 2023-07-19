@@ -3,16 +3,21 @@
     "description": "Lambda function for querying tag information for CodeCommit, CodeBuild, and CodePipeline resources",
     "main": "index.js",
     "author": {
-        "name": "aws-solutions-builder"
+        "name": "Amazon Web Services",
+        "url": "https://aws.amazon.com/solutions"
     },
+    "license": "Apache-2.0",
     "dependencies": {
         "axios": "^1.2.2"
     },
     "devDependencies": {
-        "aws-sdk": "2.1083.0",
-        "jest": "^29.3.1",
+        "aws-sdk": "^2.1412.0",
+        "axios-mock-adapter": "^1.21.2",
         "chai": "^4.3.7",
-        "axios-mock-adapter": "^1.21.2"
+        "jest": "^29.3.1"
+    },
+    "overrides": {
+        "semver": "~7.5.2"
     },
     "scripts": {
         "pretest": "npm install",
@@ -22,5 +27,5 @@
         "build": "npm run build:init && npm install --production && npm run build:zip",
         "clean": "rm -rf node_modules"
     },
-    "bundledDependencies": []
+    "bundleDependencies": []
 }

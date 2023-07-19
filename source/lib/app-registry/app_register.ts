@@ -70,7 +70,7 @@ export class AppRegister {
       applicationName: Fn.join('-', [map.findInMap('Data', 'AppRegistryApplicationName'), Aws.REGION, Aws.ACCOUNT_ID]),
       description: `Service Catalog application to track and manage all your resources for the solution ${this.solutionName}`
     });
-    application.associateStack(stack);
+    application.associateApplicationWithStack(stack);
 
     const attributeGroup = new appreg.AttributeGroup(stack, 'DefaultApplicationAttributes', {
       attributeGroupName: map.findInMap('Data', 'AttributeGroupName'),

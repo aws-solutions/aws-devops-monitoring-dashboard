@@ -57,7 +57,28 @@ class Reporter {
   }
 
   async uploadReports() {
-    const unconfiguredResources = [];
+
+    // Process resource types that either have tag configuration added or removed
+    let unconfiguredResources = [];
+    unconfiguredResources = await this.processResourceTypes(unconfiguredResources);
+ 
+    //Upload files for resource types that user added tag configuration
+    let savedError = undefined;
+    savedError = await this.uploadReportToS3(savedError);
+
+    //Delete files for resource types that user removed tag configuration
+    savedError = await this.deleteReportFromS3(unconfiguredResources, savedError);
+
+    if (savedError) {
+      throw savedError;
+    }
+  }
+
+  /**
+   * Process configured or unconfigured resource types for tagging
+   * @param {array} unconfiguredResources - List of unconfigured resource types
+   */
+  async processResourceTypes(unconfiguredResources) {
     for (const tagConfig of this._tagConfigs) {
       if (tagConfig.tagConfig) {
         // For each configured resource type, add key to _reports to ensure we upload something, even an empty file
@@ -70,9 +91,14 @@ class Reporter {
         unconfiguredResources.push(await this._getKeyFromResourceType(tagConfig.resourceType));
       }
     }
+    return unconfiguredResources;
+  }
 
-    let savedError = undefined;
-
+  /**
+   * Upload report for configured resource type to S3 bucket
+   * @param {object} savedError - error object or undefined
+   */
+  async uploadReportToS3(savedError) {
     for (const [key, report] of Object.entries(this._reports)) {
       const params = {
         Body: report.join('\n'),
@@ -88,7 +114,15 @@ class Reporter {
         }
       }
     }
+    return savedError;
+  }
 
+  /**
+   * Delete report for unconfigured resource type from S3
+   * @param {array} unconfiguredResources - List of unconfigured resource types
+   * @param {object} savedError - error object or undefined
+   */
+  async deleteReportFromS3(unconfiguredResources, savedError) {
     for (const key of unconfiguredResources) {
       try {
         await this._s3.deleteObject({ Bucket: this._bucket, Key: key }).promise();
@@ -99,11 +133,9 @@ class Reporter {
         }
       }
     }
-
-    if (savedError) {
-      throw savedError;
-    }
+    return savedError;
   }
+
 }
 
 exports.Reporter = Reporter;

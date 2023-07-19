@@ -427,7 +427,7 @@ export class GitHubEvents extends Construct {
       '}',
       '}")',
       '{',
-      '"DeliveryStreamName": "' + firehoseObjGitHub.ref + '",',
+      '"DeliveryStreamName": "' + firehoseObjGitHub.deliveryStreamName + '",',
       '"Record": {',
       '"Data": "$util.base64Encode($data)"',
       '}',
