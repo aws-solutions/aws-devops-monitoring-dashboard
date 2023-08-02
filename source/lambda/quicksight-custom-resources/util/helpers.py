@@ -23,7 +23,7 @@ def get_service_client(service_name):
     """Get the global service boto3 client"""
     global _helpers_service_clients
     if service_name not in _helpers_service_clients:        
-        config = botocore.config.Config(retries=dict(max_attempts=3))
+        config = botocore.config.Config(retries=dict(max_attempts=3), user_agent_extra = environ.get("UserAgentExtra"))
 
         logger.debug(f"Initializing global boto3 client for {service_name}")
         _helpers_service_clients[service_name] = boto3.client(service_name, config=config, region_name=get_aws_region())

@@ -1,10 +1,6 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import os
-import requests
-import json
-import sys
 import unittest
 
 
@@ -15,6 +11,7 @@ class LambdaTest(unittest.TestCase):
 
         event = {
             "RequestType": "Create",
+            "ResourceType": "Custom::CreateUUID",
             "ResourceProperties": {
                 "Resource": "UUID"
                 }}

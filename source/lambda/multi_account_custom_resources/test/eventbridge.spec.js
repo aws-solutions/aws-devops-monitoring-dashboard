@@ -18,6 +18,7 @@ jest.mock(
     const mockEventBridgeService = {
       putPermission: jest.fn().mockReturnThis(),
       removePermission: jest.fn().mockReturnThis(),
+      describeEventBus: jest.fn().mockReturnThis(),
       promise: jest.fn()
     };
     return {
@@ -46,6 +47,10 @@ describe('When testing event bridge APIs', () => {
 
   it('should successfully remove permission from organization', async () => {
     const response = await eb.removePermission(orgPrincipal, eventBusName);
+    expect(response).not.toBeNull();
+  });
+  it('should successfully describe event bus', async () => {
+  const response = await eb.describeEventBus(eventBusName);
     expect(response).not.toBeNull();
   });
 });
