@@ -3,15 +3,17 @@
     "description": "Lambda function for setting up permissions required for multi-account data ingestion",
     "main": "index.js",
     "author": {
-        "name": "aws-solutions-builder"
+        "name": "Amazon Web Services",
+        "url": "https://aws.amazon.com/solutions"
     },
+    "license": "Apache-2.0",
     "dependencies": {
         "async": "^3.2.4",
         "axios": "^1.2.2",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "aws-sdk": "2.1083.0",
+        "aws-sdk": "^2.1412.0",
         "aws-sdk-mock": "^5.8.0",
         "axios-mock-adapter": "^1.21.2",
         "chai": "^4.3.7",
@@ -21,6 +23,9 @@
         "nyc": "^15.1.0",
         "sinon": "^15.0.1",
         "sinon-chai": "^3.7.0"
+    },
+    "overrides": {
+        "semver": "~7.5.2"
     },
     "scripts": {
         "pretest": "npm install",

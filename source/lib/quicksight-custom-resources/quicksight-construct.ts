@@ -92,7 +92,7 @@ export class QuickSight extends Construct {
     customResourcePolicy.attachToRole(props.role);
 
     const customResourceFunction = new lambda.Function(this, 'CustomResource', {
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_10,
       handler: 'lambda_function.handler',
       description: 'DevOps Monitoring Dashboard on AWS solution - This function creates Amazon QuickSight resources.',
       role: props.role,

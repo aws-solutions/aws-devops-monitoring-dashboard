@@ -986,6 +986,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
      * Create nested template to provision Amazon QuickSight resources as needed
      */
     const qsNestedTemplate = new QuickSightStack(this, 'QSDashboard', {
+      description: `(${props.solutionId}Q) ${props.solutionName} - Nested template to provision QuickSight resources. Version: ${props.solutionVersion}`,
       parameters: {
         QuickSightSourceTemplateArn: this.node.tryGetContext('quicksight_source_template_arn'),
         QuickSightPrincipalArn: paramQuickSightPrincipalArn.valueAsString,
@@ -1013,6 +1014,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
      * Create nested stack to provision AWS resources for GitHub events as needed
      */
     const gitHubNestedStack = new GitHubStack(this, 'GitHubStack', {
+      description: `(${props.solutionId}G) ${props.solutionName} - Nested template to provision GitHub resources. Version: ${props.solutionVersion}`,
       solutionId: props.solutionId,
       solutionVersion: props.solutionVersion,
       solutionName: props.solutionName,

@@ -23,7 +23,7 @@ const handler = async (event, context) => {
   try {
     // manage permissions
     if (resourceType === 'Custom::MonitoringAcctPermission') {
-      await ManagePermission(requestType, resourceProperties, event);
+      await managePermission(requestType, resourceProperties, event);
     }
 
     // send cfn response
@@ -52,9 +52,9 @@ const handler = async (event, context) => {
  * @param resourceProperties
  * @param event
  */
-const ManagePermission = async (requestType, resourceProperties, event) => {
+const managePermission = async (requestType, resourceProperties, event) => {
   try {
-    LOGGER.log('INFO', `[ManagePermission] Start managing permission for request type ${requestType}`);
+    LOGGER.log('INFO', `[managePermission] Start managing permission for request type ${requestType}`);
 
     const principalType = resourceProperties['PrincipalType'];
     const principalList = resourceProperties['PrincipalList'];
@@ -66,7 +66,7 @@ const ManagePermission = async (requestType, resourceProperties, event) => {
     let s3Response = {};
 
     if (requestType === 'Create') {
-      eventBridgeResponse = await AddEventBusPermission(principalType, principalList, eventBusName);
+      eventBridgeResponse = await addEventBusPermission(principalType, principalList, eventBusName);
       s3Response = await s3BucketPolicy.putS3BucketPolicy(
         principalType,
         principalList,
@@ -74,7 +74,7 @@ const ManagePermission = async (requestType, resourceProperties, event) => {
         multiAcctBucketPSID
       );
     } else if (requestType === 'Update') {
-      eventBridgeResponse = await UpdateEventBusPermission(principalType, principalList, eventBusName);
+      eventBridgeResponse = await updateEventBusPermission(principalType, principalList, eventBusName);
       s3Response = await s3BucketPolicy.putS3BucketPolicy(
         principalType,
         principalList,
@@ -82,23 +82,23 @@ const ManagePermission = async (requestType, resourceProperties, event) => {
         multiAcctBucketPSID
       );
     } else if (requestType === 'Delete') {
-      eventBridgeResponse = await DeleteEventBusPermission(principalList, eventBusName);
+      eventBridgeResponse = await deleteEventBusPermission(principalList, eventBusName);
       s3Response = await s3BucketPolicy.deleteS3BucketPolicy(metricsBucketName, multiAcctBucketPSID);
     }
 
     LOGGER.log(
       'INFO',
-      `[ManagePermission] Response for managing permission on event bus ${eventBusName}: ${JSON.stringify(
+      `[managePermission] Response for managing permission on event bus ${eventBusName}: ${JSON.stringify(
         eventBridgeResponse
       )}`
     );
     LOGGER.log(
       'INFO',
-      `[ManagePermission] Response for managing bucket policy on s3 bucket ${metricsBucketName}: ${JSON.stringify(
+      `[managePermission] Response for managing bucket policy on s3 bucket ${metricsBucketName}: ${JSON.stringify(
         s3Response
       )}`
     );
-    LOGGER.log('INFO', `[ManagePermission] End managing permission for request type ${requestType}`);
+    LOGGER.log('INFO', `[managePermission] End managing permission for request type ${requestType}`);
   } catch (err) {
     LOGGER.log('ERROR', `Error when managing permission for request type ${requestType}: ${err.message}`);
     throw err;
@@ -111,9 +111,9 @@ const ManagePermission = async (requestType, resourceProperties, event) => {
  * @param principalList
  * @param eventBusName
  */
-const AddEventBusPermission = async (principalType, principalList, eventBusName) => {
+const addEventBusPermission = async (principalType, principalList, eventBusName) => {
   try {
-    LOGGER.log('DEBUG', '[AddEventBusPermission] Start adding permission to event bus.');
+    LOGGER.log('DEBUG', '[addEventBusPermission] Start adding permission to event bus.');
 
     let response = {};
 
@@ -122,8 +122,8 @@ const AddEventBusPermission = async (principalType, principalList, eventBusName)
       response = await eventBridge.putPermission(principalType, principalList[index], eventBusName);
     }
 
-    LOGGER.log('DEBUG', `[AddEventBusPermission] response: ${JSON.stringify(response)}`);
-    LOGGER.log('DEBUG', '[AddEventBusPermission] End adding permission to event bus.');
+    LOGGER.log('DEBUG', `[addEventBusPermission] response: ${JSON.stringify(response)}`);
+    LOGGER.log('DEBUG', '[addEventBusPermission] End adding permission to event bus.');
   } catch (err) {
     LOGGER.log('ERROR', `Error when adding permission on event bus: ${err.message}`);
     throw err;
@@ -135,9 +135,9 @@ const AddEventBusPermission = async (principalType, principalList, eventBusName)
  * @param principalList
  * @param eventBusName
  */
-const DeleteEventBusPermission = async (principalList, eventBusName) => {
+const deleteEventBusPermission = async (principalList, eventBusName) => {
   try {
-    LOGGER.log('DEBUG', '[DeleteEventBusPermission] Start deleting permission from event bus.');
+    LOGGER.log('DEBUG', '[deleteEventBusPermission] Start deleting permission from event bus.');
 
     let response = {};
 
@@ -146,8 +146,8 @@ const DeleteEventBusPermission = async (principalList, eventBusName) => {
       await eventBridge.removePermission(principalList[index], eventBusName);
     }
 
-    LOGGER.log('DEBUG', `[DeleteEventBusPermission] response: ${JSON.stringify(response)}`);
-    LOGGER.log('DEBUG', '[DeleteEventBusPermission] End deleting permission from event bus.');
+    LOGGER.log('DEBUG', `[deleteEventBusPermission] response: ${JSON.stringify(response)}`);
+    LOGGER.log('DEBUG', '[deleteEventBusPermission] End deleting permission from event bus.');
   } catch (err) {
     LOGGER.log('ERROR', `Error when deleting permission from event bus: ${err.message}`);
     throw err;
@@ -156,14 +156,13 @@ const DeleteEventBusPermission = async (principalList, eventBusName) => {
 
 /**
  * Update permission: add or remove the permission to/from a specified AWS account or AWS organization
- * @param principalType
- * @param principalList
- * @param eventBusName
- * @param event
+ * @param {string} principalType - type of principal (AWS account or organization)
+ * @param {list} principalList - List of principal id (AWS account id or organization id)
+ * @param {string} eventBusName - Name of CloudWatch event bus
  */
-const UpdateEventBusPermission = async (principalType, principalList, eventBusName) => {
+const updateEventBusPermission = async (principalType, principalList, eventBusName) => {
   try {
-    LOGGER.log('DEBUG', '[UpdateEventBusPermission] Start updating permission on event bus.');
+    LOGGER.log('DEBUG', '[updateEventBusPermission] Start updating permission on event bus.');
 
     let response = {};
     const has = Object.prototype.hasOwnProperty;
@@ -172,42 +171,29 @@ const UpdateEventBusPermission = async (principalType, principalList, eventBusNa
 
     // If no policy exists, go ahead add new policy
     if (!has.call(response, 'Policy') && principalList.length > 0) {
-      response = await AddEventBusPermission(principalType, principalList, eventBusName);
+      response = await addEventBusPermission(principalType, principalList, eventBusName);
     } else {
       const eventBusPolicy = JSON.parse(response['Policy']);
       const oldPrincipalType =
         JSON.stringify(eventBusPolicy).indexOf('aws:PrincipalOrgID') > -1 ? 'Organization' : 'Account';
       const policyStatements = eventBusPolicy['Statement'];
 
+      // Get the list of old principal id
       let oldPrincipalList = [];
-
-      // Traverse policy statements and get principal id (stored as Sid) of each statement
-      for (let ps in policyStatements) {
-        LOGGER.log('DEBUG', `[UpdateEventBusPermission] ps: ${ps}`);
-        LOGGER.log('DEBUG', `[UpdateEventBusPermission] policyStatements['Sid']: ${policyStatements[ps]['Sid']}`);
-        if (has.call(policyStatements[ps], 'Sid')) oldPrincipalList.push(policyStatements[ps]['Sid']);
-      }
+      oldPrincipalList = getOldPrincipalList(policyStatements, oldPrincipalList);
 
       // When principal type remains the same, remove permission from deleted principals and then add it to new principals as needed.
       if (oldPrincipalType === principalType) {
-        const deletePrincipalList = Array.from(GetSetDifference(new Set(oldPrincipalList), new Set(principalList)));
-        if (deletePrincipalList.length > 0)
-          response = await DeleteEventBusPermission(deletePrincipalList, eventBusName);
-
-        const newPrincipalList = Array.from(GetSetDifference(new Set(principalList), new Set(oldPrincipalList)));
-        if (newPrincipalList.length > 0)
-          response = await AddEventBusPermission(principalType, newPrincipalList, eventBusName);
+        response = updatePermissionForSamePrincipalType(oldPrincipalList, principalList, eventBusName, principalType);
       }
       // when principal type is changed, remove all the old permissions and add new ones.
       else {
-        if (oldPrincipalList.length > 0) response = await DeleteEventBusPermission(oldPrincipalList, eventBusName);
-        if (principalList.length > 0)
-          response = await AddEventBusPermission(principalType, principalList, eventBusName);
+        response = updatePermissionForDifferentPrincipalType(oldPrincipalList, principalList, eventBusName, principalType);
       }
     }
 
-    LOGGER.log('DEBUG', `[UpdateEventBusPermission] response: ${JSON.stringify(response)}`);
-    LOGGER.log('DEBUG', '[UpdateEventBusPermission] End updating permission on event bus.');
+    LOGGER.log('DEBUG', `[updateEventBusPermission] response: ${JSON.stringify(response)}`);
+    LOGGER.log('DEBUG', '[updateEventBusPermission] End updating permission on event bus.');
   } catch (err) {
     LOGGER.log('ERROR', `Error when updating permission on event bus: ${err.message}`);
     throw err;
@@ -219,12 +205,64 @@ const UpdateEventBusPermission = async (principalType, principalList, eventBusNa
  * @param setA
  * @param setB
  */
-const GetSetDifference = (setA, setB) =>
+const getSetDifference = (setA, setB) =>
   // Get elements in setA but not in setB
   new Set([...setA].filter(element => !setB.has(element)));
 
+/**
+ * Traverse policy statements and get principal id (stored as Sid) of each statement
+ * @param {boolean} has - Object.prototype.hasOwnProperty
+ * @param {json} policyStatements - Event bus policy statement
+ * @param {list} oldPrincipalList - List of old principal id
+ */
+const getOldPrincipalList = (has, policyStatements, oldPrincipalList) => {
+  for (let ps in policyStatements) {
+    LOGGER.log('DEBUG', `[updateEventBusPermission] ps: ${ps}`);
+    LOGGER.log('DEBUG', `[updateEventBusPermission] policyStatements['Sid']: ${policyStatements[ps]['Sid']}`);
+    if (has.call(policyStatements[ps], 'Sid')) oldPrincipalList.push(policyStatements[ps]['Sid']);
+  }
+
+  return oldPrincipalList;
+};
+
+/**
+ * When principal type remains the same, remove permission from deleted principals and then add it to new principals as needed.
+ * @param {list} oldPrincipalList - List of old principal id (AWS account id or organization id)
+ * @param {list} principalList - List of new principal id (AWS account id or organization id)
+ * @param {list} eventBusName - Name of CloudWatch event bus
+ * @param {list} principalType - type of principal (AWS account or organization)
+ */
+const updatePermissionForSamePrincipalType = async (oldPrincipalList, principalList, eventBusName, principalType) => {
+  let response = {};
+  const deletePrincipalList = Array.from(getSetDifference(new Set(oldPrincipalList), new Set(principalList)));
+  if (deletePrincipalList.length > 0)
+    response = await deleteEventBusPermission(deletePrincipalList, eventBusName);
+
+  const newPrincipalList = Array.from(getSetDifference(new Set(principalList), new Set(oldPrincipalList)));
+  if (newPrincipalList.length > 0)
+    response = await addEventBusPermission(principalType, newPrincipalList, eventBusName);
+
+  return response;
+};
+
+/**
+ * When principal type is changed, remove all the old permissions and add new ones.
+ * @param {list} oldPrincipalList - List of old principal id (AWS account id or organization id)
+ * @param {list} principalList - List of new principal id (AWS account id or organization id)
+ * @param {list} eventBusName - Name of CloudWatch event bus
+ * @param {list} principalType - type of principal (AWS account or organization)
+ */
+const updatePermissionForDifferentPrincipalType = async (oldPrincipalList, principalList, eventBusName, principalType) => {
+  let response = {};
+  if (oldPrincipalList.length > 0) response = await deleteEventBusPermission(oldPrincipalList, eventBusName);
+  if (principalList.length > 0)
+    response = await addEventBusPermission(principalType, principalList, eventBusName);
+
+  return response;
+};
+
 module.exports = {
   handler,
-  managePermission: ManagePermission,
-  getSetDifference: GetSetDifference
+  managePermission: managePermission,
+  getSetDifference: getSetDifference
 };

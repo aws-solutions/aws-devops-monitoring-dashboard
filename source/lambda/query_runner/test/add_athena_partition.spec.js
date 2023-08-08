@@ -58,7 +58,7 @@ jest.mock(
     sendMetrics: jest.fn().mockImplementation((solutionId, solutionUUID, data, metricsURL) => {
       expect(solutionId).toBe('SO0103');
       expect(solutionUUID).toBe('2820b493-864c-4ca1-99d3-7174fef7f374');
-      expect(metricsURL).toBe('https://metrics-url.com');
+      expect(metricsURL).toBe('https://example.com');
     })
   }),
   { virtual: true }

@@ -112,7 +112,7 @@ export class QuickSightStack extends NestedStack {
       logLevel: 'INFO',
       role: customResourceRole.Role,
       parentStackName: parentStackName.valueAsString,
-      userAgentExtra: `AwsSolution/${solutionID}/${solutionVersion}`
+      userAgentExtra: `AwsSolution/${solutionID.valueAsString}/${solutionVersion.valueAsString}`
     });
 
     ApplyCfnSuppressRulesToLogRetentionResource(this, 'LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a');
