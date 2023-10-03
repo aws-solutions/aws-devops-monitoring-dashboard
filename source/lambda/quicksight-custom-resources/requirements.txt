@@ -3,7 +3,7 @@ PyYAML==6.0
 requests==2.31.0
 tenacity~=8.2.2
 ## urllib3 should match Lambda runtime
-urllib3==1.26.9
+urllib3==1.26.17
 ## The following requirements were added by pip freeze:
 certifi==2023.07.22
 charset-normalizer==2.1.1
