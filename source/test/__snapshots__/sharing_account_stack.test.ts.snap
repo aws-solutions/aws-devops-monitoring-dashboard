@@ -399,7 +399,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "fe265bb147f675e4e4e475343c0f2a2400866d0ef7388d84f9b3e96fc7af4c88.zip",
+          "S3Key": "adbd43a8fcce96a237ee2e1fee278b09ed3903a899c5ada61909d7b14a3dfd8a.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
         "Environment": {
@@ -1328,7 +1328,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "87a3e374c84313226fe68ea537b978daa523f3af0233518e58a6a0b498762c89.zip",
+          "S3Key": "17333a0e81d18269e678e866e2bdb3caf4b4604212ba240e98e6cf159d371089.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function queries CodeCommit, CodeBuild, and CodePipeline resources for tag information.",
         "Environment": {
