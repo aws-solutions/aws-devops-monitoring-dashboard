@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.5] - 2023-10-26
+
+### Changed
+
+- Upgraded @babel/traverse to mitigate CVE-2023-45133
+- Upgraded chaijs/get-func-name to mitigate CVE-2023-43646
+- Upgraded urllib3 to mitigate CVE-2023-45803 and CVE-2023-43804
+- Upgraded other dev dependencies (moto, pytest, pytest-env)
+
 ## [1.8.4] - 2023-08-07
 
 ### Changed
