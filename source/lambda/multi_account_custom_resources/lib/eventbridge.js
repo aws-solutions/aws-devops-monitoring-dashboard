@@ -3,12 +3,12 @@
 
 'use strict';
 
-const AWS = require('aws-sdk');
+const { EventBridge } = require('@aws-sdk/client-eventbridge');
 const LOGGER = new (require('./logger'))();
 
 const userAgentExtra = process.env.UserAgentExtra;
 const options = userAgentExtra ? { customUserAgent: userAgentExtra } : {};
-const eventBridge = new AWS.EventBridge(options);
+const eventBridge = new EventBridge(options);
 
 /**
  * Add permission to allow the specified AWS account or AWS organization to put events to the specified event bus
@@ -42,7 +42,7 @@ const PutPermission = async (principalType, principal, eventBusName) => {
       };
     }
 
-    const response = await eventBridge.putPermission(params).promise();
+    const response = await eventBridge.putPermission(params);
 
     LOGGER.log('DEBUG', `[PutPermission] Response: ${JSON.stringify(response)}`);
     LOGGER.log('INFO', '[PutPermission] End putting permission on event bus.');
@@ -69,7 +69,7 @@ const RemovePermission = async (principal, eventBusName) => {
       RemoveAllPermissions: false
     };
 
-    const response = await eventBridge.removePermission(params).promise();
+    const response = await eventBridge.removePermission(params);
 
     LOGGER.log('DEBUG', `[RemovePermission] Response: ${JSON.stringify(response)}`);
     LOGGER.log('INFO', '[RemovePermission] END removing permission from event bus.');
@@ -95,7 +95,7 @@ const DescribeEventBus = async eventBusName => {
       Name: eventBusName
     };
 
-    const response = await eventBridge.describeEventBus(params).promise();
+    const response = await eventBridge.describeEventBus(params);
 
     LOGGER.log('INFO', `[DescribeEventBus] Response: ${JSON.stringify(response)}`);
     LOGGER.log('DEBUG', '[DescribeEventBus] End describing event bus.');

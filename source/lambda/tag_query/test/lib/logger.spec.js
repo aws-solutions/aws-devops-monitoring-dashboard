@@ -3,7 +3,7 @@
 
 'use strict';
 
-let Logger = new (require('../lib/logger'))();
+let Logger = new (require('../../lib/logger'))();
 
 const consoleSpy = jest.spyOn(console, 'log');
 

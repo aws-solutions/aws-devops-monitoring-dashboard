@@ -5,7 +5,7 @@ const axios = require('axios');
 const expect = require('chai').expect;
 const MockAdapter = require('axios-mock-adapter');
 
-let metricsHelper = require('../lib/metrics_helper.js');
+let metricsHelper = require('../../lib/metrics_helper.js');
 
 const solutionId = 'SO0000';
 const uuid = '999-999';

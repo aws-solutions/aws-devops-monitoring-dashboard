@@ -3,31 +3,41 @@
 
 'use strict';
 
-const AWS = require('aws-sdk');
+const { ResourceGroupsTaggingAPIClient, GetResourcesCommand } = require('@aws-sdk/client-resource-groups-tagging-api');
+const { mockClient } = require('aws-sdk-client-mock');
 const { TagConfig, ResourceTypes, CodeCommitResourceInfo } = require('../lib/resource_info');
 const { TagQueryEngine } = require('../tag_query');
 
-jest.mock('aws-sdk', () => ({
-  __esmodule: true,
-  ResourceGroupsTaggingAPI: jest.fn()
-}));
+process.env.LOG_LEVEL = 'DEBUG';
+
+// jest.mock('aws-sdk', () => ({
+//   __esmodule: true,
+//   ResourceGroupsTaggingAPI: jest.fn()
+// }));
 
 describe('Test TagQueryEngine', () => {
+  const mockResourceGroupsTaggingAPIClient = mockClient(ResourceGroupsTaggingAPIClient);
+
+  beforeEach(() => {
+    mockResourceGroupsTaggingAPIClient.reset();
+  });
+
   test('handle no tag configurations', async () => {
     const queryEngine = new TagQueryEngine([]);
     expect(await queryEngine.getResources()).toEqual([]);
   });
 
   test('handle single tag configuration, no resource', async () => {
-    AWS.ResourceGroupsTaggingAPI.mockImplementation(() => ({
-      getResources: params => {
-        expect(params).toEqual({
-          TagFilters: [{ Key: 'env', Values: ['prod'] }],
-          ResourceTypeFilters: [ResourceTypes.CodeCommitRepository]
-        });
-        return { promise: () => ({ PaginationToken: '', ResourceTagMappingList: [] }) };
-      }
-    }));
+    mockResourceGroupsTaggingAPIClient
+      .on(GetResourcesCommand, {
+        TagFilters: [{ Key: 'env', Values: ['prod'] }],
+        ResourceTypeFilters: [ResourceTypes.CodeCommitRepository]
+      })
+      .resolves({
+        PaginationToken: '',
+        ResourceTagMappingList: []
+      });
+
     const queryEngine = new TagQueryEngine([new TagConfig(ResourceTypes.CodeCommitRepository, 'env,prod')]);
     expect(await queryEngine.getResources()).toEqual([]);
   });
@@ -35,30 +45,22 @@ describe('Test TagQueryEngine', () => {
   test('handle single tag configuration', async () => {
     const arn = 'arn:aws:codecommit:us-east-1:111111111111:test-repo';
     const tags = [{ Key: 'env', Value: 'prod' }];
-    AWS.ResourceGroupsTaggingAPI.mockImplementation(() => ({
-      getResources: params => {
-        expect(params).toEqual({
-          TagFilters: [{ Key: 'env', Values: ['prod'] }],
-          ResourceTypeFilters: [ResourceTypes.CodeCommitRepository]
-        });
-        return {
-          promise: () => ({
-            PaginationToken: '',
-            ResourceTagMappingList: [
-              {
-                ComplianceDetails: {
-                  ComplianceStatus: true,
-                  KeysWithNoncompliantValues: [],
-                  NoncompliantKeys: []
-                },
-                ResourceARN: arn,
-                Tags: tags
-              }
-            ]
-          })
-        };
-      }
-    }));
+
+    mockResourceGroupsTaggingAPIClient.on(GetResourcesCommand).resolves({
+      PaginationToken: '',
+      ResourceTagMappingList: [
+        {
+          ComplianceDetails: {
+            ComplianceStatus: true,
+            KeysWithNoncompliantValues: [],
+            NoncompliantKeys: []
+          },
+          ResourceARN: arn,
+          Tags: tags
+        }
+      ]
+    });
+
     const filter = 'env,prod';
     const queryEngine = new TagQueryEngine([new TagConfig(ResourceTypes.CodeCommitRepository, filter)]);
     expect(await queryEngine.getResources()).toEqual([new CodeCommitResourceInfo(arn, tags, filter)]);
@@ -67,41 +69,40 @@ describe('Test TagQueryEngine', () => {
   test('handle multiple tag configurations', async () => {
     const arn = 'arn:aws:codecommit:us-east-1:111111111111:test-repo';
     const tags = [{ Key: 'env', Value: 'prod' }];
-    AWS.ResourceGroupsTaggingAPI.mockImplementation(() => ({
-      getResources: params => {
-        expect([
+
+    const resourceType = {
+      TagFilters: [{ Key: 'env', Values: ['prod'] }],
+      ResourceTypeFilters: [ResourceTypes.CodeCommitRepository]
+    };
+
+    mockResourceGroupsTaggingAPIClient
+      .on(GetResourcesCommand, {
+        TagFilters: [{ Key: 'env', Values: ['prod'] }],
+        ResourceTypeFilters: [ResourceTypes.CodeCommitRepository]
+      })
+      .resolvesOnce({
+        PaginationToken: '',
+        ResourceTagMappingList: [
           {
-            TagFilters: [{ Key: 'env', Values: ['prod'] }],
-            ResourceTypeFilters: [ResourceTypes.CodeCommitRepository]
-          },
-          {
-            TagFilters: [{ Key: 'env', Values: ['dev'] }],
-            ResourceTypeFilters: [ResourceTypes.CodeBuildProject]
+            ComplianceDetails: {
+              ComplianceStatus: true,
+              KeysWithNoncompliantValues: [],
+              NoncompliantKeys: []
+            },
+            ResourceARN: arn,
+            Tags: tags
           }
-        ]).toContainEqual(params);
-        const resourceType = params.ResourceTypeFilters[0];
-        return {
-          promise: () =>
-            ({
-              [ResourceTypes.CodeCommitRepository]: {
-                PaginationToken: '',
-                ResourceTagMappingList: [
-                  {
-                    ComplianceDetails: {
-                      ComplianceStatus: true,
-                      KeysWithNoncompliantValues: [],
-                      NoncompliantKeys: []
-                    },
-                    ResourceARN: arn,
-                    Tags: tags
-                  }
-                ]
-              },
-              [ResourceTypes.CodeBuildProject]: { PaginationToken: '', ResourceTagMappingList: [] }
-            }[resourceType])
-        };
-      }
-    }));
+        ]
+      })
+      .on(GetResourcesCommand, {
+        TagFilters: [{ Key: 'env', Values: ['prod'] }],
+        ResourceTypeFilters: [ResourceTypes.CodeBuildProject]
+      })
+      .resolves({
+        PaginationToken: '',
+        ResourceTagMappingList: []
+      });
+
     const filter = 'env,prod';
     const queryEngine = new TagQueryEngine([
       new TagConfig(ResourceTypes.CodeCommitRepository, filter),
@@ -115,43 +116,46 @@ describe('Test TagQueryEngine', () => {
     const secondArn = 'arn:aws:codecommit:us-east-1:111111111111:test-repo2';
     const tags = [{ Key: 'env', Value: 'prod' }];
     const token = 'a_token';
-    AWS.ResourceGroupsTaggingAPI.mockImplementation(() => ({
-      getResources: params => ({
-        promise: () => {
-          if (params.PaginationToken === token) {
-            return {
-              PaginationToken: '',
-              ResourceTagMappingList: [
-                {
-                  ComplianceDetails: {
-                    ComplianceStatus: true,
-                    KeysWithNoncompliantValues: [],
-                    NoncompliantKeys: []
-                  },
-                  ResourceARN: secondArn,
-                  Tags: tags
-                }
-              ]
-            };
-          } else {
-            return {
-              PaginationToken: token,
-              ResourceTagMappingList: [
-                {
-                  ComplianceDetails: {
-                    ComplianceStatus: true,
-                    KeysWithNoncompliantValues: [],
-                    NoncompliantKeys: []
-                  },
-                  ResourceARN: firstArn,
-                  Tags: tags
-                }
-              ]
-            };
-          }
-        }
+
+    mockResourceGroupsTaggingAPIClient
+      .on(GetResourcesCommand, {
+        TagFilters: [{ Key: 'env', Values: ['prod'] }],
+        ResourceTypeFilters: [ResourceTypes.CodeCommitRepository]
       })
-    }));
+      .resolvesOnce({
+        PaginationToken: token,
+        ResourceTagMappingList: [
+          {
+            ComplianceDetails: {
+              ComplianceStatus: true,
+              KeysWithNoncompliantValues: [],
+              NoncompliantKeys: []
+            },
+            ResourceARN: firstArn,
+            Tags: tags
+          }
+        ]
+      })
+      .on(GetResourcesCommand, {
+        TagFilters: [{ Key: 'env', Values: ['prod'] }],
+        ResourceTypeFilters: [ResourceTypes.CodeCommitRepository],
+        PaginationToken: token
+      })
+      .resolves({
+        PaginationToken: '',
+        ResourceTagMappingList: [
+          {
+            ComplianceDetails: {
+              ComplianceStatus: true,
+              KeysWithNoncompliantValues: [],
+              NoncompliantKeys: []
+            },
+            ResourceARN: secondArn,
+            Tags: tags
+          }
+        ]
+      });
+
     const filter = 'env,prod';
     const queryEngine = new TagQueryEngine([new TagConfig(ResourceTypes.CodeCommitRepository, filter)]);
     expect(await queryEngine.getResources()).toEqual(

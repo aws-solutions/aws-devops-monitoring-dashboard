@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 'use strict';
-const aws = require('aws-sdk');
+const { CloudWatch } = require('@aws-sdk/client-cloudwatch');
 
 const userAgentExtra = process.env['UserAgentExtra'];
 let options = {};
@@ -10,7 +10,7 @@ if (userAgentExtra) {
   options = { customUserAgent: userAgentExtra };
 }
 
-const cloudwatch = new aws.CloudWatch(options);
+const cloudwatch = new CloudWatch(options);
 
 const LOGGER = new (require('./lib/logger'))();
 const buildAthenaQuery = require('./build_athena_query');
@@ -136,7 +136,7 @@ const GetAthenaQueryExecutionsCount = async () => {
   let queryExecutionCount = 0;
 
   try {
-    const response = await cloudwatch.getMetricStatistics(params).promise();
+    const response = await cloudwatch.getMetricStatistics(params);
 
     if (response.Datapoints && response.Datapoints.length > 0) {
       for (const dataPoint of response.Datapoints) {

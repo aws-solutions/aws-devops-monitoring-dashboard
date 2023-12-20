@@ -9,11 +9,12 @@
     "license": "Apache-2.0",
     "dependencies": {
         "async": "^3.2.4",
-        "axios": "^1.2.2",
+        "axios": "^1.6.2",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "aws-sdk": "^2.1412.0",
+        "@aws-sdk/client-eventbridge": "^3.470.0",
+        "@aws-sdk/client-s3": "^3.470.0",
         "aws-sdk-mock": "^5.8.0",
         "axios-mock-adapter": "^1.21.2",
         "chai": "^4.3.7",

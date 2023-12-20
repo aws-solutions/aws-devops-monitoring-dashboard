@@ -27,7 +27,7 @@ Before:
     "S3Key": "5efbeaf6fad70c6f155399d9bb43debfa8efd4a4c9b5e055a103fe7b12754e76.zip"
   },
   "Handler": "index.handler",
-  "Runtime": "nodejs16.x"
+  "Runtime": "nodejs20.x"
   },
   ...
 }

@@ -3,7 +3,7 @@
 
 'use strict';
 
-const { Throttler } = require('../lib/throttler');
+const { Throttler } = require('../../lib/throttler');
 
 describe('Test Throttler', () => {
   test('Throttles execution', async () => {

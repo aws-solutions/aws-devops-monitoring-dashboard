@@ -7,8 +7,8 @@ const {
   generateQueriesForIntersection,
   generateQueriesForUnion,
   generateTagFilters
-} = require('../lib/query_generator');
-const { TagConfig, ResourceTypes } = require('../lib/resource_info');
+} = require('../../lib/query_generator');
+const { TagConfig, ResourceTypes } = require('../../lib/resource_info');
 
 describe('Test query generation for union', () => {
   test('No tag configs', () => {

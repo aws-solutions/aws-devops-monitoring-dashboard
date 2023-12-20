@@ -44,107 +44,6 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
         "MetricsURL": "https://metrics.awssolutionsbuilder.com/generic",
       },
     },
-    "DefaultCrNodeVersionMap": {
-      "af-south-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-east-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-3": {
-        "value": "nodejs16.x",
-      },
-      "ap-south-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-south-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-3": {
-        "value": "nodejs16.x",
-      },
-      "ca-central-1": {
-        "value": "nodejs16.x",
-      },
-      "cn-north-1": {
-        "value": "nodejs16.x",
-      },
-      "cn-northwest-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-central-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-central-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-north-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-south-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-south-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-3": {
-        "value": "nodejs16.x",
-      },
-      "me-central-1": {
-        "value": "nodejs16.x",
-      },
-      "me-south-1": {
-        "value": "nodejs16.x",
-      },
-      "sa-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-east-2": {
-        "value": "nodejs16.x",
-      },
-      "us-gov-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-gov-west-1": {
-        "value": "nodejs16.x",
-      },
-      "us-iso-east-1": {
-        "value": "nodejs14.x",
-      },
-      "us-iso-west-1": {
-        "value": "nodejs14.x",
-      },
-      "us-isob-east-1": {
-        "value": "nodejs14.x",
-      },
-      "us-west-1": {
-        "value": "nodejs16.x",
-      },
-      "us-west-2": {
-        "value": "nodejs16.x",
-      },
-    },
     "UserAgentExtra": {
       "UserAgentExtra": {
         "Key": "AwsSolution/SO0143/v1.0.0",
@@ -373,14 +272,6 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
         "CodeBuildEventsCodeBuildEventParserLambdaRole6077AACD",
       ],
       "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-L1",
-              "reason": "Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.",
-            },
-          ],
-        },
         "cfn_nag": {
           "rules_to_suppress": [
             {
@@ -399,7 +290,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "adbd43a8fcce96a237ee2e1fee278b09ed3903a899c5ada61909d7b14a3dfd8a.zip",
+          "S3Key": "904fc784838e208a5d21b65f62f53b3de6dee79fdf207cc79c1e90e9b5e84ca6.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
         "Environment": {
@@ -421,7 +312,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs20.x",
         "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
@@ -1188,7 +1079,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "5fa1330271b8967d9254ba2d4a07144f8acefe8b77e6d6bba38261373a50d5f8.zip",
+          "S3Key": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
         },
         "Handler": "index.handler",
         "Role": {
@@ -1197,15 +1088,8 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
             "Arn",
           ],
         },
-        "Runtime": {
-          "Fn::FindInMap": [
-            "DefaultCrNodeVersionMap",
-            {
-              "Ref": "AWS::Region",
-            },
-            "value",
-          ],
-        },
+        "Runtime": "nodejs18.x",
+        "Timeout": 900,
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -1298,14 +1182,6 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
         "TagQueryRoleA60A4D7B",
       ],
       "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-L1",
-              "reason": "Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.",
-            },
-          ],
-        },
         "cfn_nag": {
           "rules_to_suppress": [
             {
@@ -1328,7 +1204,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "17333a0e81d18269e678e866e2bdb3caf4b4604212ba240e98e6cf159d371089.zip",
+          "S3Key": "208dee6ae45001bf671384b2c4e44122097a7a4c79307328a6e02738b24f6ba7.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function queries CodeCommit, CodeBuild, and CodePipeline resources for tag information.",
         "Environment": {
@@ -1370,7 +1246,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs20.x",
         "Timeout": 900,
         "TracingConfig": {
           "Mode": "Active",

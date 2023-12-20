@@ -4,14 +4,14 @@
 
 'use strict';
 
-const AWS = require('aws-sdk');
-const STS = require('aws-sdk/clients/sts');
+const { PutObjectCommand, S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { STSClient, GetCallerIdentityCommand } = require('@aws-sdk/client-sts');
 const { getServiceFromResourceType, getTypeFromResourceType } = require('./lib/resource_info');
 const LOGGER = new (require('./lib/logger'))();
 
 class Reporter {
   constructor(bucket, tagConfigs) {
-    this._s3 = new AWS.S3({ customUserAgent: process.env.USER_AGENT_EXTRA });
+    this._s3 = new S3Client({ customUserAgent: process.env.USER_AGENT_EXTRA });
     this._bucket = bucket;
     this._prefix = 'TaggedResources';
     this._region = process.env.AWS_REGION;
@@ -46,8 +46,9 @@ class Reporter {
 
   async _getKeyFromResourceType(resourceType) {
     if (!this._account) {
-      const sts = new STS({ customUserAgent: process.env.USER_AGENT_EXTRA });
-      const response = await sts.getCallerIdentity().promise();
+      const sts = new STSClient({ customUserAgent: process.env.USER_AGENT_EXTRA });
+      const getCallerIdentityCommand = new GetCallerIdentityCommand();
+      const response = await sts.send(getCallerIdentityCommand);
       this._account = response.Account;
       this._partition = response.Arn.split(':')[1];
     }
@@ -57,11 +58,10 @@ class Reporter {
   }
 
   async uploadReports() {
-
     // Process resource types that either have tag configuration added or removed
     let unconfiguredResources = [];
     unconfiguredResources = await this.processResourceTypes(unconfiguredResources);
- 
+
     //Upload files for resource types that user added tag configuration
     let savedError = undefined;
     savedError = await this.uploadReportToS3(savedError);
@@ -106,7 +106,8 @@ class Reporter {
         Key: key
       };
       try {
-        await this._s3.putObject(params).promise();
+        const putCommand = new PutObjectCommand(params);
+        await this._s3.send(putCommand);
       } catch (err) {
         LOGGER.log('ERROR', `Error uploading report ${key} in ${this._bucket}`);
         if (!savedError) {
@@ -124,8 +125,13 @@ class Reporter {
    */
   async deleteReportFromS3(unconfiguredResources, savedError) {
     for (const key of unconfiguredResources) {
+      const params = {
+        Bucket: this._bucket,
+        Key: key
+      };
       try {
-        await this._s3.deleteObject({ Bucket: this._bucket, Key: key }).promise();
+        const deleteCommand = new DeleteObjectCommand(params);
+        await this._s3.send(deleteCommand);
       } catch (err) {
         LOGGER.log('ERROR', `Error deleting report ${key} in ${this._bucket}`);
         if (!savedError) {
@@ -135,7 +141,6 @@ class Reporter {
     }
     return savedError;
   }
-
 }
 
 exports.Reporter = Reporter;

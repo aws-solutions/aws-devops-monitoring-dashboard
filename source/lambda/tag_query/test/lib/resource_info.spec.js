@@ -3,7 +3,7 @@
 
 'use strict';
 
-const { ResourceTypes, getType, createResourceInfo } = require('../lib/resource_info');
+const { ResourceTypes, getType, createResourceInfo } = require('../../lib/resource_info');
 
 describe('Test getType', () => {
   test('CodeCommit repository', () => {

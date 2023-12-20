@@ -4,12 +4,12 @@
 'use strict';
 
 const LOGGER = new (require('./logger'))();
-const AWS = require('aws-sdk');
+const { SecretsManager } = require('@aws-sdk/client-secrets-manager');
 
 const options = {
   customUserAgent: process.env.userAgentExtra
 };
-const secretsManager = new AWS.SecretsManager(options);
+const secretsManager = new SecretsManager(options);
 
 const secretMap = new Map();
 
@@ -29,7 +29,7 @@ const getSecret = async secretId => {
   let secret;
 
   try {
-    const response = await secretsManager.getSecretValue(params).promise();
+    const response = await secretsManager.getSecretValue(params);
     secret = response.SecretString;
     secretMap.set(secretId, secret);
   } catch (error) {

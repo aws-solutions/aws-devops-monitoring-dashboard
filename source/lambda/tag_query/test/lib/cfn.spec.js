@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const axios = require('axios');
-const cfn = require('../lib/cfn.js');
+const cfn = require('../../lib/cfn.js');
 
 const event = {
   LogicalResourceId: 'testLRId',
@@ -12,10 +12,10 @@ const event = {
 };
 
 const logStreamName = 'testLSName';
-const responseData = {status: 200, data: 'testData'}
+const responseData = { status: 200, data: 'testData' };
 
-jest.mock("axios");
-axios.put.mockImplementation(() => Promise.resolve({status: 200, data:{}}));
+jest.mock('axios');
+axios.put.mockImplementation(() => Promise.resolve({ status: 200, data: {} }));
 
 describe('Test sending CFN response', () => {
   it('should call axios.put to send CFN response', async () => {

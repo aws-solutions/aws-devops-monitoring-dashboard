@@ -3,12 +3,12 @@
 
 'use strict';
 
-const AWS = require('aws-sdk');
+const { S3 } = require('@aws-sdk/client-s3');
 const LOGGER = new (require('./logger'))();
 
 const userAgentExtra = process.env.UserAgentExtra;
 const options = userAgentExtra ? { customUserAgent: userAgentExtra } : {};
-const s3 = new AWS.S3(options);
+const s3 = new S3(options);
 
 /**
  * Get s3 bucket policy given a bucket name
@@ -22,7 +22,7 @@ const GetS3BucketPolicy = async bucketName => {
       Bucket: bucketName
     };
 
-    const response = await s3.getBucketPolicy(params).promise();
+    const response = await s3.getBucketPolicy(params);
 
     LOGGER.log('INFO', `[GetS3BucketPolicy] Response: ${JSON.stringify(response)}`);
     LOGGER.log('INFO', '[GetS3BucketPolicy] END getting s3 bucket policy.');
@@ -50,7 +50,7 @@ const PutS3BucketPolicy = async (bucketName, bucketPolicy) => {
       Policy: bucketPolicy
     };
 
-    const response = await s3.putBucketPolicy(params).promise();
+    const response = await s3.putBucketPolicy(params);
 
     LOGGER.log('DEBUG', `[PutS3BucketPolicy] Response: ${JSON.stringify(response)}`);
     LOGGER.log('INFO', '[PutS3BucketPolicy] End putting bucket policy on s3 bucket .');
@@ -74,7 +74,7 @@ const DeleteS3BucketPolicy = async bucketName => {
       Bucket: bucketName
     };
 
-    const response = await s3.deleteBucketPolicy(params).promise();
+    const response = await s3.deleteBucketPolicy(params);
 
     LOGGER.log('DEBUG', `[DeleteS3BucketPolicy] Response: ${JSON.stringify(response)}`);
     LOGGER.log('INFO', '[DeleteS3BucketPolicy] END deleting s3 bucket policy.');

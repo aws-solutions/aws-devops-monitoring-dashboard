@@ -85,7 +85,7 @@ jest.mock(
 );
 
 jest.mock(
-  'aws-sdk',
+  '@aws-sdk/client-glue',
   () => ({
     __esmodule: true,
     Glue: jest.fn().mockImplementation(options => {

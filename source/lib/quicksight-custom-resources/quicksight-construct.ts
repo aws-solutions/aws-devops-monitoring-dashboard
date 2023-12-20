@@ -92,7 +92,7 @@ export class QuickSight extends Construct {
     customResourcePolicy.attachToRole(props.role);
 
     const customResourceFunction = new lambda.Function(this, 'CustomResource', {
-      runtime: lambda.Runtime.PYTHON_3_10,
+      runtime: lambda.Runtime.PYTHON_3_11,
       handler: 'lambda_function.handler',
       description: 'DevOps Monitoring Dashboard on AWS solution - This function creates Amazon QuickSight resources.',
       role: props.role,
@@ -114,6 +114,13 @@ export class QuickSight extends Construct {
       {
         id: 'W92',
         reason: 'There is no need for Reserved Concurrency'
+      }
+    ]);
+    
+    NagSuppressions.addResourceSuppressions(customResourceFunction, [
+      {
+        id: 'AwsSolutions-L1',
+        reason: 'Python 3.11 is most current supported version in lambda.'
       }
     ]);
 

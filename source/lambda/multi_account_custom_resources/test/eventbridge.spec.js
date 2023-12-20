@@ -3,7 +3,6 @@
 
 'use strict';
 
-require('aws-sdk');
 const eb = require('../lib/eventbridge.js');
 
 const accountPrincipalType = 'Account';
@@ -13,13 +12,12 @@ const orgPrincipal = 'testOrgId';
 const eventBusName = 'testEventBusName';
 
 jest.mock(
-  'aws-sdk',
+  '@aws-sdk/client-eventbridge',
   () => {
     const mockEventBridgeService = {
-      putPermission: jest.fn().mockReturnThis(),
-      removePermission: jest.fn().mockReturnThis(),
-      describeEventBus: jest.fn().mockReturnThis(),
-      promise: jest.fn()
+      putPermission: jest.fn(),
+      removePermission: jest.fn(),
+      describeEventBus: jest.fn(),
     };
     return {
       __esmodule: true,

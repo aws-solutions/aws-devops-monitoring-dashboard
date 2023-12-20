@@ -172,14 +172,6 @@ export class GitHubEvents extends Construct {
       }
     ]);
 
-    // Add cdk-nag suppression
-    NagSuppressions.addResourceSuppressions(eventParserLambdaGitHubCfnRef, [
-      {
-        id: 'AwsSolutions-L1',
-        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
-      }
-    ]);
-
     /**
      * Create Kinesis Data Firehose using KinesisFirehoseToS3 construct to deliver GitHub events
      */

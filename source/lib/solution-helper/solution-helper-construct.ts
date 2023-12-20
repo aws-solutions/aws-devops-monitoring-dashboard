@@ -6,6 +6,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { ExecutionRole } from './lambda-role-cloudwatch-construct';
 import { addCfnSuppressRules } from '@aws-solutions-constructs/core';
+import { NagSuppressions } from 'cdk-nag';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 
 export interface SolutionHelperProps {
@@ -26,7 +27,7 @@ export class SolutionHelper extends Construct {
     const helperRole = new ExecutionRole(this, 'HelperRole');
 
     const helperFunction = new lambda.Function(this, 'SolutionHelper', {
-      runtime: lambda.Runtime.PYTHON_3_10,
+      runtime: lambda.Runtime.PYTHON_3_11,
       handler: 'lambda_function.handler',
       description: 'DevOps Monitoring Dashboard on AWS solution - This function generates UUID for each deployment.',
       role: helperRole.Role,
@@ -47,6 +48,13 @@ export class SolutionHelper extends Construct {
       {
         id: 'W92',
         reason: 'There is no need for Reserved Concurrency'
+      }
+    ]);
+    
+    NagSuppressions.addResourceSuppressions(helperFunction, [
+      {
+        id: 'AwsSolutions-L1',
+        reason: 'Running Python 3.11.'
       }
     ]);
 
