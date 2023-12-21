@@ -4,7 +4,7 @@
 
 'use strict';
 
-const AWS = require('aws-sdk');
+const { ResourceGroupsTaggingAPIClient, GetResourcesCommand } = require('@aws-sdk/client-resource-groups-tagging-api');
 const { generateTagFilters, generateQueriesForIntersection } = require('./lib/query_generator');
 const { createResourceInfo, getType } = require('./lib/resource_info');
 const { Throttler } = require('./lib/throttler');
@@ -16,7 +16,7 @@ class TagQueryEngine {
     tagConfigs.forEach(({ resourceType, tagConfig }) => Object.assign(this._tagStrings, { [resourceType]: tagConfig }));
     this._queries = generateQueriesForIntersection(tagConfigs);
     this._tagFilters = generateTagFilters(tagConfigs);
-    this._tagApi = new AWS.ResourceGroupsTaggingAPI({ customUserAgent: process.env.USER_AGENT_EXTRA });
+    this._tagApi = new ResourceGroupsTaggingAPIClient({ customUserAgent: process.env.USER_AGENT_EXTRA });
     this._throttler = new Throttler(1000);
     this._savedError = undefined;
   }
@@ -45,7 +45,7 @@ class TagQueryEngine {
           uniqueArns.add(arn);
         }
       } catch (err) {
-        LOGGER.log('ERROR', `Error querying tagging API with ${params}: ${err}`);
+        LOGGER.log('ERROR', `Error querying tagging API with ${JSON.stringify(params)}: ${err}`);
         // Return information on as many resources as possible
         if (this._savedError === undefined) {
           // But persist an error if we encounter it so the caller can check for it
@@ -76,7 +76,8 @@ class TagQueryEngine {
 
   async _getResourcesThrottled(params) {
     await this._throttler.ready();
-    const response = await this._tagApi.getResources(params).promise();
+    const command = new GetResourcesCommand(params);
+    const response = await this._tagApi.send(command);
     return response;
   }
 

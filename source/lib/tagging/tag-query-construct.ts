@@ -111,12 +111,6 @@ export class TagQuery extends Construct {
         reason: 'Wildcard permissions required for xray.'
       }
     ]);
-    NagSuppressions.addResourceSuppressions(lambdaFunction, [
-      {
-        id: 'AwsSolutions-L1',
-        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
-      }
-    ]);
     addCfnSuppressRules(lambdaFunction, [
       {
         id: 'W58',

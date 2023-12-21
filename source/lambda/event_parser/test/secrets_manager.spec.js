@@ -3,7 +3,6 @@
 
 'use strict';
 
-require('aws-sdk');
 const secretsManager = require('../lib/secrets_manager');
 
 const goodSecretId = 'goodSecretId';
@@ -23,7 +22,7 @@ const mockGetSecretValue = jest.fn(SecretId => {
   }
 });
 
-jest.mock('aws-sdk', () => ({
+jest.mock('@aws-sdk/client-secrets-manager', () => ({
   config: {
     logger: String,
     update() {
@@ -31,9 +30,7 @@ jest.mock('aws-sdk', () => ({
     }
   },
   SecretsManager: jest.fn(() => ({
-    getSecretValue: jest.fn(({ SecretId }) => ({
-      promise: () => mockGetSecretValue(SecretId)
-    }))
+    getSecretValue: jest.fn(({ SecretId }) => mockGetSecretValue(SecretId))
   }))
 }));
 

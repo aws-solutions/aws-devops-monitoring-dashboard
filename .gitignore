@@ -12,6 +12,7 @@ package-lock.json
 node_modules
 **/__pycache__/*
 *.venv-test/
+*.venv
 *_yaml/
 
 # CDK asset staging directory

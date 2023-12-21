@@ -454,14 +454,6 @@ export class DevOpsDashboardStack extends cdk.Stack {
     ];
     addCfnSuppressRules(refEventParserLambda, lambdaCfnNag);
 
-    // Add cdk-nag suppression
-    NagSuppressions.addResourceSuppressions(refEventParserLambda, [
-      {
-        id: 'AwsSolutions-L1',
-        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
-      }
-    ]);
-
     /* Add more configurations to property ExtendedS3DestinationConfiguration */
     firehoseObj.addPropertyOverride('ExtendedS3DestinationConfiguration', {
       CompressionFormat: 'UNCOMPRESSED',
@@ -569,7 +561,7 @@ export class DevOpsDashboardStack extends cdk.Stack {
     }
     firehoseObj.node.addDependency(firehoseRolePolicy);
 
-    const refGlueTable = db.node.findChild('AWSDevopsMetricsGlueTable') as glue.Table;
+    const refGlueTable = db.node.findChild('AWSDevopsMetricsGlueTable') as glue.S3Table;
     firehoseObj.node.addDependency(refGlueTable);
 
     /**
@@ -792,14 +784,6 @@ export class DevOpsDashboardStack extends cdk.Stack {
     const refQueryRunnerLambda = queryRunnerLambdaFunction.node.findChild('Resource') as lambda.CfnFunction;
     addCfnSuppressRules(refQueryRunnerLambda, lambdaCfnNag);
 
-    // Add cdk-nag suppression
-    NagSuppressions.addResourceSuppressions(refQueryRunnerLambda, [
-      {
-        id: 'AwsSolutions-L1',
-        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
-      }
-    ]);
-
     /*
      * Create Custom Resource Query Builder Lambda - build and run athena queries
      */
@@ -971,14 +955,6 @@ export class DevOpsDashboardStack extends cdk.Stack {
       {
         id: 'AwsSolutions-IAM5',
         reason: 'Lambda needs resource * to send trace data to X-Ray'
-      }
-    ]);
-
-    const refAthenaParLambda = ebToAthenaParLambda.lambdaFunction.node.defaultChild as lambda.CfnFunction;
-    NagSuppressions.addResourceSuppressions(refAthenaParLambda, [
-      {
-        id: 'AwsSolutions-L1',
-        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
       }
     ]);
 

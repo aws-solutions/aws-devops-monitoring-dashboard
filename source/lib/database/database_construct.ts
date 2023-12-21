@@ -3,7 +3,7 @@
 
 import { Construct } from 'constructs';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
-import { Database, Table, DataFormat, Schema } from '@aws-cdk/aws-glue-alpha';
+import { Database, S3Table, DataFormat, Schema } from '@aws-cdk/aws-glue-alpha';
 import { CfnWorkGroup } from 'aws-cdk-lib/aws-athena';
 import { NagSuppressions } from 'cdk-nag';
 
@@ -40,7 +40,7 @@ export class GlueDatabase extends Construct {
     /**
      * Create AWS Glue table for CloudWatch Metrics for CodeBuild
      */
-    const codeBuildMetricsGlueTable = new Table(this, 'CodeBuildMetricsGlueTable', {
+    const codeBuildMetricsGlueTable = new S3Table(this, 'CodeBuildMetricsGlueTable', {
       description: 'DevOps Monitoring Dashboard on AWS solution - AWS CodeBuild Metrics Glue table',
       database: devopsMetricsGlueDB,
       tableName: 'aws_codebuild_metrics_table',
@@ -134,7 +134,7 @@ export class GlueDatabase extends Construct {
       /**
        * Create AWS Glue table for CloudWatch Events for AWS CodeCommit, CodeDeploy, CodePipeline, CloudWatch Canary
        */
-      const devopsMetricsGlueTable = new Table(this, 'AWSDevopsMetricsGlueTable', {
+      const devopsMetricsGlueTable = new S3Table(this, 'AWSDevopsMetricsGlueTable', {
         description: 'DevOps Monitoring Dashboard on AWS solution - AWS DevOps Metrics Glue table',
         database: devopsMetricsGlueDB,
         tableName: 'aws_devops_metrics_table',
@@ -300,7 +300,7 @@ export class GlueDatabase extends Construct {
       /**
        * Create AWS Glue table for tagged CodeCommit repositories
        */
-      const codeCommitTagsGlueTable = new Table(this, 'CodeCommitTagsGlueTable', {
+      const codeCommitTagsGlueTable = new S3Table(this, 'CodeCommitTagsGlueTable', {
         description: 'DevOps Monitoring Dashboard on AWS solution - AWS CodeCommit Tags Glue table',
         database: devopsMetricsGlueDB,
         tableName: 'tagged_codecommit_table',
@@ -341,7 +341,7 @@ export class GlueDatabase extends Construct {
       /**
        * Create AWS Glue table for tagged CodeBuild projects
        */
-      const codeBuildTagsGlueTable = new Table(this, 'CodeBuildTagsGlueTable', {
+      const codeBuildTagsGlueTable = new S3Table(this, 'CodeBuildTagsGlueTable', {
         description: 'DevOps Monitoring Dashboard on AWS solution - AWS CodeBuild Tags Glue table',
         database: devopsMetricsGlueDB,
         tableName: 'tagged_codebuild_table',
@@ -382,7 +382,7 @@ export class GlueDatabase extends Construct {
       /**
        * Create AWS Glue table for tagged CodePipelines
        */
-      const codePipelineTagsGlueTable = new Table(this, 'CodePipelineTagsGlueTable', {
+      const codePipelineTagsGlueTable = new S3Table(this, 'CodePipelineTagsGlueTable', {
         description: 'DevOps Monitoring Dashboard on AWS solution - AWS CodePipeline Tags Glue table',
         database: devopsMetricsGlueDB,
         tableName: 'tagged_codepipeline_table',
@@ -423,7 +423,7 @@ export class GlueDatabase extends Construct {
       /**
        * Create AWS Glue table for GitHub Metrics
        */
-      const gitHubMetricsGlueTable = new Table(this, 'GitHubMetricsGlueTable', {
+      const gitHubMetricsGlueTable = new S3Table(this, 'GitHubMetricsGlueTable', {
         description: 'DevOps Monitoring Dashboard on AWS solution - GitHub Metrics Glue table',
         database: devopsMetricsGlueDB,
         tableName: 'aws_github_metrics_table',

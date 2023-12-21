@@ -437,7 +437,7 @@ exports.handler = async () => {
         "Name": {
           "Ref": "CanaryName",
         },
-        "RuntimeVersion": "syn-nodejs-puppeteer-3.8",
+        "RuntimeVersion": "syn-nodejs-puppeteer-6.0",
         "Schedule": {
           "DurationInSeconds": "0",
           "Expression": {

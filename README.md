@@ -62,8 +62,8 @@ For a detailed solution implementation guide, refer to Solution Landing Page [De
 ## Prerequisites for Customization
 
 - [AWS Command Line Interface](https://aws.amazon.com/cli/)
-- Python 3.9
-- NodeJS 16
+- Python 3.11
+- NodeJS 20
 
 <a name="build"></a>
 
@@ -269,7 +269,7 @@ DevOps Monitoring Dashboard on AWS solution consists of:
 
 # Collection of operational metrics
 
-This solution collects anonymous operational metrics to help AWS improve the quality and features of the solution. For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/solutions/latest/aws-devops-monitoring-dashboard/collection-of-operational-metrics.html).
+This solution collects anonymoized operational metrics to help AWS improve the quality and features of the solution. For more information, including how to disable this capability, please see the [implementation guide](https://docs.aws.amazon.com/solutions/latest/aws-devops-monitoring-dashboard/collection-of-operational-metrics.html).
 
 <a name="license"></a>
 

@@ -12,7 +12,7 @@
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "aws-sdk": "^2.1412.0",
+        "@aws-sdk/client-secrets-manager": "^3.470.0",
         "aws-sdk-mock": "^5.8.0",
         "chai": "^4.3.7",
         "jest": "^29.3.1",

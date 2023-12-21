@@ -3,7 +3,7 @@
 
 'use strict';
 
-const AWS = require('aws-sdk');
+const { Athena } = require('@aws-sdk/client-athena');
 const LOGGER = new (require('./logger'))();
 
 let options = {};
@@ -11,7 +11,7 @@ const userAgentExtra = process.env.UserAgentExtra;
 if (userAgentExtra) {
   options = { customUserAgent: userAgentExtra };
 }
-const athena = new AWS.Athena(options);
+const athena = new Athena(options);
 
 /**
  * Execute Athena Query
@@ -32,7 +32,7 @@ const ExecuteAthenaQuery = async (dbName, workGroup, queryString) => {
     LOGGER.log('INFO', 'Query params: ' + JSON.stringify(params, null, 2));
     LOGGER.log('INFO', 'Query string: \n' + queryString.toString());
 
-    const response = await athena.startQueryExecution(params).promise();
+    const response = await athena.startQueryExecution(params);
     const queryExecutionId = response.QueryExecutionId;
 
     LOGGER.log('INFO', '[ExecuteAthenaQuery] response: ' + JSON.stringify(response));

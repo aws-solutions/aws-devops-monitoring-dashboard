@@ -123,13 +123,6 @@ export class MonitoringAcctPermission extends Construct {
       logRetention: logs.RetentionDays.THREE_MONTHS
     });
 
-    NagSuppressions.addResourceSuppressions(monitoringAcctPermissionLambda, [
-      {
-        id: 'AwsSolutions-L1',
-        reason: 'Node.js 16 is one of the latest lambda runtime versions supported by solution pipeline.'
-      }
-    ]);
-
     const refMonitoringAcctPermissionLambda = monitoringAcctPermissionLambda.node.findChild(
       'Resource'
     ) as lambda.CfnFunction;

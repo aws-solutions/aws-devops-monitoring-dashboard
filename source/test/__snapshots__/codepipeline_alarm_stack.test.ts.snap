@@ -18,107 +18,6 @@ exports[`Snapshot test for codepipeline alarm stack 1`] = `
         "NameSpace": "CodePipeline/SO0143/Pipelines",
       },
     },
-    "DefaultCrNodeVersionMap": {
-      "af-south-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-east-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-northeast-3": {
-        "value": "nodejs16.x",
-      },
-      "ap-south-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-south-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-1": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-2": {
-        "value": "nodejs16.x",
-      },
-      "ap-southeast-3": {
-        "value": "nodejs16.x",
-      },
-      "ca-central-1": {
-        "value": "nodejs16.x",
-      },
-      "cn-north-1": {
-        "value": "nodejs16.x",
-      },
-      "cn-northwest-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-central-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-central-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-north-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-south-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-south-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-1": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-2": {
-        "value": "nodejs16.x",
-      },
-      "eu-west-3": {
-        "value": "nodejs16.x",
-      },
-      "me-central-1": {
-        "value": "nodejs16.x",
-      },
-      "me-south-1": {
-        "value": "nodejs16.x",
-      },
-      "sa-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-east-2": {
-        "value": "nodejs16.x",
-      },
-      "us-gov-east-1": {
-        "value": "nodejs16.x",
-      },
-      "us-gov-west-1": {
-        "value": "nodejs16.x",
-      },
-      "us-iso-east-1": {
-        "value": "nodejs14.x",
-      },
-      "us-iso-west-1": {
-        "value": "nodejs14.x",
-      },
-      "us-isob-east-1": {
-        "value": "nodejs14.x",
-      },
-      "us-west-1": {
-        "value": "nodejs16.x",
-      },
-      "us-west-2": {
-        "value": "nodejs16.x",
-      },
-    },
   },
   "Metadata": {
     "AWS::CloudFormation::Interface": {
@@ -257,7 +156,7 @@ exports[`Snapshot test for codepipeline alarm stack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "c56527323fe165e19e5c38b88f77270ba67c06d0fd17823264a8e1268ef9ce50.zip",
+          "S3Key": "17c16a3854838fd3ff4bda08146122a6701f33b9c86ae17f415ad0dc47a97544.zip",
         },
         "Handler": "index.handler",
         "Role": {
@@ -266,15 +165,7 @@ exports[`Snapshot test for codepipeline alarm stack 1`] = `
             "Arn",
           ],
         },
-        "Runtime": {
-          "Fn::FindInMap": [
-            "DefaultCrNodeVersionMap",
-            {
-              "Ref": "AWS::Region",
-            },
-            "value",
-          ],
-        },
+        "Runtime": "nodejs18.x",
         "Timeout": 120,
       },
       "Type": "AWS::Lambda::Function",
@@ -539,7 +430,7 @@ exports[`Snapshot test for codepipeline alarm stack 1`] = `
             ],
           ],
         },
-        "Delete": "{"service":"CloudWatchLogs","action":"deleteResourcePolicy","parameters":{"policyName":"CodePipelineAlarmEventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864184E82F4"},"ignoreErrorCodesMatching":"400"}",
+        "Delete": "{"service":"CloudWatchLogs","action":"deleteResourcePolicy","parameters":{"policyName":"CodePipelineAlarmEventsLogGroupPolicyCodePipelineAlarmPipelineEventsRule4FBE0864184E82F4"},"ignoreErrorCodesMatching":"ResourceNotFoundException"}",
         "InstallLatestAwsSdk": true,
         "ServiceToken": {
           "Fn::GetAtt": [

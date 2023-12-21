@@ -8,7 +8,7 @@ const cfn = require('./lib/cfn');
 const buildAthenaQuery = require('./build_athena_query');
 const exeAthenaQuery = require('./lib/execute_athena_query');
 const metricsHelper = require('./lib/metrics_helper');
-const aws = require('aws-sdk');
+const { Glue } = require('@aws-sdk/client-glue');
 
 /**
  * Execute Athena query as configured for different data sources
@@ -213,7 +213,7 @@ const deletePartitionForUpdate = async (requestType, resourceProperties) => {
       options = { customUserAgent: userAgentExtra };
     }
     LOGGER.log('INFO', JSON.stringify(options, null, 2));
-    const glue = new aws.Glue(options);
+    const glue = new Glue(options);
     const athenaDB = resourceProperties['MetricsDBName'];
     const athenaTable = resourceProperties['MetricsTableName'];
     const currentDate = new Date();
@@ -224,8 +224,7 @@ const deletePartitionForUpdate = async (requestType, resourceProperties) => {
         DatabaseName: athenaDB,
         PartitionValues: [dateStringForPartition],
         TableName: athenaTable
-      })
-      .promise();
+      });
     LOGGER.log('INFO', requestType + ':\n ' + JSON.stringify(response, null, 2));
   } catch (error) {
     LOGGER.log('ERROR', error);

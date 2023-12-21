@@ -19,7 +19,7 @@ const SOLUTION_NAME = process.env['SOLUTION_NAME'] || 'undefined';
 const DIST_VERSION = process.env['DIST_VERSION'] || '%%VERSION%%';
 const DIST_OUTPUT_BUCKET = process.env['DIST_OUTPUT_BUCKET'] || '%%BUCKET%%';
 const DIST_SOLUTION_NAME = process.env['DIST_SOLUTION_NAME'] || '%%SOLUTION%%';
-const LAMBDA_RUNTIME_NODEJS = lambda.Runtime.NODEJS_16_X;
+const LAMBDA_RUNTIME_NODEJS = lambda.Runtime.NODEJS_20_X;
 const TEMPLATE_FORMAT_VERSION = '2010-09-09';
 
 const app = new cdk.App();
@@ -48,7 +48,7 @@ const devopsDashboardStack = new DevOpsDashboardStack(app, 'aws-devops-monitorin
   solutionName: SOLUTION_NAME,
   solutionDistBucket: DIST_OUTPUT_BUCKET,
   solutionDistName: DIST_SOLUTION_NAME,
-  lambdaRuntimeNode: LAMBDA_RUNTIME_NODEJS
+  lambdaRuntimeNode: LAMBDA_RUNTIME_NODEJS,
 });
 
 /* Stack for creating codepipeline alarm */
@@ -72,7 +72,7 @@ const sharingAccountStack = new SharingAccountStack(app, 'sharing-account-stack'
   solutionName: SOLUTION_NAME,
   solutionDistBucket: DIST_OUTPUT_BUCKET,
   solutionDistName: DIST_SOLUTION_NAME,
-  lambdaRuntimeNode: LAMBDA_RUNTIME_NODEJS
+  lambdaRuntimeNode: LAMBDA_RUNTIME_NODEJS,
 });
 
 const appRegister = new AppRegister({

@@ -93,7 +93,7 @@ exports[`adding cfn suppressing rules to lambda 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs20.x",
       },
       "Type": "AWS::Lambda::Function",
     },

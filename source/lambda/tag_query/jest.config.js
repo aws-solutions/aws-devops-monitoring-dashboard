@@ -5,5 +5,6 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['test/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
   collectCoverageFrom: ['*.js', 'lib/*.js', '!test/*.js', '!jest.config.js'],
-  coverageReporters: [['lcov', { projectRoot: '../../../' }], 'text']
+  coverageReporters: [['lcov', { projectRoot: '../../../' }], 'text'],
+  setupFiles: ['<rootDir>/.jest/setEnvVars.js']
 };

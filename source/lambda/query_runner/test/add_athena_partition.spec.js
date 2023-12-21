@@ -4,7 +4,7 @@
 const add_athena_partition = require('../add_athena_partition');
 
 jest.mock(
-  'aws-sdk',
+  '@aws-sdk/client-cloudwatch',
   () => ({
     __esmodule: true,
     CloudWatch: jest.fn().mockReturnValue({

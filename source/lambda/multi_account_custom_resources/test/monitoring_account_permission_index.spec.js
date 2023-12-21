@@ -3,7 +3,6 @@
 
 'use strict';
 
-require('aws-sdk');
 const monitorAcctPerm = require('../monitoring_account_permission_index');
 const eb = require('../lib/eventbridge');
 
@@ -77,24 +76,32 @@ const responseByDescribeEventBus = {
 };
 
 jest.mock(
-  'aws-sdk',
+  '@aws-sdk/client-s3',
+  () => {
+    const mockS3Service = {
+      putBucketPolicy: jest.fn(),
+      getBucketPolicy: jest.fn(),
+      deleteBucketPolicy: jest.fn(),
+    };
+    return {
+      __esmodule: true,
+      S3: jest.fn(() => mockS3Service),
+    };
+  },
+  { virual: true }
+);
+
+jest.mock(
+  '@aws-sdk/client-eventbridge',
   () => {
     const mockEventBridgeService = {
-      putPermission: jest.fn().mockReturnThis(),
-      removePermission: jest.fn().mockReturnThis(),
-      describeEventBus: jest.fn().mockReturnThis(),
-      promise: jest.fn()
-    };
-    const mockS3Service = {
-      putBucketPolicy: jest.fn().mockReturnThis(),
-      getBucketPolicy: jest.fn().mockReturnThis(),
-      deleteBucketPolicy: jest.fn().mockReturnThis(),
-      promise: jest.fn()
+      putPermission: jest.fn(),
+      removePermission: jest.fn(),
+      describeEventBus: jest.fn(),
     };
     return {
       __esmodule: true,
       EventBridge: jest.fn(() => mockEventBridgeService),
-      S3: jest.fn(() => mockS3Service)
     };
   },
   { virual: true }

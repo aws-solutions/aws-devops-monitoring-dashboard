@@ -12,8 +12,7 @@
 
 import { Aws, CfnCondition, CfnOutput, CfnParameter, Fn, RemovalPolicy, Stack, StackProps, Tags } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { CfnCanary } from 'aws-cdk-lib/aws-synthetics';
-import { Canary, Code, Runtime, Schedule, Test } from '@aws-cdk/aws-synthetics-alpha';
+import { CfnCanary, Canary, Code, Runtime, Schedule, Test } from 'aws-cdk-lib/aws-synthetics';
 import {
   BlockPublicAccess,
   Bucket,
@@ -373,7 +372,7 @@ export class CanaryStack extends Stack {
         bucket: artifactBucket,
         prefix: Aws.STACK_NAME
       },
-      runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_3_8
+      runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_6_0
     });
 
     const canaryServiceRoleResource = canary.node.findChild('ServiceRole').node.findChild('Resource') as CfnRole;

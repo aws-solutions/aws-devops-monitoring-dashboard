@@ -8,11 +8,10 @@ const s3BucketPolicy = require('../lib/s3_bucket_policy');
 const bucketName = 'testBucketName';
 
 jest.mock(
-  'aws-sdk',
+  '@aws-sdk/client-s3',
   () => {
     const mockS3Service = {
-      deleteBucketPolicy: jest.fn().mockReturnThis(),
-      promise: jest.fn()
+      deleteBucketPolicy: jest.fn(),
     };
     return {
       __esmodule: true,
