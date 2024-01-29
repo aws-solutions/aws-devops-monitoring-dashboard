@@ -76,7 +76,7 @@ const RemovePermission = async (principal, eventBusName) => {
 
     return response;
   } catch (err) {
-    if (err.code !== 'ResourceNotFoundException') {
+    if (err.name !== 'ResourceNotFoundException') {
       LOGGER.log('ERROR', `[RemovePermission] Error when removing permission from event bus: ${err.message}`);
       throw err;
     }

@@ -29,7 +29,7 @@ const GetS3BucketPolicy = async bucketName => {
 
     return response;
   } catch (err) {
-    if (err.code !== 'NoSuchBucketPolicy') {
+    if (err.name !== 'NoSuchBucketPolicy') {
       LOGGER.log('ERROR', `[GetS3BucketPolicy] Error when getting s3 bucket policy: ${err.message}`);
       throw err;
     }
@@ -81,7 +81,7 @@ const DeleteS3BucketPolicy = async bucketName => {
 
     return response;
   } catch (err) {
-    if (err.code !== 'NoSuchBucketPolicy') {
+    if (err.name !== 'NoSuchBucketPolicy') {
       LOGGER.log(
         'ERROR',
         `[DeleteS3BucketPolicy] Error when deleting bucket policy from s3 bucket ${bucketName}: ${err.message}`

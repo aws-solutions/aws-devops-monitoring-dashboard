@@ -117,7 +117,7 @@ const GetExistingS3BucketPolicy = async bucketName => {
     return policyStatements;
   } catch (err) {
     // If no bucket policy exists, don't fail but return empty json object
-    if (err.statusCode === 404) return {};
+    if (err.name === 'NoSuchBucketPolicy') return {};
   }
 };
 

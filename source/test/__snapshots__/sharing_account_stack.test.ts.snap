@@ -1204,7 +1204,7 @@ exports[`Snapshot test for primary SharingAccountStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "208dee6ae45001bf671384b2c4e44122097a7a4c79307328a6e02738b24f6ba7.zip",
+          "S3Key": "c4deb04178754c3929b060836cc4b9507b72b8ecaf28d154f95378058fd25f54.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function queries CodeCommit, CodeBuild, and CodePipeline resources for tag information.",
         "Environment": {
