@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 'use strict';
-
+const mockGetS3BucketPolicy = jest.fn();
 const manageBucketPolicy = require('../manage_s3_bucket_policy');
+const { ServiceException } = require('@smithy/smithy-client');
 
 const accountPrincipalType = 'Account';
 const accountPrincipalList = ['111111111111', '222222222222'];
@@ -45,12 +46,11 @@ jest.mock(
   '../lib/s3_bucket_policy',
   () => ({
     __esmodule: true,
-    getS3BucketPolicy: jest.fn().mockReturnValue(existingPS),
+    getS3BucketPolicy: mockGetS3BucketPolicy.mockReturnValue(existingPS),
     putS3BucketPolicy: jest.fn().mockReturnThis(),
     deleteS3BucketPolicy: jest.fn().mockReturnThis(),
     promise: jest.fn()
-  }),
-  { virual: true }
+  })
 );
 
 describe('Test managing s3 bucket policy', () => {
@@ -83,5 +83,11 @@ describe('Test managing s3 bucket policy', () => {
         multiAcctBucketPSID
     );
     expect(response).not.toBeNull();
+  });
+  it('Should return empty object when there is no bucket policy ', async () => {
+    const mockError = new ServiceException({name: 'NoSuchBucketPolicy'});
+    mockGetS3BucketPolicy.mockImplementation(async () => { throw  mockError });
+    const response = await manageBucketPolicy.getExistingS3BucketPolicy('test-bucket');
+    expect(response).toEqual({});
   });
 });
