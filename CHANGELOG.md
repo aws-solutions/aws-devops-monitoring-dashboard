@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.8] - 2024-03-11
+### Changed
+- Upgraded synthetics canary runtime to v6.2
+- Upgraded CDK to v2.130
+- Upgraded solutions-constructs to v2.54
+
 ## [1.8.7] - 2024-01-30
 ### Fixed
 
