@@ -407,7 +407,7 @@ const pageLoadBlueprint = async function () {
   const response = await page.goto(URL, {waitUntil: 'domcontentloaded', timeout: 30000});
   //Wait for page to render.
   //Increase or decrease wait time based on endpoint being monitored.
-  await page.waitFor(",
+  await page.waitForTimeout(",
                 {
                   "Ref": "ResponseThreshold",
                 },
@@ -437,7 +437,7 @@ exports.handler = async () => {
         "Name": {
           "Ref": "CanaryName",
         },
-        "RuntimeVersion": "syn-nodejs-puppeteer-6.0",
+        "RuntimeVersion": "syn-nodejs-puppeteer-6.2",
         "Schedule": {
           "DurationInSeconds": "0",
           "Expression": {

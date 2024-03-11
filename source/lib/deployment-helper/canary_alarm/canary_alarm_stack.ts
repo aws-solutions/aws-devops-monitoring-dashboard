@@ -337,7 +337,7 @@ export class CanaryStack extends Stack {
       "  const response = await page.goto(URL, {waitUntil: 'domcontentloaded', timeout: 30000});",
       '  //Wait for page to render.',
       '  //Increase or decrease wait time based on endpoint being monitored.',
-      '  await page.waitFor(' + paramResponseThresh.valueAsString + ');',
+      '  await page.waitForTimeout(' + paramResponseThresh.valueAsString + ');',
       '  // This will take a screenshot that will be included in test output artifacts',
       "  await synthetics.takeScreenshot('loaded', 'loaded');",
       '  let pageTitle = await page.title();',
@@ -372,7 +372,7 @@ export class CanaryStack extends Stack {
         bucket: artifactBucket,
         prefix: Aws.STACK_NAME
       },
-      runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_6_0
+      runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_6_2
     });
 
     const canaryServiceRoleResource = canary.node.findChild('ServiceRole').node.findChild('Resource') as CfnRole;
