@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.9] - 2024-07-10
+### Changed
+- Upgraded braces to mitigate CVE-2024-4068
+- Upgraded requests to mitigate CVE-2024-35195
+
 ## [1.8.8] - 2024-03-11
 ### Changed
 - Upgraded synthetics canary runtime to v6.2
