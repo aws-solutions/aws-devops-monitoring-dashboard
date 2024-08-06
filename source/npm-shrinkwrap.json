@@ -1,12 +1,12 @@
 {
     "name": "aws_devops_monitoring_dashboard",
-    "version": "1.8.9",
+    "version": "1.8.10",
     "lockfileVersion": 3,
     "requires": true,
     "packages": {
         "": {
             "name": "aws_devops_monitoring_dashboard",
-            "version": "1.8.9",
+            "version": "1.8.10",
             "license": "Apache-2.0",
             "dependencies": {
                 "@aws-cdk/aws-glue-alpha": "^2.130.0-alpha",
