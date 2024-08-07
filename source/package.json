@@ -1,7 +1,7 @@
 {
     "name": "aws_devops_monitoring_dashboard",
     "description": "CDK app to provision AWS resources for the solution",
-    "version": "1.8.9",
+    "version": "1.8.10",
     "bin": {
         "aws_devops_monitoring_dashboard": "bin/aws_devops_monitoring_dashboard.js"
     },
