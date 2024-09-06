@@ -1,3 +1,5 @@
+⚠️ __Important: DevOps Monitoring Dashboard on AWS will no longer be supported starting December 3, 2024. We encourage you to look at other alternatives offered by AWS Partners, such as [Datadog’s CI Visibility](https://www.datadoghq.com/blog/aws-codepipeline-ci-visibility/) which provides a monitoring dashboard for [AWS CodePipeline](https://aws.amazon.com/codepipeline/).__ ⚠️
+
 **[🚀 Solution Landing Page](https://aws.amazon.com/solutions/implementations/aws-devops-monitoring-dashboard/)** | **[🚧 Feature request](https://github.com/aws-solutions/aws-devops-monitoring-dashboard/issues/new?assignees=&labels=feature-request%2C+enhancement&template=feature_request.md&title=)** | **[🐛 Bug Report](https://github.com/aws-solutions/aws-devops-monitoring-dashboard/issues/new?assignees=&labels=bug%2C+triage&template=bug_report.md&title=)**
 
 Note: If you want to use the solution without building from source, navigate to Solution Landing Page
