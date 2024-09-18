@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.12] - 2024-09-18
+### Changed
+- Upgraded path-to-regexp to mitigate CVE-2024-45296
+- Upgraded micromatch to mitigate CVE-2024-4067
+
 ## [1.8.11] - 2024-08-16
 ### Changed
 - Upgraded axios to mitigate CVE-2024-39338
