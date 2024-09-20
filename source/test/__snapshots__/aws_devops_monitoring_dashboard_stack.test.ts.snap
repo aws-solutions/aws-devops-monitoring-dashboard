@@ -447,7 +447,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "f4fd05151c560d0c6b8364b4a2add5e75600534d0dfbc0679ea1efe5aa7f7f63.zip",
+          "S3Key": "ca8aa2360e37b80efd42f09b76a1e5f131a812cb2bb0c4ffeda33173f70743ad.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function runs on a daily schedule and adds a new partition to Amazon Athena table",
         "Environment": {
@@ -1122,7 +1122,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "240e359dfbddd5a1f34a91445a3224f32a4fb1859012c760306c1e654e3b65f5.zip",
+          "S3Key": "c630f97eb2c42a717af78477815b434f59094d54563f429f2f2f05b7334a2e77.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses CloudWatch metrics for CodeBuild, sends relevant data to S3 for downstream operation",
         "Environment": {
@@ -2545,7 +2545,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "240e359dfbddd5a1f34a91445a3224f32a4fb1859012c760306c1e654e3b65f5.zip",
+          "S3Key": "c630f97eb2c42a717af78477815b434f59094d54563f429f2f2f05b7334a2e77.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function performs lambda transformation within kinesis firehose. It parses raw cloudwatch events, sends relevant data to S3 for downstream operation",
         "Environment": {
@@ -2718,7 +2718,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
               {
                 "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
               },
-              "/6a7f795e43e0139b1144186492f0874070c3c0cf88af9b65b07694bfdf9d7fda.json",
+              "/518e8dd1a32bdaae7bbd7345dd7e8bd6f2b24a1e0e17e7ae97d4dd7c873d91f9.json",
             ],
           ],
         },
@@ -3445,7 +3445,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "f4fd05151c560d0c6b8364b4a2add5e75600534d0dfbc0679ea1efe5aa7f7f63.zip",
+          "S3Key": "ca8aa2360e37b80efd42f09b76a1e5f131a812cb2bb0c4ffeda33173f70743ad.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function runs Amazon Athena queries and creates views.",
         "Environment": {
@@ -3745,7 +3745,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "73200f82b93cc5a96e7fc16ecd98bc88acad5a2451553b152228fdcab5f8ac2a.zip",
+          "S3Key": "cd3ad7dccc1befe3ed8d030d73127733b79bb73cce9c8b56014fe641eeef3541.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function queries CodeCommit, CodeBuild, and CodePipeline resources for tag information.",
         "Environment": {
@@ -4362,7 +4362,7 @@ exports[`Snapshot test for primary devopsDashboardStack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "2efb257d6185920b53ab436d195b557aaf741c2b1cfe9bb88e0de8bd4a2cc41b.zip",
+          "S3Key": "09b58641894e03f71236261a76b7330786115af3f496f6eeef97c64c9f668d84.zip",
         },
         "Description": "DevOps Monitoring Dashboard on AWS solution - This function manages permissions in the central monitoring account that are required for processing metrics sent by other accounts.",
         "Environment": {

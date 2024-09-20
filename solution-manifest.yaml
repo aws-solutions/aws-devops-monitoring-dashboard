@@ -2,7 +2,7 @@
 id: SO0143 # Solution Id
 name: devops-monitoring-dashboard-on-aws # trademarked name
 opensource_archive: aws-devops-monitoring-dashboard.zip
-version: v1.8.11 # current version of the solution. Used to verify template headers
+version: v1.8.12 # current version of the solution. Used to verify template headers
 cloudformation_templates: # This list should match with AWS CloudFormation templates section of IG
   - template: aws-devops-monitoring-dashboard.template
     main_template: true
