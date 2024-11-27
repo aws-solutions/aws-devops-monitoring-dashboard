@@ -8,7 +8,6 @@
 !source/lambda/**/*.js
 !**/cdk-solution-helper/index.js
 
-package-lock.json
 node_modules
 **/__pycache__/*
 *.venv-test/
