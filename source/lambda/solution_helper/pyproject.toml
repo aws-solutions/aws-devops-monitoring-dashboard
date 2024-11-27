@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "solution-helper"
+package-mode = false
+ 
+[tool.poetry.dependencies]
+python = "~3.12"
+crhelper = "^2.0.11"
+requests = "^2.32.3"
+urllib3 = "<2"
+ 
+[tool.poetry.dev-dependencies]
+coverage = "^7.0.5"
+pytest = "^7.4.2"
+pytest-cov = "^4.1.0"
+boto3 = "^1.35.0"
+botocore = "^1.35.0"
+ 
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

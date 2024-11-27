@@ -157,18 +157,12 @@ for folder in */ ; do
         fi
     done
 
-    if [ -e "requirements.txt" ]; then
-        echo "Installing python lambda using virtual environment"
-        python3 -m venv .venv-test
-        echo "Activating virtual environment"
-        source .venv-test/bin/activate
-        python3 -m pip install -U pip setuptools
-        echo "Executing pip3 install -q -r requirements.txt --target ./"
-        python3 -m pip install -q -r requirements.txt --target ./
-        echo "Deactivating virtual environment"
-        deactivate
-        echo "Deleting python virtual environment"
-        rm -fr .venv-test
+    if [ -e "pyproject.toml" ]; then
+        echo "Installing python lambda using Poetry"
+        "$POETRY_HOME"/bin/poetry install --no-dev
+        "$POETRY_HOME"/bin/poetry export -f requirements.txt --output requirements.txt --without-hashes
+        pip3 install -r requirements.txt --target ./
+        rm requirements.txt
     elif [ -e "package.json" ]; then
         echo "Installing node dependencies"
         echo "Executing do_cmd npm install --omit=dev"

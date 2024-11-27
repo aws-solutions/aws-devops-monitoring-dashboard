@@ -1,7 +1,7 @@
 {
     "name": "aws_devops_monitoring_dashboard",
     "description": "CDK app to provision AWS resources for the solution",
-    "version": "1.8.12",
+    "version": "1.8.13",
     "bin": {
         "aws_devops_monitoring_dashboard": "bin/aws_devops_monitoring_dashboard.js"
     },
@@ -24,10 +24,10 @@
     },
     "devDependencies": {
         "@aws-cdk/assert": "^2.68.0",
-        "@aws-cdk/aws-servicecatalogappregistry-alpha": "2.130.0-alpha.0",
+        "@aws-cdk/aws-servicecatalogappregistry-alpha": "2.171.0-alpha.0",
         "@types/jest": "^29.2.5",
         "@types/node": "^18.11.18",
-        "aws-cdk": "^2.130.0",
+        "aws-cdk": "^2.171.0",
         "eslint": "^8.44.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-config-react-app": "^7.0.1",
@@ -42,12 +42,12 @@
         "typescript": "^5.1.6"
     },
     "dependencies": {
-        "@aws-cdk/aws-glue-alpha": "^2.130.0-alpha",
+        "@aws-cdk/aws-glue-alpha": "^2.171.0-alpha",
         "@aws-solutions-constructs/aws-eventbridge-kinesisfirehose-s3": "2.54.0",
         "@aws-solutions-constructs/aws-eventbridge-lambda": "2.54.0",
         "@aws-solutions-constructs/aws-kinesisfirehose-s3": "2.54.0",
         "@aws-solutions-constructs/core": "2.54.0",
-        "aws-cdk-lib": "^2.130.0",
+        "aws-cdk-lib": "^2.171.0",
         "cdk-nag": "^2.21.58",
         "constructs": "^10.2.69",
         "source-map-support": "^0.5.21"

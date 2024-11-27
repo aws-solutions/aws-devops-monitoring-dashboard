@@ -55,23 +55,6 @@ else
     export SOLUTION_TRADEMARKEDNAME
 fi
 
-setup_python_env() {
-	if [ -d "./.venv-test" ]; then
-		echo "Reusing already setup python venv in ./.venv-test. Delete ./.venv-test if you want a fresh one created."
-		return
-	fi
-	echo "Setting up python venv"
-	python3 -m venv .venv-test
-	echo "Initiating virtual environment"
-	source .venv-test/bin/activate
-	echo "Installing python packages"
-	pip3 install -U pip setuptools
-	pip3 install -r requirements.txt --target .
-	pip3 install -r requirements-dev.txt
-	echo "deactivate virtual environment"
-	deactivate
-}
-
 run_python_lambda_test() {
 	lambda_name=$1
 	lambda_description=$2
@@ -80,12 +63,12 @@ run_python_lambda_test() {
 	echo "------------------------------------------------------------------------------"
 	cd $source_dir/lambda/$lambda_name
 
-	[ "${CLEAN:-true}" = "true" ] && rm -fr .venv-test
-
-	setup_python_env
+	echo "Installing python packages"
+	# This creates a virtual environment based on the project name in pyproject.toml.
+	"$POETRY_HOME"/bin/poetry install
 
 	echo "Initiating virtual environment"
-	source .venv-test/bin/activate
+  	source $("$POETRY_HOME"/bin/poetry env info --path)/bin/activate
 
 	# setup coverage report path
 	mkdir -p $source_dir/test/coverage-reports
@@ -103,7 +86,6 @@ run_python_lambda_test() {
 	deactivate
 
 	if [ "${CLEAN:-true}" = "true" ]; then
-		rm -fr .venv-test
 		# Note: leaving $source_dir/test/coverage-reports to allow further processing of coverage reports
 		rm -fr coverage
 		rm .coverage
