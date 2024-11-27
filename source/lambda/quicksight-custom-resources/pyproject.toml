@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "quicksight-custom-resources"
+package-mode = false
+ 
+[tool.poetry.dependencies]
+python = "~3.12"
+crhelper = "^2.0.11"
+PyYAML = "^6.0"
+requests = "^2.32.3"
+tenacity = "^8.2.2"
+urllib3 = "<2"
+ 
+[tool.poetry.dev-dependencies]
+mock = "^5.1.0"
+moto = "^4.2.6"
+pytest = "^7.4.2"
+pytest-cov = "^4.1.0"
+pytest-env = "^1.0.1"
+boto3 = "^1.35.0"
+botocore = "^1.35.0"
+ 
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
